@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 VMware Download Link Collector
-Collects download links for VMware Workstation and Fusion products.
+使用 Playwright 获取 VMware 下载链接（支持 JavaScript 渲染）
 """
 
 import json
@@ -10,130 +10,173 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-import requests
-from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
-# VMware product URLs
+# VMware 产品配置
 VMWARE_PRODUCTS = {
     "workstation-pro": {
         "name": "VMware Workstation Pro",
-        "url": "https://www.vmware.com/products/workstation-pro.html",
-        "download_page": "https://www.vmware.com/go/tryworkstation-pro",
+        "url": "https://www.vmware.com/info/workstation-pro/evaluation",
         "platforms": ["Windows", "Linux"],
-    },
-    "workstation-player": {
-        "name": "VMware Workstation Player",
-        "url": "https://www.vmware.com/products/workstation-player.html",
-        "download_page": "https://www.vmware.com/go/tryworkstation-player",
-        "platforms": ["Windows", "Linux"],
+        "description": "行业标准的桌面虚拟化软件",
+        "latest_version": "17.5.2",
     },
     "fusion-pro": {
         "name": "VMware Fusion Pro",
-        "url": "https://www.vmware.com/products/fusion.html",
-        "download_page": "https://www.vmware.com/go/tryfusion-pro",
+        "url": "https://knowledge.broadcom.com/external/article/315638/download-and-install-vmware-fusion.html",
         "platforms": ["macOS"],
-    },
-    "fusion-player": {
-        "name": "VMware Fusion Player",
-        "url": "https://www.vmware.com/products/fusion.html",
-        "download_page": "https://www.vmware.com/go/tryfusion-player",
-        "platforms": ["macOS"],
+        "description": "macOS 上的专业虚拟化软件",
+        "latest_version": "13.5.2",
     },
 }
 
-# Known download URL patterns (these are examples, actual URLs may vary)
-VMWARE_DOWNLOAD_PATTERNS = {
-    "workstation-pro": "https://www.vmware.com/go/getworkstation-pro",
-    "workstation-player": "https://www.vmware.com/go/getworkstation-player",
-    "fusion-pro": "https://www.vmware.com/go/getfusion-pro",
-    "fusion-player": "https://www.vmware.com/go/getfusion-player",
+# Broadcom 支持门户下载页面
+BROADCOM_DOWNLOADS = {
+    "workstation-pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro",
+    "fusion-pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro",
 }
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+# VMware 知识库文章（包含下载信息）
+VMWARE_KB_ARTICLES = {
+    "workstation-pro": "https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hype.html",
+    "fusion-pro": "https://knowledge.broadcom.com/external/article/315638/download-and-install-vmware-fusion.html",
 }
 
 
-def get_page_content(url: str) -> str | None:
-    """Fetch page content with error handling."""
+def get_page_with_playwright(url: str, wait_selector: str = None, timeout: int = 30000) -> str | None:
+    """使用 Playwright 获取页面内容（支持 JavaScript 渲染）"""
     try:
-        response = requests.get(url, headers=HEADERS, timeout=30)
-        response.raise_for_status()
-        return response.text
-    except requests.RequestException as e:
-        print(f"Error fetching {url}: {e}", file=sys.stderr)
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            )
+            page = context.new_page()
+
+            # 访问页面
+            page.goto(url, wait_until="networkidle", timeout=timeout)
+
+            # 等待特定选择器出现（如果指定）
+            if wait_selector:
+                try:
+                    page.wait_for_selector(wait_selector, timeout=10000)
+                except PlaywrightTimeout:
+                    print(f"  等待选择器超时: {wait_selector}", file=sys.stderr)
+
+            # 获取页面内容
+            content = page.content()
+            browser.close()
+            return content
+
+    except Exception as e:
+        print(f"Playwright 错误: {e}", file=sys.stderr)
         return None
 
 
-def extract_version_info(html: str) -> dict:
-    """Extract version information from HTML content."""
-    soup = BeautifulSoup(html, "html.parser")
-    version_info = {}
+def extract_version_from_text(text: str) -> str | None:
+    """从文本中提取版本号"""
+    # 匹配 VMware 版本号模式（如 17.5.2, 13.5.0 等）
+    patterns = [
+        # 匹配 "VMware Workstation 17 Pro" 或 "VMware Fusion 13 Pro"
+        r"VMware\s+Workstation\s+(\d+)(?:\s+Pro)?",
+        r"VMware\s+Fusion\s+(\d+)(?:\s+Pro)?",
+        # 匹配完整版本号如 17.5.2
+        r"VMware\s+Workstation\s+(?:Pro\s+)?(\d+\.\d+(?:\.\d+)?)",
+        r"VMware\s+Fusion\s+(?:Pro\s+)?(\d+\.\d+(?:\.\d+)?)",
+        # 通用版本号模式
+        r"Version\s+(\d+\.\d+(?:\.\d+)?)",
+        r"v(\d+\.\d+(?:\.\d+)?)",
+    ]
 
-    # Look for version patterns in text
-    version_pattern = r"(\d+\.\d+(?:\.\d+)?)"
-    text = soup.get_text()
+    for pattern in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            version = match.group(1)
+            # 如果只匹配到主版本号（如 17），添加 .0
+            if version.isdigit():
+                return f"{version}.0"
+            return version
 
-    # Find version numbers
-    versions = re.findall(version_pattern, text)
-    if versions:
-        version_info["versions_found"] = list(set(versions))[:5]  # Limit to 5 unique versions
-
-    return version_info
+    return None
 
 
-def check_download_page(product_key: str) -> dict:
-    """Check a product's download page for information."""
+def extract_download_links(html: str, base_url: str = "") -> list[dict]:
+    """从 HTML 中提取下载链接"""
+    links = []
+
+    # 匹配各种下载链接模式
+    patterns = [
+        # 直接下载链接
+        r'href=["\']([^"\']*\.(?:exe|dmg|tar\.gz|bundle|iso|zip))["\']',
+        # Broadcom 支持门户链接
+        r'href=["\']([^"\']*support\.broadcom\.com[^"\']*)["\']',
+        # VMware 下载链接
+        r'href=["\']([^"\']*vmware\.com[^"\']*download[^"\']*)["\']',
+        # 通用下载按钮
+        r'href=["\']([^"\']*(?:download|get|try)[^"\']*)["\']',
+    ]
+
+    for pattern in patterns:
+        matches = re.findall(pattern, html, re.IGNORECASE)
+        for match in matches:
+            if match.startswith("/"):
+                match = base_url + match
+            if match not in [l["url"] for l in links]:
+                links.append({"url": match, "type": "download"})
+
+    return links
+
+
+def check_vmware_product(product_key: str) -> dict:
+    """检查 VMware 产品页面获取下载信息"""
     product = VMWARE_PRODUCTS[product_key]
     result = {
         "product": product["name"],
         "key": product_key,
         "platforms": product["platforms"],
+        "description": product["description"],
         "product_url": product["url"],
-        "download_page": product["download_page"],
-        "direct_download": VMWARE_DOWNLOAD_PATTERNS.get(product_key, ""),
+        "broadcom_downloads": BROADCOM_DOWNLOADS.get(product_key, ""),
+        "kb_article": VMWARE_KB_ARTICLES.get(product_key, ""),
         "checked_at": datetime.utcnow().isoformat(),
         "status": "unknown",
+        "version": product.get("latest_version", "unknown"),
+        "download_links": [],
     }
 
-    # Check product page
-    html = get_page_content(product["url"])
-    if html:
-        version_info = extract_version_info(html)
-        result.update(version_info)
-        result["status"] = "available"
+    print(f"正在检查 {product['name']}...")
 
-        # Check for specific version mentions
-        soup = BeautifulSoup(html, "html.parser")
-        text = soup.get_text().lower()
-
-        # Look for version mentions
-        if "workstation" in product_key:
-            ws_match = re.search(r"workstation\s*(?:pro|player)?\s*(\d+(?:\.\d+)*)", text)
-            if ws_match:
-                result["latest_version"] = ws_match.group(1)
-        elif "fusion" in product_key:
-            fusion_match = re.search(r"fusion\s*(?:pro|player)?\s*(\d+(?:\.\d+)*)", text)
-            if fusion_match:
-                result["latest_version"] = fusion_match.group(1)
-    else:
+    # 获取产品页面
+    html = get_page_with_playwright(product["url"])
+    if not html:
         result["status"] = "unreachable"
+        return result
+
+    result["status"] = "available"
+
+    # 尝试从页面提取版本信息（如果预定义版本不存在）
+    if result["version"] == "unknown":
+        version = extract_version_from_text(html)
+        if version:
+            result["version"] = version
+            print(f"  从页面找到版本: {version}")
+    else:
+        print(f"  使用预定义版本: {result['version']}")
+
+    # 提取下载链接
+    download_links = extract_download_links(html, "https://www.vmware.com")
+    result["download_links"] = download_links
+
+    if download_links:
+        print(f"  找到 {len(download_links)} 个下载链接")
+    else:
+        print("  未找到直接下载链接，需要通过 Broadcom 支持门户下载")
 
     return result
 
 
-def collect_all_downloads() -> list[dict]:
-    """Collect download information for all VMware products."""
-    results = []
-    for product_key in VMWARE_PRODUCTS:
-        print(f"Checking {VMWARE_PRODUCTS[product_key]['name']}...")
-        result = check_download_page(product_key)
-        results.append(result)
-    return results
-
-
 def save_to_json(results: list[dict], output_path: Path) -> None:
-    """Save results to JSON file."""
+    """保存结果到 JSON 文件"""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(
@@ -145,81 +188,113 @@ def save_to_json(results: list[dict], output_path: Path) -> None:
             indent=2,
             ensure_ascii=False,
         )
-    print(f"Saved JSON to {output_path}")
+    print(f"已保存 JSON 到 {output_path}")
 
 
 def generate_readme(results: list[dict], readme_path: Path) -> None:
-    """Generate README.md with download links."""
+    """生成 README.md"""
     lines = [
-        "# VMware Download Links",
+        "# VMware 下载链接",
         "",
-        f"Auto-collected VMware download links. Last updated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+        f"自动收集的 VMware 下载链接。最后更新: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
         "",
-        "## Products",
+        "## 产品列表",
         "",
     ]
 
     for result in results:
         lines.append(f"### {result['product']}")
         lines.append("")
-        lines.append(f"- **Platforms**: {', '.join(result['platforms'])}")
+        lines.append(f"- **平台**: {', '.join(result['platforms'])}")
+        lines.append(f"- **说明**: {result['description']}")
 
-        if "latest_version" in result:
-            lines.append(f"- **Latest Version**: {result['latest_version']}")
+        if result.get("version"):
+            lines.append(f"- **最新版本**: {result['version']}")
 
-        lines.append(f"- **Product Page**: [{result['product']}]({result['product_url']})")
-        lines.append(f"- **Download Page**: [Download]({result['download_page']})")
+        lines.append(f"- **产品页面**: [{result['product']}]({result['product_url']})")
 
-        if result.get("direct_download"):
-            lines.append(f"- **Direct Download**: [Get {result['product']}]({result['direct_download']})")
+        if result.get("broadcom_downloads"):
+            lines.append(f"- **Broadcom 下载**: [下载页面]({result['broadcom_downloads']})")
 
-        lines.append(f"- **Status**: {result['status']}")
+        if result.get("kb_article"):
+            lines.append(f"- **安装指南**: [KB 文章]({result['kb_article']})")
+
+        # 列出找到的下载链接
+        if result.get("download_links"):
+            lines.append("- **直接下载链接**:")
+            for link in result["download_links"][:3]:  # 最多显示 3 个
+                lines.append(f"  - [{link['url']}]({link['url']})")
+
+        lines.append(f"- **状态**: {result['status']}")
         lines.append("")
 
     lines.extend(
         [
-            "## Notes",
+            "## 如何下载",
             "",
-            "- VMware downloads may require a Broadcom account (free)",
-            "- Direct download links redirect to the VMware Customer Connect portal",
-            "- This repository is auto-updated via GitHub Actions",
+            "VMware 产品现在由 Broadcom 管理。下载步骤：",
+            "",
+            "1. 访问 [Broadcom 支持门户](https://support.broadcom.com)",
+            "2. 注册/登录免费账号",
+            "3. 导航到 VMware 产品下载页面",
+            "4. 选择产品版本和平台",
+            "5. 同意条款后下载",
+            "",
+            "> **提示**: 自 2024 年 5 月起，VMware Workstation Pro 和 Fusion Pro 对个人使用免费。",
+            "",
+            "## 本地运行",
+            "",
+            "```bash",
+            "# 安装依赖",
+            "uv pip install -r requirements.txt",
+            "",
+            "# 安装 Playwright 浏览器",
+            "python -m playwright install chromium",
+            "",
+            "# 运行收集脚本",
+            "python scripts/collect_vmware_links.py",
+            "```",
             "",
             "## License",
             "",
-            "This project is for educational purposes. VMware products are subject to their own licensing terms.",
+            "本项目仅供学习用途。VMware 产品受其自身许可条款约束。",
         ]
     )
 
     readme_path.parent.mkdir(parents=True, exist_ok=True)
     with open(readme_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
-    print(f"Generated README at {readme_path}")
+    print(f"已生成 README 到 {readme_path}")
 
 
 def main() -> int:
-    """Main entry point."""
-    print("VMware Download Link Collector")
-    print("=" * 40)
+    """主函数"""
+    print("VMware 下载链接收集器")
+    print("=" * 50)
 
-    # Collect downloads
-    results = collect_all_downloads()
+    # 收集所有产品信息
+    results = []
+    for product_key in VMWARE_PRODUCTS:
+        result = check_vmware_product(product_key)
+        results.append(result)
 
-    # Determine output paths
+    # 确定输出路径
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
     json_path = repo_root / "data" / "vmware_downloads.json"
     readme_path = repo_root / "README.md"
 
-    # Save results
+    # 保存结果
     save_to_json(results, json_path)
     generate_readme(results, readme_path)
 
-    # Print summary
-    print("\n" + "=" * 40)
-    print("Summary:")
+    # 打印摘要
+    print("\n" + "=" * 50)
+    print("收集摘要:")
     for result in results:
-        status = "✓" if result["status"] == "available" else "✗"
-        print(f"  {status} {result['product']}: {result['status']}")
+        status = "[OK]" if result["status"] == "available" else "[FAIL]"
+        version = f" v{result['version']}" if result.get("version") else ""
+        print(f"  {status} {result['product']}{version}: {result['status']}")
 
     return 0
 

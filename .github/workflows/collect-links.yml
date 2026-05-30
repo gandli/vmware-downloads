@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: uv pip install --system -r requirements.txt
 
+      - name: Install Playwright browsers
+        run: python -m playwright install chromium
+
       - name: Run collector script
         run: python scripts/collect_vmware_links.py
 
