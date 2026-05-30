@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 05:57 UTC
+最后更新: 2026-05-30 06:17 UTC
 
 ## 官方下载（需要登录）
 
@@ -8,6 +8,11 @@ Broadcom 官方下载页面，需要注册或登录账号：
 
 - [VMware Workstation Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true)
 - [VMware Fusion Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true)
+
+### 账号信息
+
+- 邮箱: `REDACTED_EMAIL`
+- 密码: `REDACTED_PASSWORD`
 
 ## Archive.org 镜像（无需登录）
 
