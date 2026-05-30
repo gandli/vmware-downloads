@@ -285,54 +285,67 @@ def generate_readme(data: dict, path: Path) -> None:
         sha_str = f" | SHA256: `{sha256[:16]}...`" if sha256 else ""
         lines.append(f"- **{platform.title()}**: [{info['url']}]({info['url']}) ({info['size']}{sha_str})")
 
-    # 所有版本表格
+    # 所有版本表格（包含 SHA256）
     lines.extend([
         "",
         "## 所有版本",
         "",
         "### VMware Workstation Pro",
         "",
-        "| 版本 | Build | 日期 | Windows | Linux |",
-        "|------|-------|------|---------|-------|",
+        "| 版本 | Build | 日期 | Windows | Windows SHA256 | Linux | Linux SHA256 |",
+        "|------|-------|------|---------|----------------|-------|--------------|",
     ])
 
     for v in data["workstation_pro"]:
         win = v["downloads"].get("windows", {})
         linux = v["downloads"].get("linux", {})
+        win_sha = v["sha256"].get("windows", "")
+        linux_sha = v["sha256"].get("linux", "")
         win_link = f"[下载]({win['url']}) ({win['size']})" if win else "N/A"
         linux_link = f"[下载]({linux['url']}) ({linux['size']})" if linux else "N/A"
-        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | {win_link} | {linux_link} |")
+        win_sha_str = f"`{win_sha[:16]}...`" if win_sha else "N/A"
+        linux_sha_str = f"`{linux_sha[:16]}...`" if linux_sha else "N/A"
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | {win_link} | {win_sha_str} | {linux_link} | {linux_sha_str} |")
 
     lines.extend([
         "",
         "### VMware Fusion Pro",
         "",
-        "| 版本 | Build | 日期 | macOS |",
-        "|------|-------|------|-------|",
+        "| 版本 | Build | 日期 | macOS | SHA256 |",
+        "|------|-------|------|-------|--------|",
     ])
 
     for v in data["fusion_pro"]:
         macos = v["downloads"].get("macos", {})
+        macos_sha = v["sha256"].get("macos", "")
         macos_link = f"[下载]({macos['url']}) ({macos['size']})" if macos else "N/A"
-        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | {macos_link} |")
+        macos_sha_str = f"`{macos_sha[:16]}...`" if macos_sha else "N/A"
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | {macos_link} | {macos_sha_str} |")
 
     lines.extend([
         "",
-        "## SHA256 校验",
+        "## 完整 SHA256 校验值",
         "",
-        "| 版本 | 平台 | SHA256 |",
-        "|------|------|--------|",
+        "```",
     ])
 
     for v in data["workstation_pro"]:
         for platform, sha in v["sha256"].items():
             if sha:
-                lines.append(f"| Workstation {v['version']} | {platform.title()} | `{sha}` |")
+                filename = f"VMware-Workstation-Full-{v['version']}-{v['build']}"
+                if platform == "windows":
+                    filename += ".exe"
+                else:
+                    filename += ".x86_64.bundle"
+                lines.append(f"{sha}  {filename}")
 
     for v in data["fusion_pro"]:
         for platform, sha in v["sha256"].items():
             if sha:
-                lines.append(f"| Fusion {v['version']} | {platform.title()} | `{sha}` |")
+                filename = f"VMware-Fusion-{v['version']}-{v['build']}_universal.dmg"
+                lines.append(f"{sha}  {filename}")
+
+    lines.append("```")
 
     lines.extend([
         "",
