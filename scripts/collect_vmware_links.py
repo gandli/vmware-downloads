@@ -6,6 +6,7 @@ VMware Download Link Collector
 
 import json
 import sys
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -238,6 +239,37 @@ def main() -> int:
 
     data = collect_downloads()
 
+    # 验证链接可访问性
+    print("\n验证链接可访问性...")
+    all_links = []
+    for v in data["workstation_pro"]:
+        all_links.append(("Workstation " + v["version"] + " Windows", v["windows"]))
+        all_links.append(("Workstation " + v["version"] + " Linux", v["linux"]))
+    for v in data["fusion_pro"]:
+        all_links.append(("Fusion " + v["version"] + " macOS", v["macos"]))
+
+    failed = []
+    for name, url in all_links:
+        try:
+            req = urllib.request.Request(url, method='HEAD')
+            with urllib.request.urlopen(req, timeout=30) as response:
+                if response.status == 200:
+                    size = response.headers.get("Content-Length", "N/A")
+                    size_mb = f"{int(size) / 1024 / 1024:.1f} MB" if size != "N/A" else "N/A"
+                    print(f"  [OK] {name}: {size_mb}")
+                else:
+                    print(f"  [FAIL] {name}: HTTP {response.status}")
+                    failed.append(name)
+        except Exception as e:
+            print(f"  [FAIL] {name}: {e}")
+            failed.append(name)
+
+    if failed:
+        print(f"\n警告: {len(failed)} 个链接不可访问!")
+        for f in failed:
+            print(f"  - {f}")
+        return 1
+
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
 
@@ -246,6 +278,7 @@ def main() -> int:
 
     print(f"\nWorkstation Pro: {len(data['workstation_pro'])} 个版本")
     print(f"Fusion Pro: {len(data['fusion_pro'])} 个版本")
+    print(f"链接验证: {len(all_links)}/{len(all_links)} 通过")
 
     return 0
 
