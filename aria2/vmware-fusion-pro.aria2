@@ -1,39 +1,31 @@
 # VMware Fusion Pro v26H1 (build 25388279)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/26H1/25388279/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-26H1-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg
+  out=VMware-Fusion-26H1-macOS.dmg
 
 # VMware Fusion Pro v25H2u1 (build 25219963)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/25H2u1/25219963/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-25H2u1-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2u1-25219963_universal.dmg
+  out=VMware-Fusion-25H2u1-macOS.dmg
 
 # VMware Fusion Pro v25H2 (build 24995814)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/25H2/24995814/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-25H2-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2-24995814_universal.dmg
+  out=VMware-Fusion-25H2-macOS.dmg
 
 # VMware Fusion Pro v13.6.4 (build 24832108)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.6.4/24832108/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-13.6.4-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg
+  out=VMware-Fusion-13.6.4-macOS.dmg
 
 # VMware Fusion Pro v13.6.3 (build 24585314)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.6.3/24585314/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-13.6.3-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.3-24585314_universal.dmg
+  out=VMware-Fusion-13.6.3-macOS.dmg
 
 # VMware Fusion Pro v13.6.1 (build 23298819)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.6.1/23298819/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-13.6.1-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.1-23298819_universal.dmg
+  out=VMware-Fusion-13.6.1-macOS.dmg
 
 # VMware Fusion Pro v13.6.0 (build 23278157)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.6.0/23278157/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-13.6.0-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.0-23278157_universal.dmg
+  out=VMware-Fusion-13.6.0-macOS.dmg
 
 # VMware Fusion Pro v13.5.2 (build 23324145)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.5.2/23324145/universal/core/com.vmware.fusion.zip.tar
-  out=VMware-Fusion-13.5.2-macOS.zip.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.5.2-23324145_universal.dmg
+  out=VMware-Fusion-13.5.2-macOS.dmg

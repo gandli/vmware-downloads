@@ -1,80 +1,62 @@
 # VMware Workstation Pro v26H1 (build 25388281)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar
-  out=VMware-Workstation-26H1-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe
+  out=VMware-Workstation-26H1-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/26H1/25388281/linux/core/VMware-Workstation-26H1-25388281.x86_64.bundle.tar
-  out=VMware-Workstation-26H1-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle
+  out=VMware-Workstation-26H1-Linux.bundle
 
 # VMware Workstation Pro v25H2u1 (build 25219725)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/25H2u1/25219725/windows/core/VMware-workstation-25H2u1-25219725.exe.tar
-  out=VMware-Workstation-25H2u1-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2u1-25219725.exe
+  out=VMware-Workstation-25H2u1-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/25H2u1/25219725/linux/core/VMware-Workstation-25H2u1-25219725.x86_64.bundle.tar
-  out=VMware-Workstation-25H2u1-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2u1-25219725.x86_64.bundle
+  out=VMware-Workstation-25H2u1-Linux.bundle
 
 # VMware Workstation Pro v25H2 (build 24995812)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/25H2/24995812/windows/core/VMware-workstation-25H2-24995812.exe.tar
-  out=VMware-Workstation-25H2-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe
+  out=VMware-Workstation-25H2-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/25H2/24995812/linux/core/VMware-Workstation-25H2-24995812.x86_64.bundle.tar
-  out=VMware-Workstation-25H2-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle
+  out=VMware-Workstation-25H2-Linux.bundle
 
 # VMware Workstation Pro v17.6.4 (build 24832109)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.4/24832109/windows/core/VMware-workstation-17.6.4-24832109.exe.tar
-  out=VMware-Workstation-17.6.4-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.4-24832109.exe
+  out=VMware-Workstation-17.6.4-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.4/24832109/linux/core/VMware-Workstation-17.6.4-24832109.x86_64.bundle.tar
-  out=VMware-Workstation-17.6.4-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.4-24832109.x86_64.bundle
+  out=VMware-Workstation-17.6.4-Linux.bundle
 
 # VMware Workstation Pro v17.6.3 (build 24583834)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.3/24583834/windows/core/VMware-workstation-17.6.3-24583834.exe.tar
-  out=VMware-Workstation-17.6.3-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.3-24583834.exe
+  out=VMware-Workstation-17.6.3-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.3/24583834/linux/core/VMware-Workstation-17.6.3-24583834.x86_64.bundle.tar
-  out=VMware-Workstation-17.6.3-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.3-24583834.x86_64.bundle
+  out=VMware-Workstation-17.6.3-Linux.bundle
 
 # VMware Workstation Pro v17.6.2 (build 24409262)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.2/24409262/windows/core/VMware-workstation-17.6.2-24409262.exe.tar
-  out=VMware-Workstation-17.6.2-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.2-24409262.exe
+  out=VMware-Workstation-17.6.2-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.2/24409262/linux/core/VMware-Workstation-17.6.2-24409262.x86_64.bundle.tar
-  out=VMware-Workstation-17.6.2-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.2-24409262.x86_64.bundle
+  out=VMware-Workstation-17.6.2-Linux.bundle
 
 # VMware Workstation Pro v17.6.1 (build 24319023)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.1/24319023/windows/core/VMware-workstation-17.6.1-24319023.exe.tar
-  out=VMware-Workstation-17.6.1-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.1-24319023.exe
+  out=VMware-Workstation-17.6.1-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.1/24319023/linux/core/VMware-Workstation-17.6.1-24319023.x86_64.bundle.tar
-  out=VMware-Workstation-17.6.1-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.1-24319023.x86_64.bundle
+  out=VMware-Workstation-17.6.1-Linux.bundle
 
 # VMware Workstation Pro v17.6.0 (build 24238078)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.0/24238078/windows/core/VMware-workstation-17.6.0-24238078.exe.tar
-  out=VMware-Workstation-17.6.0-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.0-24238078.exe
+  out=VMware-Workstation-17.6.0-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.6.0/24238078/linux/core/VMware-Workstation-17.6.0-24238078.x86_64.bundle.tar
-  out=VMware-Workstation-17.6.0-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.0-24238078.x86_64.bundle
+  out=VMware-Workstation-17.6.0-Linux.bundle
 
 # VMware Workstation Pro v17.5.2 (build 23775571)
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.5.2/23775571/windows/core/VMware-workstation-17.5.2-23775571.exe.tar
-  out=VMware-Workstation-17.5.2-Windows.exe.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.2-23775571.exe
+  out=VMware-Workstation-17.5.2-Windows.exe
 
-https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/17.5.2/23775571/linux/core/VMware-Workstation-17.5.2-23775571.x86_64.bundle.tar
-  out=VMware-Workstation-17.5.2-Linux.bundle.tar
-  header=Host: softwareupdate-prod.broadcom.com.cdn.cloudflare.net
+https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle
+  out=VMware-Workstation-17.5.2-Linux.bundle
