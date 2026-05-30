@@ -10,6 +10,9 @@ env/
 # Environment variables
 .env
 
+# Temporary downloads
+tmp_downloads/
+
 # IDE
 .vscode/
 .idea/
