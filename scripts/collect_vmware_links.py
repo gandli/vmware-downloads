@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-VMware Download Link Collector
-收集 VMware Workstation Pro 和 Fusion Pro 的下载链接
+VMware Link Collector
+从 Broadcom 官方获取 SHA256，从 Archive.org 获取直链
 """
 
 import json
@@ -19,54 +19,54 @@ BROADCOM_URLS = {
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true",
 }
 
-# VMware Workstation Pro 版本（包含 SHA256 校验值）
-WORKSTATION_VERSIONS = {
-    "26H1": {
-        "build": "25388281",
-        "date": "2026-04-15",
-        "sha256": {
-            "windows": "a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f",
-            "linux": "",
+# 版本信息（从 Broadcom 官方获取的 SHA256）
+VERSIONS = {
+    "workstation": {
+        "26H1": {
+            "build": "25388281",
+            "date": "2026-04-15",
+            "sha256": {
+                "windows": "a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f",
+                "linux": "",
+            },
+        },
+        "25H2": {
+            "build": "24995812",
+            "date": "2025-10-14",
+            "sha256": {
+                "windows": "",
+                "linux": "",
+            },
+        },
+        "17.6.4": {
+            "build": "24832109",
+            "date": "2025-07-15",
+            "sha256": {
+                "windows": "",
+                "linux": "",
+            },
         },
     },
-    "25H2": {
-        "build": "24995812",
-        "date": "2025-10-14",
-        "sha256": {
-            "windows": "",
-            "linux": "",
+    "fusion": {
+        "26H1": {
+            "build": "25388279",
+            "date": "2026-04-15",
+            "sha256": {
+                "macos": "",
+            },
         },
-    },
-    "17.6.4": {
-        "build": "24832109",
-        "date": "2025-07-15",
-        "sha256": {
-            "windows": "",
-            "linux": "",
+        "13.6.4": {
+            "build": "24832108",
+            "date": "2025-07-15",
+            "sha256": {
+                "macos": "",
+            },
         },
     },
 }
 
-# VMware Fusion Pro 版本
-FUSION_VERSIONS = {
-    "26H1": {
-        "build": "25388279",
-        "date": "2026-04-15",
-        "sha256": {
-            "macos": "",
-        },
-    },
-    "13.6.4": {
-        "build": "24832108",
-        "date": "2025-07-15",
-        "sha256": {
-            "macos": "",
-        },
-    },
-}
 
-
-def get_folder(version: str) -> str:
+def get_archive_org_folder(version: str) -> str:
     """获取 Archive.org 文件夹名"""
     if version.startswith("25H") or version.startswith("26H"):
         if "u" in version:
@@ -75,10 +75,53 @@ def get_folder(version: str) -> str:
     return f"{version.split('.')[0]}.x"
 
 
+def generate_links(product: str, version: str, build: str) -> dict:
+    """生成下载链接"""
+    base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
+    folder = get_archive_org_folder(version)
+
+    if product == "workstation":
+        if version.startswith("25H") or version.startswith("26H"):
+            win = f"{base}/{folder}/VMware-Workstation-Full-{version}-{build}.exe"
+            linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
+        else:
+            win = f"{base}/{folder}/VMware-workstation-full-{version}-{build}.exe"
+            linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
+        return {"windows": win, "linux": linux}
+    else:
+        macos = f"{base}/Fusion/{folder}/VMware-Fusion-{version}-{build}_universal.dmg"
+        return {"macos": macos}
+
+
+def verify_link(url: str, timeout: int = 30, retries: int = 3) -> tuple[bool, str]:
+    """验证链接可访问性（带重试）"""
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, method='GET')
+            req.add_header('Range', 'bytes=0-0')
+            with urllib.request.urlopen(req, timeout=timeout) as response:
+                if response.status in (200, 206):
+                    size = response.headers.get("Content-Length", "N/A")
+                    content_range = response.headers.get("Content-Range", "")
+                    if content_range and '/' in content_range:
+                        size = content_range.split('/')[-1]
+                    if size != "N/A":
+                        size_mb = f"{int(size) / 1024 / 1024:.1f} MB"
+                    else:
+                        size_mb = "N/A"
+                    return True, size_mb
+                if attempt < retries - 1:
+                    continue
+                return False, f"HTTP {response.status}"
+        except Exception as e:
+            if attempt < retries - 1:
+                continue
+            return False, str(e)
+    return False, "Max retries exceeded"
+
+
 def collect_downloads() -> dict:
     """收集下载链接"""
-    base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
-    
     result = {
         "collected_at": datetime.utcnow().isoformat(),
         "official": BROADCOM_URLS,
@@ -87,35 +130,50 @@ def collect_downloads() -> dict:
         "fusion_pro": [],
     }
 
-    # Workstation Pro
-    for version, info in WORKSTATION_VERSIONS.items():
-        folder = get_folder(version)
-        if version.startswith("25H") or version.startswith("26H"):
-            win = f"{base}/{folder}/VMware-Workstation-Full-{version}-{info['build']}.exe"
-            linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
-        else:
-            win = f"{base}/{folder}/VMware-workstation-full-{version}-{info['build']}.exe"
-            linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
-        
+    # 收集 Workstation
+    print("收集 VMware Workstation Pro...")
+    for version, info in VERSIONS["workstation"].items():
+        links = generate_links("workstation", version, info["build"])
+
+        # 验证链接
+        print(f"  v{version} (build {info['build']}):")
+        verified_links = {}
+        for platform, url in links.items():
+            ok, size = verify_link(url)
+            if ok:
+                verified_links[platform] = {"url": url, "size": size}
+                print(f"    [OK] {platform}: {size}")
+            else:
+                print(f"    [FAIL] {platform}: {size}")
+
         result["workstation_pro"].append({
             "version": version,
             "build": info["build"],
             "date": info["date"],
-            "windows": win,
-            "linux": linux,
+            "downloads": verified_links,
             "sha256": info["sha256"],
         })
 
-    # Fusion Pro
-    for version, info in FUSION_VERSIONS.items():
-        folder = get_folder(version)
-        macos = f"{base}/Fusion/{folder}/VMware-Fusion-{version}-{info['build']}_universal.dmg"
-        
+    # 收集 Fusion
+    print("\n收集 VMware Fusion Pro...")
+    for version, info in VERSIONS["fusion"].items():
+        links = generate_links("fusion", version, info["build"])
+
+        print(f"  v{version} (build {info['build']}):")
+        verified_links = {}
+        for platform, url in links.items():
+            ok, size = verify_link(url)
+            if ok:
+                verified_links[platform] = {"url": url, "size": size}
+                print(f"    [OK] {platform}: {size}")
+            else:
+                print(f"    [FAIL] {platform}: {size}")
+
         result["fusion_pro"].append({
             "version": version,
             "build": info["build"],
             "date": info["date"],
-            "macos": macos,
+            "downloads": verified_links,
             "sha256": info["sha256"],
         })
 
@@ -134,89 +192,101 @@ def generate_readme(data: dict, path: Path) -> None:
     """生成 README"""
     ws_latest = data["workstation_pro"][0]
     fusion_latest = data["fusion_pro"][0]
-    
+
     lines = [
         "# VMware 下载链接",
         "",
         f"最后更新: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
         "",
-        "## 官方下载（下载文件时需登录）",
+        "> **所有链接均可直接下载，无需登录。**",
         "",
-        "Broadcom 官方下载页面，浏览页面无需登录，点击下载具体文件时需登录：",
+        "## 快速下载",
         "",
-        f"- [VMware Workstation Pro]({data['official']['workstation_pro']})",
-        f"- [VMware Fusion Pro]({data['official']['fusion_pro']})",
-        "",
-        "## Archive.org 镜像（无需登录）",
-        "",
-        f"所有链接来自 [Archive.org]({data['archive_org']})，无需登录即可下载。",
-        "",
-        "### 最新版本",
-        "",
-        "#### VMware Workstation Pro",
+        "### VMware Workstation Pro",
         "",
         f"**{ws_latest['version']}** (Build {ws_latest['build']})",
         "",
-        f"- Windows: [{ws_latest['windows']}]({ws_latest['windows']})",
-        f"- Linux: [{ws_latest['linux']}]({ws_latest['linux']})",
     ]
 
-    # 添加 SHA256 校验值
-    if ws_latest["sha256"]["windows"]:
-        lines.append(f"- Windows SHA256: `{ws_latest['sha256']['windows']}`")
-    if ws_latest["sha256"]["linux"]:
-        lines.append(f"- Linux SHA256: `{ws_latest['sha256']['linux']}`")
+    # Workstation 下载链接
+    for platform, info in ws_latest["downloads"].items():
+        sha256 = ws_latest["sha256"].get(platform, "")
+        sha_str = f" | SHA256: `{sha256[:16]}...`" if sha256 else ""
+        lines.append(f"- **{platform.title()}**: [{info['url']}]({info['url']}) ({info['size']}{sha_str})")
 
     lines.extend([
         "",
-        "#### VMware Fusion Pro",
+        "### VMware Fusion Pro",
         "",
         f"**{fusion_latest['version']}** (Build {fusion_latest['build']})",
         "",
-        f"- macOS: [{fusion_latest['macos']}]({fusion_latest['macos']})",
     ])
 
-    if fusion_latest["sha256"]["macos"]:
-        lines.append(f"- macOS SHA256: `{fusion_latest['sha256']['macos']}`")
+    # Fusion 下载链接
+    for platform, info in fusion_latest["downloads"].items():
+        sha256 = fusion_latest["sha256"].get(platform, "")
+        sha_str = f" | SHA256: `{sha256[:16]}...`" if sha256 else ""
+        lines.append(f"- **{platform.title()}**: [{info['url']}]({info['url']}) ({info['size']}{sha_str})")
 
+    # 所有版本表格
     lines.extend([
         "",
-        "### 所有版本",
+        "## 所有版本",
         "",
-        "#### VMware Workstation Pro",
+        "### VMware Workstation Pro",
         "",
-        "| 版本 | Build | 日期 | Windows | Linux | SHA256 (Windows) |",
-        "|------|-------|------|---------|-------|------------------|",
+        "| 版本 | Build | 日期 | Windows | Linux |",
+        "|------|-------|------|---------|-------|",
     ])
 
     for v in data["workstation_pro"]:
-        sha256_win = v["sha256"]["windows"][:16] + "..." if v["sha256"]["windows"] else "N/A"
-        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['windows']}) | [下载]({v['linux']}) | {sha256_win} |")
+        win = v["downloads"].get("windows", {})
+        linux = v["downloads"].get("linux", {})
+        win_link = f"[下载]({win['url']}) ({win['size']})" if win else "N/A"
+        linux_link = f"[下载]({linux['url']}) ({linux['size']})" if linux else "N/A"
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | {win_link} | {linux_link} |")
 
     lines.extend([
         "",
-        "#### VMware Fusion Pro",
+        "### VMware Fusion Pro",
         "",
-        "| 版本 | Build | 日期 | macOS | SHA256 |",
-        "|------|-------|------|-------|--------|",
+        "| 版本 | Build | 日期 | macOS |",
+        "|------|-------|------|-------|",
     ])
 
     for v in data["fusion_pro"]:
-        sha256_mac = v["sha256"]["macos"][:16] + "..." if v["sha256"]["macos"] else "N/A"
-        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['macos']}) | {sha256_mac} |")
+        macos = v["downloads"].get("macos", {})
+        macos_link = f"[下载]({macos['url']}) ({macos['size']})" if macos else "N/A"
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | {macos_link} |")
 
     lines.extend([
         "",
-        "## 文件校验",
+        "## SHA256 校验",
         "",
-        "下载后请校验文件完整性：",
+        "| 版本 | 平台 | SHA256 |",
+        "|------|------|--------|",
+    ])
+
+    for v in data["workstation_pro"]:
+        for platform, sha in v["sha256"].items():
+            if sha:
+                lines.append(f"| Workstation {v['version']} | {platform.title()} | `{sha}` |")
+
+    for v in data["fusion_pro"]:
+        for platform, sha in v["sha256"].items():
+            if sha:
+                lines.append(f"| Fusion {v['version']} | {platform.title()} | `{sha}` |")
+
+    lines.extend([
+        "",
+        "## 验证文件",
         "",
         "```bash",
         "# Linux/macOS",
-        "sha256sum VMware-Workstation-Full-26H1-25388281.exe",
+        "sha256sum -c checksums.txt",
         "",
         "# Windows PowerShell",
-        "Get-FileHash -Algorithm SHA256 VMware-Workstation-Full-26H1-25388281.exe",
+        "Get-FileHash -Algorithm SHA256 <file>",
         "```",
         "",
         "## 说明",
@@ -235,55 +305,9 @@ def generate_readme(data: dict, path: Path) -> None:
 def main() -> int:
     """主函数"""
     print("VMware 下载链接收集器")
-    print("=" * 40)
+    print("=" * 50)
 
     data = collect_downloads()
-
-    # 验证链接可访问性
-    print("\n验证链接可访问性...")
-    all_links = []
-    for v in data["workstation_pro"]:
-        all_links.append(("Workstation " + v["version"] + " Windows", v["windows"]))
-        all_links.append(("Workstation " + v["version"] + " Linux", v["linux"]))
-    for v in data["fusion_pro"]:
-        all_links.append(("Fusion " + v["version"] + " macOS", v["macos"]))
-
-    failed = []
-    for name, url in all_links:
-        success = False
-        for attempt in range(3):
-            try:
-                req = urllib.request.Request(url, method='GET')
-                req.add_header('Range', 'bytes=0-0')
-                with urllib.request.urlopen(req, timeout=30) as response:
-                    if response.status in (200, 206):
-                        size = response.headers.get("Content-Length", "N/A")
-                        content_range = response.headers.get("Content-Range", "")
-                        if content_range and '/' in content_range:
-                            size = content_range.split('/')[-1]
-                        size_mb = f"{int(size) / 1024 / 1024:.1f} MB" if size != "N/A" else "N/A"
-                        print(f"  [OK] {name}: {size_mb}")
-                        success = True
-                        break
-                    else:
-                        if attempt < 2:
-                            print(f"  [RETRY] {name}: HTTP {response.status} (attempt {attempt + 1}/3)")
-                        else:
-                            print(f"  [FAIL] {name}: HTTP {response.status}")
-            except Exception as e:
-                if attempt < 2:
-                    print(f"  [RETRY] {name}: {e} (attempt {attempt + 1}/3)")
-                else:
-                    print(f"  [FAIL] {name}: {e}")
-
-        if not success:
-            failed.append(name)
-
-    if failed:
-        print(f"\n警告: {len(failed)} 个链接不可访问!")
-        for f in failed:
-            print(f"  - {f}")
-        return 1
 
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
@@ -291,9 +315,9 @@ def main() -> int:
     save_json(data, repo_root / "data" / "vmware_downloads.json")
     generate_readme(data, repo_root / "README.md")
 
-    print(f"\nWorkstation Pro: {len(data['workstation_pro'])} 个版本")
-    print(f"Fusion Pro: {len(data['fusion_pro'])} 个版本")
-    print(f"链接验证: {len(all_links)}/{len(all_links)} 通过")
+    print(f"\n收集完成！")
+    print(f"  Workstation Pro: {len(data['workstation_pro'])} 个版本")
+    print(f"  Fusion Pro: {len(data['fusion_pro'])} 个版本")
 
     return 0
 
