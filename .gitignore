@@ -7,6 +7,9 @@ __pycache__/
 venv/
 env/
 
+# Environment variables
+.env
+
 # Data files (generated)
 data/*.json
 
