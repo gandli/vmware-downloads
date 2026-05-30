@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 VMware Link Collector
 从 Broadcom 官方获取 SHA256，从 Archive.org 获取直链
@@ -288,35 +288,12 @@ def generate_readme(data: dict, path: Path) -> None:
     # 所有版本表格（包含完整 SHA256）
     lines.extend([
         "",
-        "## 官方下载（需要登录）",
+        "## 所有版本",
         "",
-        "也可以从 Broadcom 官网下载最新版本：",
+        "### VMware Workstation Pro",
         "",
-        "1. 打开博通官网：https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
-        "2. 注册或登录账号",
-        "3. 选择版本和平台",
-        "4. 同意条款后下载",
-        "",
-        "## 免费使用说明",
-        "",
-        "- **2024年5月14日**（版本 17.5.2 起）：VMware Workstation Pro 免费供**个人用户**使用",
-        "- **2024年11月11日**（版本 17.6.2 起）：VMware Workstation Pro 免费供**所有用户**（个人、教育、商业）使用",
-        "",
-        "> 详情请参考：",
-        "> - [VMware Desktop Hypervisor Pro Apps Now Available for Personal Use](https://blogs.vmware.com/cloud-foundation/2024/05/14/vmware-desktop-hypervisor-pro-apps-now-available-for-personal-use/)",
-        "> - [VMware Fusion and Workstation are Now Free for All Users](https://blogs.vmware.com/cloud-foundation/2024/11/11/vmware-fusion-and-workstation-are-now-free-for-all-users/)",
-        "",
-        "## 系统兼容性",
-        "",
-        "| 操作系统 | 最终支持版本 |",
-        "|----------|-------------|",
-        "| Windows 7 | VMware Workstation 15.5.7 |",
-        "| Windows XP / 32位系统 | VMware Workstation 10.0.7 |",
-        "",
-        "## 说明",
-        "",
-        "- 下载后可直接安装，无需许可证密钥",
-        "- 安装时选择「个人使用」即可",
+        "| 版本 | Build | 日期 | Windows | Windows SHA256 | Linux | Linux SHA256 |",
+        "|------|-------|------|---------|----------------|-------|--------------|",
     ])
 
     for v in data["workstation_pro"]:
@@ -347,6 +324,31 @@ def generate_readme(data: dict, path: Path) -> None:
 
     lines.extend([
         "",
+        "## 官方下载（需要登录）",
+        "",
+        "也可以从 Broadcom 官网下载最新版本：",
+        "",
+        "1. 打开博通官网：https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
+        "2. 注册或登录账号",
+        "3. 选择版本和平台",
+        "4. 同意条款后下载",
+        "",
+        "## 免费使用说明",
+        "",
+        "- **2024年5月14日**（版本 17.5.2 起）：VMware Workstation Pro 免费供**个人用户**使用",
+        "- **2024年11月11日**（版本 17.6.2 起）：VMware Workstation Pro 免费供**所有用户**（个人、教育、商业）使用",
+        "",
+        "> 详情请参考：",
+        "> - [VMware Desktop Hypervisor Pro Apps Now Available for Personal Use](https://blogs.vmware.com/cloud-foundation/2024/05/14/vmware-desktop-hypervisor-pro-apps-now-available-for-personal-use/)",
+        "> - [VMware Fusion and Workstation are Now Free for All Users](https://blogs.vmware.com/cloud-foundation/2024/11/11/vmware-fusion-and-workstation-are-now-free-for-all-users/)",
+        "",
+        "## 系统兼容性",
+        "",
+        "| 操作系统 | 最终支持版本 |",
+        "|----------|-------------|",
+        "| Windows 7 | VMware Workstation 15.5.7 |",
+        "| Windows XP / 32位系统 | VMware Workstation 10.0.7 |",
+        "",
         "## 验证文件",
         "",
         "```bash",
@@ -356,6 +358,11 @@ def generate_readme(data: dict, path: Path) -> None:
         "# Windows PowerShell",
         "Get-FileHash -Algorithm SHA256 <file>",
         "```",
+        "",
+        "## 说明",
+        "",
+        "- 下载后可直接安装，无需许可证密钥",
+        "- 安装时选择「个人使用」即可",
     ])
 
     path.parent.mkdir(parents=True, exist_ok=True)
