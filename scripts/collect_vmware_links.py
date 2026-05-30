@@ -94,7 +94,7 @@ def collect_downloads() -> dict:
             linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
         else:
             win = f"{base}/{folder}/VMware-workstation-full-{version}-{info['build']}.exe"
-            linux = f"{base}/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
+            linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
         
         result["workstation_pro"].append({
             "version": version,
