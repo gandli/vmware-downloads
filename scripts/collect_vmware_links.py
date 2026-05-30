@@ -59,9 +59,10 @@ def generate_workstation_downloads(version: str, build: str) -> dict:
     archive_base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
 
     # Archive.org 链接
+    # 注意：新版本（25H2+, 26H1）的 Linux 版本在 Linux/ 子目录下
     if version.startswith("25H") or version.startswith("26H"):
         archive_windows = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.exe"
-        archive_linux = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
+        archive_linux = f"{archive_base}/Linux/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
     else:
         archive_windows = f"{archive_base}/{folder}/VMware-workstation-full-{version}-{build}.exe"
         archive_linux = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
