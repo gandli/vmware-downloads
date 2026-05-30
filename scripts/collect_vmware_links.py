@@ -20,7 +20,12 @@ BROADCOM_URLS = {
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true",
 }
 
-# 版本信息（从 Broadcom 官方和社区获取的 SHA256）
+# 版本信息
+# SHA256 来源：
+# - Broadcom 官方下载页面（通过浏览器获取）
+# - Chocolatey 包管理器 (community.chocolatey.org)
+# - GitHub 社区 (201853910/VMwareWorkstation)
+# - TechPowerUp 下载页面
 VERSIONS = {
     "workstation": {
         "26H1": {
