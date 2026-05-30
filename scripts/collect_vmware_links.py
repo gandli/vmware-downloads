@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 VMware Download Link Collector
-收集 VMware 产品的直链下载地址（无需登录）
-使用 Archive.org 镜像作为主要来源
+收集 VMware 产品的下载地址
+使用 Cloudflare CDN 缓存和 Archive.org 作为来源
 """
 
 import json
@@ -12,6 +12,10 @@ from pathlib import Path
 
 # Archive.org 集合地址
 ARCHIVE_ORG_COLLECTION = "vmwareworkstationarchive"
+
+# Broadcom CDN 配置（通过 Cloudflare 缓存访问）
+BROADCOM_CDN_BASE = "https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/"
+CLOUDFLARE_CDN_HOST = "softwareupdate-prod.broadcom.com.cdn.cloudflare.net"
 
 # VMware Workstation 版本和 Build 号对照表
 WORKSTATION_VERSIONS = {
@@ -42,7 +46,6 @@ FUSION_VERSIONS = {
 def get_archive_org_folder(version: str) -> str:
     """获取 Archive.org 文件夹名"""
     if version.startswith("25H") or version.startswith("26H"):
-        # 25H2u1 -> 25H2, 26H1 -> 26H1
         if "u" in version:
             return version.split("u")[0]
         return version
@@ -53,32 +56,51 @@ def get_archive_org_folder(version: str) -> str:
 def generate_workstation_downloads(version: str, build: str) -> dict:
     """生成 Workstation 下载链接"""
     folder = get_archive_org_folder(version)
-    base_url = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
+    archive_base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
 
-    # 新版本格式（25H2+）使用不同文件名
+    # Archive.org 链接
     if version.startswith("25H") or version.startswith("26H"):
-        windows_url = f"{base_url}/{folder}/VMware-Workstation-Full-{version}-{build}.exe"
-        linux_url = f"{base_url}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
+        archive_windows = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.exe"
+        archive_linux = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
     else:
-        windows_url = f"{base_url}/{folder}/VMware-workstation-full-{version}-{build}.exe"
-        linux_url = f"{base_url}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
+        archive_windows = f"{archive_base}/{folder}/VMware-workstation-full-{version}-{build}.exe"
+        archive_linux = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
+
+    # Broadcom CDN 链接（需要通过 Cloudflare 缓存访问）
+    cdn_windows = f"{BROADCOM_CDN_BASE}ws/{version}/{build}/windows/core/VMware-workstation-{version}-{build}.exe.tar"
+    cdn_linux = f"{BROADCOM_CDN_BASE}ws/{version}/{build}/linux/core/VMware-Workstation-{version}-{build}.x86_64.bundle.tar"
 
     return {
-        "windows": windows_url,
-        "linux": linux_url,
+        "archive_org": {
+            "windows": archive_windows,
+            "linux": archive_linux,
+        },
+        "broadcom_cdn": {
+            "windows": cdn_windows,
+            "linux": cdn_linux,
+        },
+        "techpowerup": "https://www.techpowerup.com/download/vmware-workstation-pro/",
     }
 
 
 def generate_fusion_downloads(version: str, build: str) -> dict:
     """生成 Fusion 下载链接"""
     folder = get_archive_org_folder(version)
-    base_url = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
+    archive_base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
 
-    # Fusion 使用 universal.dmg
-    macos_url = f"{base_url}/Fusion/{folder}/VMware-Fusion-{version}-{build}_universal.dmg"
+    archive_macos = f"{archive_base}/Fusion/{folder}/VMware-Fusion-{version}-{build}_universal.dmg"
+
+    # Broadcom CDN 链接
+    cdn_macos = f"{BROADCOM_CDN_BASE}fusion/{version}/{build}/universal/core/com.vmware.fusion.zip.tar"
 
     return {
-        "macos": macos_url,
+        "archive_org": {
+            "macos": archive_macos,
+        },
+        "broadcom_cdn": {
+            "macos": cdn_macos,
+        },
+        "techpowerup": "https://www.techpowerup.com/download/vmware-fusion/",
     }
 
 
@@ -86,8 +108,11 @@ def collect_vmware_downloads() -> dict:
     """收集 VMware 下载链接"""
     result = {
         "collected_at": datetime.utcnow().isoformat(),
-        "source": "Archive.org (无需登录)",
-        "collection_url": f"https://archive.org/details/{ARCHIVE_ORG_COLLECTION}",
+        "sources": {
+            "broadcom_cdn": "Broadcom 官方 CDN（通过 Cloudflare 缓存访问）",
+            "archive_org": "Archive.org 社区镜像（无需登录）",
+            "techpowerup": "TechPowerUp 第三方下载站点",
+        },
         "products": {
             "workstation-pro": {
                 "name": "VMware Workstation Pro",
@@ -146,40 +171,90 @@ def save_to_json(data: dict, output_path: Path) -> None:
 def generate_readme(data: dict, readme_path: Path) -> None:
     """生成 README.md"""
     lines = [
-        "# VMware 下载链接（无需登录）",
+        "# VMware 下载链接",
         "",
         f"最后更新: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
         "",
-        "> **所有链接均可直接下载，无需注册或登录任何账号。**",
+        "> **VMware Workstation Pro 和 Fusion Pro 对所有用户免费。**",
         "",
-        "## 快速下载",
+        "## 下载方式",
         "",
-        "### VMware Workstation Pro（最新版本）",
+        "### 方式一：Broadcom 官方 CDN（推荐）",
+        "",
+        "Broadcom 官方 CDN 通过 Cloudflare 缓存提供，下载速度最快。",
+        "",
+        "**使用方法（Linux/macOS）：**",
+        "",
+        "```bash",
+        "# 下载 Workstation Pro（Windows）",
+        f"curl -L --connect-to softwareupdate-prod.broadcom.com:443:{CLOUDFLARE_CDN_HOST}:443 \\",
+        "  -o VMware-Workstation.exe.tar \\",
+        f"  \"{BROADCOM_CDN_BASE}ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar\"",
+        "",
+        "# 解压 .tar 文件获得 .exe 安装包",
+        "tar -xf VMware-Workstation.exe.tar",
+        "",
+        "# 下载 Workstation Pro（Linux）",
+        f"curl -L --connect-to softwareupdate-prod.broadcom.com:443:{CLOUDFLARE_CDN_HOST}:443 \\",
+        "  -o VMware-Workstation.bundle.tar \\",
+        f"  \"{BROADCOM_CDN_BASE}ws/26H1/25388281/linux/core/VMware-Workstation-26H1-25388281.x86_64.bundle.tar\"",
+        "",
+        "# 解压",
+        "tar -xf VMware-Workstation.bundle.tar",
+        "```",
+        "",
+        "**使用方法（Windows PowerShell）：**",
+        "",
+        "```powershell",
+        "# 修改 hosts 文件（需要管理员权限）",
+        "# 在 C:\\Windows\\System32\\drivers\\etc\\hosts 添加：",
+        "# softwareupdate-prod.broadcom.com.cdn.cloudflare.net softwareupdate-prod.broadcom.com",
+        "",
+        "# 然后直接下载",
+        f"Invoke-WebRequest -Uri \"{BROADCOM_CDN_BASE}ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar\" -OutFile VMware-Workstation.tar",
+        "",
+        "# 解压",
+        "tar -xf VMware-Workstation.tar",
+        "```",
+        "",
+        "### 方式二：TechPowerUp",
+        "",
+        "TechPowerUp 是可靠的第三方下载站点。",
+        "",
+        "- [VMware Workstation Pro 下载页面](https://www.techpowerup.com/download/vmware-workstation-pro/)",
+        "- [VMware Fusion Pro 下载页面](https://www.techpowerup.com/download/vmware-fusion/)",
+        "",
+        "### 方式三：Archive.org 镜像",
+        "",
+        "Archive.org 提供历史版本的镜像，无需登录。",
+        "",
+        f"- [VMware 镜像集合](https://archive.org/details/{ARCHIVE_ORG_COLLECTION})",
         "",
     ]
 
-    # 获取最新版本
+    # 最新版本快速下载
     latest_ws = data["products"]["workstation-pro"]["versions"][0]
+    latest_fusion = data["products"]["fusion-pro"]["versions"][0]
+
     lines.extend([
+        "## 最新版本",
+        "",
+        "### VMware Workstation Pro",
+        "",
         f"**版本 {latest_ws['version']}** (Build {latest_ws['build']})",
         "",
-        "| 平台 | 下载链接 |",
-        "|------|----------|",
-        f"| Windows | [直接下载]({latest_ws['downloads']['windows']}) |",
-        f"| Linux | [直接下载]({latest_ws['downloads']['linux']}) |",
+        "| 平台 | Broadcom CDN | Archive.org |",
+        "|------|--------------|-------------|",
+        f"| Windows | [CDN]({latest_ws['downloads']['broadcom_cdn']['windows']}) | [下载]({latest_ws['downloads']['archive_org']['windows']}) |",
+        f"| Linux | [CDN]({latest_ws['downloads']['broadcom_cdn']['linux']}) | [下载]({latest_ws['downloads']['archive_org']['linux']}) |",
         "",
-    ])
-
-    # Fusion
-    latest_fusion = data["products"]["fusion-pro"]["versions"][0]
-    lines.extend([
-        "### VMware Fusion Pro（最新版本）",
+        "### VMware Fusion Pro",
         "",
         f"**版本 {latest_fusion['version']}** (Build {latest_fusion['build']})",
         "",
-        "| 平台 | 下载链接 |",
-        "|------|----------|",
-        f"| macOS | [直接下载]({latest_fusion['downloads']['macos']}) |",
+        "| 平台 | Broadcom CDN | Archive.org |",
+        "|------|--------------|-------------|",
+        f"| macOS | [CDN]({latest_fusion['downloads']['broadcom_cdn']['macos']}) | [下载]({latest_fusion['downloads']['archive_org']['macos']}) |",
         "",
     ])
 
@@ -189,40 +264,58 @@ def generate_readme(data: dict, readme_path: Path) -> None:
         "",
         "### VMware Workstation Pro",
         "",
-        "| 版本 | Build | 发布日期 | Windows | Linux |",
-        "|------|-------|----------|---------|-------|",
+        "| 版本 | Build | 发布日期 | Windows (CDN) | Linux (CDN) | Windows (Archive) | Linux (Archive) |",
+        "|------|-------|----------|---------------|-------------|-------------------|-----------------|",
     ])
 
     for v in data["products"]["workstation-pro"]["versions"]:
         lines.append(
             f"| {v['version']} | {v['build']} | {v['release_date']} | "
-            f"[下载]({v['downloads']['windows']}) | "
-            f"[下载]({v['downloads']['linux']}) |"
+            f"[CDN]({v['downloads']['broadcom_cdn']['windows']}) | "
+            f"[CDN]({v['downloads']['broadcom_cdn']['linux']}) | "
+            f"[下载]({v['downloads']['archive_org']['windows']}) | "
+            f"[下载]({v['downloads']['archive_org']['linux']}) |"
         )
 
     lines.extend([
         "",
         "### VMware Fusion Pro",
         "",
-        "| 版本 | Build | 发布日期 | macOS |",
-        "|------|-------|----------|-------|",
+        "| 版本 | Build | 发布日期 | macOS (CDN) | macOS (Archive) |",
+        "|------|-------|----------|-------------|-----------------|",
     ])
 
     for v in data["products"]["fusion-pro"]["versions"]:
         lines.append(
             f"| {v['version']} | {v['build']} | {v['release_date']} | "
-            f"[下载]({v['downloads']['macos']}) |"
+            f"[CDN]({v['downloads']['broadcom_cdn']['macos']}) | "
+            f"[下载]({v['downloads']['archive_org']['macos']}) |"
         )
 
     lines.extend([
         "",
-        "## 数据来源",
+        "## CDN 访问说明",
         "",
-        "本项目使用 [Archive.org](https://archive.org) 的 VMware 镜像作为主要来源。",
+        "Broadcom 官方 CDN (`softwareupdate-prod.broadcom.com`) 的 DNS 已被移除，",
+        "但可以通过 Cloudflare 边缘缓存访问：",
         "",
-        f"- **Archive.org 集合**: [{ARCHIVE_ORG_COLLECTION}](https://archive.org/details/{ARCHIVE_ORG_COLLECTION})",
-        "- **维护者**: TheLightDeveloper",
-        "- **覆盖范围**: Workstation 2.x - 26H1, Fusion 8.x - 26H1",
+        "### Linux/macOS",
+        "",
+        "使用 `curl --connect-to` 参数：",
+        "",
+        "```bash",
+        f"curl --connect-to softwareupdate-prod.broadcom.com:443:{CLOUDFLARE_CDN_HOST}:443 <URL>",
+        "```",
+        "",
+        "### Windows",
+        "",
+        "修改 `C:\\Windows\\System32\\drivers\\etc\\hosts` 文件，添加：",
+        "",
+        "```",
+        f"{CLOUDFLARE_CDN_HOST} softwareupdate-prod.broadcom.com",
+        "```",
+        "",
+        "然后直接使用 CDN 链接下载。",
         "",
         "## VMware Tools",
         "",
@@ -232,11 +325,6 @@ def generate_readme(data: dict, readme_path: Path) -> None:
         "## 许可证",
         "",
         "自 2024 年 11 月起，VMware Workstation Pro 和 Fusion Pro 对所有用户（个人、教育、商业）免费。",
-        "",
-        "## 相关项目",
-        "",
-        "- [moonheart/vmware-index](https://github.com/moonheart/vmware-index) - VMware 下载索引",
-        "- [201853910/VMwareWorkstation](https://github.com/201853910/VMwareWorkstation) - GitHub 镜像",
         "",
         "## License",
         "",
@@ -251,7 +339,7 @@ def generate_readme(data: dict, readme_path: Path) -> None:
 
 def main() -> int:
     """主函数"""
-    print("VMware 下载链接收集器（无需登录版）")
+    print("VMware 下载链接收集器")
     print("=" * 50)
 
     # 收集下载链接
@@ -272,8 +360,10 @@ def main() -> int:
     print("收集完成！")
     print(f"  Workstation Pro: {len(data['products']['workstation-pro']['versions'])} 个版本")
     print(f"  Fusion Pro: {len(data['products']['fusion-pro']['versions'])} 个版本")
-    print(f"\n数据来源: Archive.org (无需登录)")
-    print(f"集合地址: https://archive.org/details/{ARCHIVE_ORG_COLLECTION}")
+    print("\n下载来源:")
+    print("  - Broadcom CDN: 官方 CDN（通过 Cloudflare 缓存访问）")
+    print("  - Archive.org: 社区维护的镜像（无需登录）")
+    print("  - TechPowerUp: 第三方下载站点")
 
     return 0
 
