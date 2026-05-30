@@ -1,27 +1,36 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 05:02 UTC
+最后更新: 2026-05-30 05:12 UTC
 
-> 所有链接来自 [Archive.org](https://archive.org)，无需登录即可下载。
+## 官方下载（需要登录）
 
-## 最新版本
+Broadcom 官方下载页面，需要注册或登录账号：
 
-### VMware Workstation Pro
+- [VMware Workstation Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true)
+- [VMware Fusion Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true)
+
+## Archive.org 镜像（无需登录）
+
+所有链接来自 [Archive.org](https://archive.org/details/vmwareworkstationarchive)，无需登录即可下载。
+
+### 最新版本
+
+#### VMware Workstation Pro
 
 **26H1** (Build 25388281)
 
 - Windows: [https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe)
 - Linux: [https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle)
 
-### VMware Fusion Pro
+#### VMware Fusion Pro
 
 **26H1** (Build 25388279)
 
 - macOS: [https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg)
 
-## 所有版本
+### 所有版本
 
-### VMware Workstation Pro
+#### VMware Workstation Pro
 
 | 版本 | Build | 日期 | Windows | Linux |
 |------|-------|------|---------|-------|
@@ -35,7 +44,7 @@
 | 17.6.0 | 24238078 | 2024-08-28 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.0-24238078.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.0-24238078.x86_64.bundle) |
 | 17.5.2 | 23775571 | 2024-05-10 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.2-23775571.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle) |
 
-### VMware Fusion Pro
+#### VMware Fusion Pro
 
 | 版本 | Build | 日期 | macOS |
 |------|-------|------|-------|

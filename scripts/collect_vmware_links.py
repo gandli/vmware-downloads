@@ -2,7 +2,6 @@
 """
 VMware Download Link Collector
 收集 VMware Workstation Pro 和 Fusion Pro 的下载链接
-使用 Archive.org 作为来源（可靠，无需登录）
 """
 
 import json
@@ -12,6 +11,12 @@ from pathlib import Path
 
 # Archive.org 集合地址
 ARCHIVE_ORG_COLLECTION = "vmwareworkstationarchive"
+
+# Broadcom 官方下载页面
+BROADCOM_URLS = {
+    "workstation_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
+    "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true",
+}
 
 # VMware Workstation Pro 版本
 WORKSTATION_VERSIONS = {
@@ -54,7 +59,8 @@ def collect_downloads() -> dict:
     
     result = {
         "collected_at": datetime.utcnow().isoformat(),
-        "source": f"https://archive.org/details/{ARCHIVE_ORG_COLLECTION}",
+        "official": BROADCOM_URLS,
+        "archive_org": f"https://archive.org/details/{ARCHIVE_ORG_COLLECTION}",
         "workstation_pro": [],
         "fusion_pro": [],
     }
@@ -110,26 +116,35 @@ def generate_readme(data: dict, path: Path) -> None:
         "",
         f"最后更新: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
         "",
-        "> 所有链接来自 [Archive.org](https://archive.org)，无需登录即可下载。",
+        "## 官方下载（需要登录）",
         "",
-        "## 最新版本",
+        "Broadcom 官方下载页面，需要注册或登录账号：",
         "",
-        "### VMware Workstation Pro",
+        f"- [VMware Workstation Pro]({data['official']['workstation_pro']})",
+        f"- [VMware Fusion Pro]({data['official']['fusion_pro']})",
+        "",
+        "## Archive.org 镜像（无需登录）",
+        "",
+        f"所有链接来自 [Archive.org]({data['archive_org']})，无需登录即可下载。",
+        "",
+        "### 最新版本",
+        "",
+        "#### VMware Workstation Pro",
         "",
         f"**{ws_latest['version']}** (Build {ws_latest['build']})",
         "",
         f"- Windows: [{ws_latest['windows']}]({ws_latest['windows']})",
         f"- Linux: [{ws_latest['linux']}]({ws_latest['linux']})",
         "",
-        "### VMware Fusion Pro",
+        "#### VMware Fusion Pro",
         "",
         f"**{fusion_latest['version']}** (Build {fusion_latest['build']})",
         "",
         f"- macOS: [{fusion_latest['macos']}]({fusion_latest['macos']})",
         "",
-        "## 所有版本",
+        "### 所有版本",
         "",
-        "### VMware Workstation Pro",
+        "#### VMware Workstation Pro",
         "",
         "| 版本 | Build | 日期 | Windows | Linux |",
         "|------|-------|------|---------|-------|",
@@ -140,7 +155,7 @@ def generate_readme(data: dict, path: Path) -> None:
 
     lines.extend([
         "",
-        "### VMware Fusion Pro",
+        "#### VMware Fusion Pro",
         "",
         "| 版本 | Build | 日期 | macOS |",
         "|------|-------|------|-------|",
