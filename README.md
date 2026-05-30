@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 05:02 UTC
+最后更新: 2026-05-30 05:10 UTC
 
 > 所有链接来自 [Archive.org](https://archive.org)，无需登录即可下载。
 
