@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 VMware Download Link Collector
-收集 VMware 产品的下载地址，支持 SHA 校验和 aria2 下载
-使用 Archive.org 作为首选来源（可靠，无需登录）
+收集 VMware Workstation Pro 和 Fusion Pro 的下载链接
+使用 Archive.org 作为来源（可靠，无需登录）
 """
 
 import json
@@ -13,7 +13,7 @@ from pathlib import Path
 # Archive.org 集合地址
 ARCHIVE_ORG_COLLECTION = "vmwareworkstationarchive"
 
-# VMware Workstation 版本和 Build 号对照表
+# VMware Workstation Pro 版本
 WORKSTATION_VERSIONS = {
     "26H1": {"build": "25388281", "date": "2026-04-15"},
     "25H2u1": {"build": "25219725", "date": "2026-02-26"},
@@ -26,7 +26,7 @@ WORKSTATION_VERSIONS = {
     "17.5.2": {"build": "23775571", "date": "2024-05-10"},
 }
 
-# VMware Fusion 版本信息
+# VMware Fusion Pro 版本
 FUSION_VERSIONS = {
     "26H1": {"build": "25388279", "date": "2026-04-15"},
     "25H2u1": {"build": "25219963", "date": "2026-02-26"},
@@ -39,488 +39,146 @@ FUSION_VERSIONS = {
 }
 
 
-def get_archive_org_folder(version: str) -> str:
+def get_folder(version: str) -> str:
     """获取 Archive.org 文件夹名"""
     if version.startswith("25H") or version.startswith("26H"):
         if "u" in version:
             return version.split("u")[0]
         return version
-    major = version.split(".")[0]
-    return f"{major}.x"
+    return f"{version.split('.')[0]}.x"
 
 
-def generate_workstation_downloads(version: str, build: str) -> dict:
-    """生成 Workstation 下载链接"""
-    folder = get_archive_org_folder(version)
-    archive_base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
-
-    # Archive.org 链接（首选，可靠）
-    if version.startswith("25H") or version.startswith("26H"):
-        archive_windows = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.exe"
-        archive_linux = f"{archive_base}/Linux/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
-    else:
-        archive_windows = f"{archive_base}/{folder}/VMware-workstation-full-{version}-{build}.exe"
-        archive_linux = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
-
-    return {
-        "archive_org": {
-            "windows": archive_windows,
-            "linux": archive_linux,
-        },
-        "techpowerup": "https://www.techpowerup.com/download/vmware-workstation-pro/",
-    }
-
-
-def generate_fusion_downloads(version: str, build: str) -> dict:
-    """生成 Fusion 下载链接"""
-    folder = get_archive_org_folder(version)
-    archive_base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
-
-    archive_macos = f"{archive_base}/Fusion/{folder}/VMware-Fusion-{version}-{build}_universal.dmg"
-
-    return {
-        "archive_org": {
-            "macos": archive_macos,
-        },
-        "techpowerup": "https://www.techpowerup.com/download/vmware-fusion/",
-    }
-
-
-def collect_vmware_downloads() -> dict:
-    """收集 VMware 下载链接"""
+def collect_downloads() -> dict:
+    """收集下载链接"""
+    base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
+    
     result = {
         "collected_at": datetime.utcnow().isoformat(),
-        "sources": {
-            "archive_org": {
-                "name": "Archive.org（推荐）",
-                "note": "可靠，无需登录，社区维护",
-                "url": f"https://archive.org/details/{ARCHIVE_ORG_COLLECTION}",
-            },
-            "techpowerup": {
-                "name": "TechPowerUp",
-                "note": "可靠的第三方下载站点",
-            },
-        },
-        "products": {
-            "workstation-pro": {
-                "name": "VMware Workstation Pro",
-                "platforms": ["Windows", "Linux"],
-                "description": "行业标准的桌面虚拟化软件",
-                "license": "免费（个人和商业使用）",
-                "versions": [],
-            },
-            "fusion-pro": {
-                "name": "VMware Fusion Pro",
-                "platforms": ["macOS"],
-                "description": "macOS 上的专业虚拟化软件",
-                "license": "免费（个人和商业使用）",
-                "versions": [],
-            },
-        },
+        "source": f"https://archive.org/details/{ARCHIVE_ORG_COLLECTION}",
+        "workstation_pro": [],
+        "fusion_pro": [],
     }
 
-    # 收集 Workstation 版本
-    print("正在收集 VMware Workstation Pro 下载链接...")
+    # Workstation Pro
     for version, info in WORKSTATION_VERSIONS.items():
-        links = generate_workstation_downloads(version, info["build"])
-        version_info = {
+        folder = get_folder(version)
+        if version.startswith("25H") or version.startswith("26H"):
+            win = f"{base}/{folder}/VMware-Workstation-Full-{version}-{info['build']}.exe"
+            linux = f"{base}/Linux/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
+        else:
+            win = f"{base}/{folder}/VMware-workstation-full-{version}-{info['build']}.exe"
+            linux = f"{base}/{folder}/VMware-Workstation-Full-{version}-{info['build']}.x86_64.bundle"
+        
+        result["workstation_pro"].append({
             "version": version,
             "build": info["build"],
-            "release_date": info["date"],
-            "downloads": links,
-        }
-        result["products"]["workstation-pro"]["versions"].append(version_info)
-        print(f"  v{version} (build {info['build']})")
+            "date": info["date"],
+            "windows": win,
+            "linux": linux,
+        })
 
-    # 收集 Fusion 版本
-    print("正在收集 VMware Fusion Pro 下载链接...")
+    # Fusion Pro
     for version, info in FUSION_VERSIONS.items():
-        links = generate_fusion_downloads(version, info["build"])
-        version_info = {
+        folder = get_folder(version)
+        macos = f"{base}/Fusion/{folder}/VMware-Fusion-{version}-{info['build']}_universal.dmg"
+        
+        result["fusion_pro"].append({
             "version": version,
             "build": info["build"],
-            "release_date": info["date"],
-            "downloads": links,
-        }
-        result["products"]["fusion-pro"]["versions"].append(version_info)
-        print(f"  v{version} (build {info['build']})")
+            "date": info["date"],
+            "macos": macos,
+        })
 
     return result
 
 
-def save_to_json(data: dict, output_path: Path) -> None:
-    """保存到 JSON 文件"""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
+def save_json(data: dict, path: Path) -> None:
+    """保存 JSON"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"已保存 JSON 到 {output_path}")
+    print(f"已保存: {path}")
 
 
-def generate_aria2_configs(data: dict, output_dir: Path) -> None:
-    """生成 aria2 下载配置文件"""
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # 生成 Workstation Pro aria2 文件
-    ws_aria2_lines = []
-    for v in data["products"]["workstation-pro"]["versions"]:
-        ws_aria2_lines.append(f"# VMware Workstation Pro v{v['version']} (build {v['build']})")
-        ws_aria2_lines.append(v["downloads"]["archive_org"]["windows"])
-        ws_aria2_lines.append(f"  out=VMware-Workstation-{v['version']}-Windows.exe")
-        ws_aria2_lines.append("")
-        ws_aria2_lines.append(v["downloads"]["archive_org"]["linux"])
-        ws_aria2_lines.append(f"  out=VMware-Workstation-{v['version']}-Linux.bundle")
-        ws_aria2_lines.append("")
-
-    ws_aria2_path = output_dir / "vmware-workstation-pro.aria2"
-    with open(ws_aria2_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(ws_aria2_lines))
-    print(f"已生成 Workstation aria2 配置: {ws_aria2_path}")
-
-    # 生成 Fusion Pro aria2 文件
-    fusion_aria2_lines = []
-    for v in data["products"]["fusion-pro"]["versions"]:
-        fusion_aria2_lines.append(f"# VMware Fusion Pro v{v['version']} (build {v['build']})")
-        fusion_aria2_lines.append(v["downloads"]["archive_org"]["macos"])
-        fusion_aria2_lines.append(f"  out=VMware-Fusion-{v['version']}-macOS.dmg")
-        fusion_aria2_lines.append("")
-
-    fusion_aria2_path = output_dir / "vmware-fusion-pro.aria2"
-    with open(fusion_aria2_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(fusion_aria2_lines))
-    print(f"已生成 Fusion aria2 配置: {fusion_aria2_path}")
-
-
-def generate_download_scripts(data: dict, output_dir: Path) -> None:
-    """生成下载脚本"""
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Linux/macOS 下载脚本
-    sh_lines = [
-        "#!/bin/bash",
-        "# VMware 下载脚本（使用 aria2）",
-        "",
-        "# 检查 aria2 是否安装",
-        "if ! command -v aria2c &> /dev/null; then",
-        '    echo "错误: 未安装 aria2"',
-        '    echo "请先安装 aria2:"',
-        '    echo "  macOS: brew install aria2"',
-        '    echo "  Ubuntu/Debian: sudo apt install aria2"',
-        '    echo "  Windows: scoop install aria2 或 choco install aria2"',
-        "    exit 1",
-        "fi",
-        "",
-        "# 下载目录",
-        'DOWNLOAD_DIR="./vmware-downloads"',
-        'mkdir -p "$DOWNLOAD_DIR"',
-        "",
-        "# 使用 aria2 下载",
-        'echo "开始下载 VMware 产品..."',
-        'aria2c --dir="$DOWNLOAD_DIR" --file-allocation=none \\',
-        "  --connect-timeout=30 --retry-wait=5 --max-tries=3 \\",
-        "  -i vmware-workstation-pro.aria2",
-        "",
-        'echo "下载完成！"',
-    ]
-
-    sh_path = output_dir / "download.sh"
-    with open(sh_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(sh_lines))
-    print(f"已生成下载脚本: {sh_path}")
-
-    # Windows PowerShell 下载脚本
-    ps1_lines = [
-        "# VMware 下载脚本（使用 aria2）",
-        "",
-        "# 检查 aria2 是否安装",
-        "if (-not (Get-Command aria2c -ErrorAction SilentlyContinue)) {",
-        '    Write-Error "错误: 未安装 aria2"',
-        '    Write-Host "请先安装 aria2:"',
-        '    Write-Host "  scoop install aria2"',
-        '    Write-Host "  choco install aria2"',
-        '    Write-Host "  winget install aria2"',
-        "    exit 1",
-        "}",
-        "",
-        "# 下载目录",
-        '$DOWNLOAD_DIR = ".\\vmware-downloads"',
-        "New-Item -ItemType Directory -Force -Path $DOWNLOAD_DIR | Out-Null",
-        "",
-        "# 使用 aria2 下载",
-        'Write-Host "开始下载 VMware 产品..."',
-        'aria2c --dir="$DOWNLOAD_DIR" --file-allocation=none `',
-        "  --connect-timeout=30 --retry-wait=5 --max-tries=3 `",
-        "  -i vmware-workstation-pro.aria2",
-        "",
-        'Write-Host "下载完成！"',
-    ]
-
-    ps1_path = output_dir / "download.ps1"
-    with open(ps1_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(ps1_lines))
-    print(f"已生成下载脚本: {ps1_path}")
-
-
-def generate_sha256_checklist(data: dict, output_dir: Path) -> None:
-    """生成 SHA256 校验清单"""
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    sha_lines = [
-        "# VMware 下载文件 SHA256 校验清单",
-        f"# 生成时间: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
-        "#",
-        "# 使用方法:",
-        "# Linux/macOS: sha256sum -c vmware-sha256.txt",
-        "# Windows: Get-FileHash -Algorithm SHA256 <file>",
-        "",
-    ]
-
-    # Workstation Pro
-    sha_lines.append("# VMware Workstation Pro")
-    for v in data["products"]["workstation-pro"]["versions"]:
-        sha_lines.append(f"# v{v['version']} (build {v['build']})")
-        sha_lines.append(f"<sha256>  VMware-Workstation-{v['version']}-Windows.exe")
-        sha_lines.append(f"<sha256>  VMware-Workstation-{v['version']}-Linux.bundle")
-    sha_lines.append("")
-
-    # Fusion Pro
-    sha_lines.append("# VMware Fusion Pro")
-    for v in data["products"]["fusion-pro"]["versions"]:
-        sha_lines.append(f"# v{v['version']} (build {v['build']})")
-        sha_lines.append(f"<sha256>  VMware-Fusion-{v['version']}-macOS.dmg")
-    sha_lines.append("")
-
-    sha_path = output_dir / "vmware-sha256.txt"
-    with open(sha_path, "w", encoding="utf-8") as f:
-        f.write("\n".join(sha_lines))
-    print(f"已生成 SHA256 校验清单: {sha_path}")
-
-
-def generate_readme(data: dict, readme_path: Path) -> None:
-    """生成 README.md"""
+def generate_readme(data: dict, path: Path) -> None:
+    """生成 README"""
+    ws_latest = data["workstation_pro"][0]
+    fusion_latest = data["fusion_pro"][0]
+    
     lines = [
         "# VMware 下载链接",
         "",
         f"最后更新: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
         "",
-        "> **VMware Workstation Pro 和 Fusion Pro 对所有用户免费。**",
+        "> 所有链接来自 [Archive.org](https://archive.org)，无需登录即可下载。",
         "",
-        "## 快速安装（Windows）",
-        "",
-        "### 使用 winget（推荐）",
-        "",
-        "```powershell",
-        "# 安装 VMware Workstation Pro",
-        "winget install VMware.WorkstationPro",
-        "",
-        "# 安装 VMware Fusion Pro（macOS）",
-        "winget install VMware.Fusion",
-        "```",
-        "",
-        "### 使用 scoop",
-        "",
-        "```powershell",
-        "# 添加 VMware bucket",
-        "scoop bucket add extras",
-        "",
-        "# 安装 VMware Workstation Pro",
-        "scoop install vmware-workstation",
-        "```",
-        "",
-        "### 使用 chocolatey",
-        "",
-        "```powershell",
-        "# 安装 VMware Workstation Pro",
-        "choco install vmwareworkstation",
-        "",
-        "# 安装 VMware Fusion Pro（macOS）",
-        "choco install vmwarefusion",
-        "```",
-        "",
-        "## 快速下载（使用 aria2）",
-        "",
-        "### 安装 aria2",
-        "",
-        "```bash",
-        "# macOS",
-        "brew install aria2",
-        "",
-        "# Ubuntu/Debian",
-        "sudo apt install aria2",
-        "",
-        "# Windows (scoop)",
-        "scoop install aria2",
-        "",
-        "# Windows (chocolatey)",
-        "choco install aria2",
-        "",
-        "# Windows (winget)",
-        "winget install aria2",
-        "```",
-        "",
-        "### 下载方法",
-        "",
-        "```bash",
-        "# 下载所有版本",
-        "bash download.sh",
-        "",
-        "# 或使用 PowerShell",
-        ".\\download.ps1",
-        "",
-        "# 下载单个文件",
-        "aria2c 'https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe'",
-        "```",
-        "",
-        "## 下载方式",
-        "",
-        "### Archive.org（推荐）",
-        "",
-        "Archive.org 提供所有版本的下载，无需登录。",
-        "",
-        f"- [VMware 镜像集合](https://archive.org/details/{ARCHIVE_ORG_COLLECTION})",
-        "- 覆盖范围: Workstation 2.x - 26H1, Fusion 8.x - 26H1",
-        "",
-        "### TechPowerUp",
-        "",
-        "TechPowerUp 是可靠的第三方下载站点。",
-        "",
-        "- [VMware Workstation Pro 下载页面](https://www.techpowerup.com/download/vmware-workstation-pro/)",
-        "- [VMware Fusion Pro 下载页面](https://www.techpowerup.com/download/vmware-fusion/)",
-        "",
-    ]
-
-    # 最新版本快速下载
-    latest_ws = data["products"]["workstation-pro"]["versions"][0]
-    latest_fusion = data["products"]["fusion-pro"]["versions"][0]
-
-    lines.extend([
         "## 最新版本",
         "",
         "### VMware Workstation Pro",
         "",
-        f"**版本 {latest_ws['version']}** (Build {latest_ws['build']})",
+        f"**{ws_latest['version']}** (Build {ws_latest['build']})",
         "",
-        "| 平台 | 下载链接 |",
-        "|------|----------|",
-        f"| Windows | [下载]({latest_ws['downloads']['archive_org']['windows']}) |",
-        f"| Linux | [下载]({latest_ws['downloads']['archive_org']['linux']}) |",
+        f"- Windows: [{ws_latest['windows']}]({ws_latest['windows']})",
+        f"- Linux: [{ws_latest['linux']}]({ws_latest['linux']})",
         "",
         "### VMware Fusion Pro",
         "",
-        f"**版本 {latest_fusion['version']}** (Build {latest_fusion['build']})",
+        f"**{fusion_latest['version']}** (Build {fusion_latest['build']})",
         "",
-        "| 平台 | 下载链接 |",
-        "|------|----------|",
-        f"| macOS | [下载]({latest_fusion['downloads']['archive_org']['macos']}) |",
+        f"- macOS: [{fusion_latest['macos']}]({fusion_latest['macos']})",
         "",
-    ])
-
-    # 所有版本
-    lines.extend([
         "## 所有版本",
         "",
         "### VMware Workstation Pro",
         "",
-        "| 版本 | Build | 发布日期 | Windows | Linux |",
-        "|------|-------|----------|---------|-------|",
-    ])
+        "| 版本 | Build | 日期 | Windows | Linux |",
+        "|------|-------|------|---------|-------|",
+    ]
 
-    for v in data["products"]["workstation-pro"]["versions"]:
-        lines.append(
-            f"| {v['version']} | {v['build']} | {v['release_date']} | "
-            f"[下载]({v['downloads']['archive_org']['windows']}) | "
-            f"[下载]({v['downloads']['archive_org']['linux']}) |"
-        )
+    for v in data["workstation_pro"]:
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['windows']}) | [下载]({v['linux']}) |")
 
     lines.extend([
         "",
         "### VMware Fusion Pro",
         "",
-        "| 版本 | Build | 发布日期 | macOS |",
-        "|------|-------|----------|-------|",
+        "| 版本 | Build | 日期 | macOS |",
+        "|------|-------|------|-------|",
     ])
 
-    for v in data["products"]["fusion-pro"]["versions"]:
-        lines.append(
-            f"| {v['version']} | {v['build']} | {v['release_date']} | "
-            f"[下载]({v['downloads']['archive_org']['macos']}) |"
-        )
+    for v in data["fusion_pro"]:
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['macos']}) |")
 
     lines.extend([
         "",
-        "## 文件校验",
+        "## 说明",
         "",
-        "下载后请校验文件完整性：",
-        "",
-        "```bash",
-        "# Linux/macOS",
-        "sha256sum -c vmware-sha256.txt",
-        "",
-        "# Windows PowerShell",
-        "Get-FileHash -Algorithm SHA256 VMware-Workstation-26H1-Windows.exe",
-        "```",
-        "",
-        "## VMware Tools",
-        "",
-        "- 最新版本: https://packages-prod.broadcom.com/tools/releases/latest/",
-        "- 历史版本: https://packages-prod.broadcom.com/tools/frozen/",
-        "",
-        "## 许可证",
-        "",
-        "自 2024 年 11 月起，VMware Workstation Pro 和 Fusion Pro 对所有用户（个人、教育、商业）免费。",
-        "",
-        "## License",
-        "",
-        "本项目仅供学习用途。",
+        "- VMware Workstation Pro 和 Fusion Pro 自 2024 年 11 月起对所有用户免费",
+        "- 下载后可直接安装，无需许可证密钥",
+        "- 安装时选择 个人使用 即可",
     ])
 
-    readme_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(readme_path, "w", encoding="utf-8") as f:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
-    print(f"已生成 README 到 {readme_path}")
+    print(f"已生成: {path}")
 
 
 def main() -> int:
     """主函数"""
     print("VMware 下载链接收集器")
-    print("=" * 50)
+    print("=" * 40)
 
-    # 收集下载链接
-    data = collect_vmware_downloads()
+    data = collect_downloads()
 
-    # 确定输出路径
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
-    json_path = repo_root / "data" / "vmware_downloads.json"
-    readme_path = repo_root / "README.md"
-    aria2_dir = repo_root / "aria2"
 
-    # 保存结果
-    save_to_json(data, json_path)
-    generate_aria2_configs(data, aria2_dir)
-    generate_download_scripts(data, aria2_dir)
-    generate_sha256_checklist(data, aria2_dir)
-    generate_readme(data, readme_path)
+    save_json(data, repo_root / "data" / "vmware_downloads.json")
+    generate_readme(data, repo_root / "README.md")
 
-    # 打印摘要
-    print("\n" + "=" * 50)
-    print("收集完成！")
-    print(f"  Workstation Pro: {len(data['products']['workstation-pro']['versions'])} 个版本")
-    print(f"  Fusion Pro: {len(data['products']['fusion-pro']['versions'])} 个版本")
-    print("\n生成的文件:")
-    print(f"  - {json_path}")
-    print(f"  - {readme_path}")
-    print(f"  - {aria2_dir / 'vmware-workstation-pro.aria2'}")
-    print(f"  - {aria2_dir / 'vmware-fusion-pro.aria2'}")
-    print(f"  - {aria2_dir / 'download.sh'}")
-    print(f"  - {aria2_dir / 'download.ps1'}")
-    print(f"  - {aria2_dir / 'vmware-sha256.txt'}")
-    print("\n下载方式:")
-    print("  - Archive.org: 推荐，可靠，无需登录")
-    print("  - TechPowerUp: 第三方下载站点")
-    print("\n包管理器安装:")
-    print("  - winget install VMware.WorkstationPro")
-    print("  - scoop install vmware-workstation")
-    print("  - choco install vmwareworkstation")
+    print(f"\nWorkstation Pro: {len(data['workstation_pro'])} 个版本")
+    print(f"Fusion Pro: {len(data['fusion_pro'])} 个版本")
 
     return 0
 
