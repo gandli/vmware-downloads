@@ -137,15 +137,19 @@ def verify_link(url: str, timeout: int = 30, retries: int = 3) -> tuple[bool, st
     return False, "Max retries exceeded"
 
 
-def calculate_sha256_from_url(url: str, timeout: int = 60) -> str | None:
-    """从 URL 下载文件并计算 SHA256（仅下载前 1MB 用于快速校验）"""
+def calculate_sha256_from_url(url: str, timeout: int = 300) -> str | None:
+    """从 URL 下载完整文件并计算 SHA256"""
     try:
-        req = urllib.request.Request(url)
-        req.add_header('Range', 'bytes=0-1048576')  # 下载前 1MB
         sha256 = hashlib.sha256()
-        with urllib.request.urlopen(req, timeout=timeout) as response:
+        with urllib.request.urlopen(url, timeout=timeout) as response:
+            total = 0
             for chunk in iter(lambda: response.read(8192), b''):
                 sha256.update(chunk)
+                total += len(chunk)
+                # 每 10MB 打印进度
+                if total % (10 * 1024 * 1024) < 8192:
+                    print(f"    已下载: {total / 1024 / 1024:.1f} MB", end='\r')
+        print(f"    已下载: {total / 1024 / 1024:.1f} MB")
         return sha256.hexdigest()
     except Exception as e:
         print(f"    计算 SHA256 失败: {e}")

@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-30T09:50:58.872283",
+  "collected_at": "2026-05-30T10:00:01.205804",
   "official": {
     "workstation_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true"
@@ -121,7 +121,12 @@
       "version": "13.6.4",
       "build": "24832108",
       "date": "2025-07-15",
-      "downloads": {},
+      "downloads": {
+        "macos": {
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg",
+          "size": "530.9 MB"
+        }
+      },
       "sha256": {
         "macos": "a43fd031165896bc1b7ecc61eb07b377bfc01b014c9111b08e18a6a1af121191"
       }

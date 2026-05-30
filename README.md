@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 09:51 UTC
+最后更新: 2026-05-30 10:00 UTC
 
 > **所有链接均可直接下载，无需登录。**
 
@@ -36,7 +36,7 @@
 | 版本 | Build | 日期 | macOS |
 |------|-------|------|-------|
 | 26H1 | 25388279 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.7 MB) |
-| 13.6.4 | 24832108 | 2025-07-15 | N/A |
+| 13.6.4 | 24832108 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg) (530.9 MB) |
 
 ## SHA256 校验
 
