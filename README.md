@@ -9,11 +9,6 @@ Broadcom 官方下载页面，需要注册或登录账号：
 - [VMware Workstation Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true)
 - [VMware Fusion Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true)
 
-### 账号信息
-
-- 邮箱: `REDACTED_EMAIL`
-- 密码: `REDACTED_PASSWORD`
-
 ## Archive.org 镜像（无需登录）
 
 所有链接来自 [Archive.org](https://archive.org/details/vmwareworkstationarchive)，无需登录即可下载。
