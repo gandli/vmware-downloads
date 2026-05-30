@@ -21,7 +21,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install dependencies
+        run: |
+          pip install playwright
+          playwright install chromium
+
       - name: Run collector script
+        env:
+          BROADCOM_USERNAME: ${{ secrets.BROADCOM_USERNAME }}
+          BROADCOM_PASSWORD: ${{ secrets.BROADCOM_PASSWORD }}
         run: python scripts/collect_vmware_links.py
 
       - name: Commit and push changes
