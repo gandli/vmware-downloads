@@ -250,18 +250,33 @@ def main() -> int:
 
     failed = []
     for name, url in all_links:
-        try:
-            req = urllib.request.Request(url, method='HEAD')
-            with urllib.request.urlopen(req, timeout=30) as response:
-                if response.status == 200:
-                    size = response.headers.get("Content-Length", "N/A")
-                    size_mb = f"{int(size) / 1024 / 1024:.1f} MB" if size != "N/A" else "N/A"
-                    print(f"  [OK] {name}: {size_mb}")
+        success = False
+        for attempt in range(3):
+            try:
+                req = urllib.request.Request(url, method='GET')
+                req.add_header('Range', 'bytes=0-0')
+                with urllib.request.urlopen(req, timeout=30) as response:
+                    if response.status in (200, 206):
+                        size = response.headers.get("Content-Length", "N/A")
+                        content_range = response.headers.get("Content-Range", "")
+                        if content_range and '/' in content_range:
+                            size = content_range.split('/')[-1]
+                        size_mb = f"{int(size) / 1024 / 1024:.1f} MB" if size != "N/A" else "N/A"
+                        print(f"  [OK] {name}: {size_mb}")
+                        success = True
+                        break
+                    else:
+                        if attempt < 2:
+                            print(f"  [RETRY] {name}: HTTP {response.status} (attempt {attempt + 1}/3)")
+                        else:
+                            print(f"  [FAIL] {name}: HTTP {response.status}")
+            except Exception as e:
+                if attempt < 2:
+                    print(f"  [RETRY] {name}: {e} (attempt {attempt + 1}/3)")
                 else:
-                    print(f"  [FAIL] {name}: HTTP {response.status}")
-                    failed.append(name)
-        except Exception as e:
-            print(f"  [FAIL] {name}: {e}")
+                    print(f"  [FAIL] {name}: {e}")
+
+        if not success:
             failed.append(name)
 
     if failed:

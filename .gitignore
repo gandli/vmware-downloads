@@ -10,9 +10,6 @@ env/
 # Environment variables
 .env
 
-# Data files (generated)
-data/*.json
-
 # IDE
 .vscode/
 .idea/

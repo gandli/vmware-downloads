@@ -1,0 +1,63 @@
+{
+  "collected_at": "2026-05-30T07:41:06.812181",
+  "official": {
+    "workstation_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
+    "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true"
+  },
+  "archive_org": "https://archive.org/details/vmwareworkstationarchive",
+  "workstation_pro": [
+    {
+      "version": "26H1",
+      "build": "25388281",
+      "date": "2026-04-15",
+      "windows": "https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe",
+      "linux": "https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle",
+      "sha256": {
+        "windows": "a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f",
+        "linux": ""
+      }
+    },
+    {
+      "version": "25H2",
+      "build": "24995812",
+      "date": "2025-10-14",
+      "windows": "https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe",
+      "linux": "https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle",
+      "sha256": {
+        "windows": "",
+        "linux": ""
+      }
+    },
+    {
+      "version": "17.6.4",
+      "build": "24832109",
+      "date": "2025-07-15",
+      "windows": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.4-24832109.exe",
+      "linux": "https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-Workstation-Full-17.6.4-24832109.x86_64.bundle",
+      "sha256": {
+        "windows": "",
+        "linux": ""
+      }
+    }
+  ],
+  "fusion_pro": [
+    {
+      "version": "26H1",
+      "build": "25388279",
+      "date": "2026-04-15",
+      "macos": "https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg",
+      "sha256": {
+        "macos": ""
+      }
+    },
+    {
+      "version": "13.6.4",
+      "build": "24832108",
+      "date": "2025-07-15",
+      "macos": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg",
+      "sha256": {
+        "macos": ""
+      }
+    }
+  ]
+}
