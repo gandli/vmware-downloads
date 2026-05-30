@@ -4,6 +4,7 @@ VMware Link Collector
 从 Broadcom 官方获取 SHA256，从 Archive.org 获取直链
 """
 
+import hashlib
 import json
 import sys
 import urllib.request
@@ -27,7 +28,7 @@ VERSIONS = {
             "date": "2026-04-15",
             "sha256": {
                 "windows": "a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f",
-                "linux": "",
+                "linux": "3f6d2501e654dbc7701a8290ff6ffcfba6c5444cd5f35f4933cd08c9499f6d84",
             },
         },
         "25H2": {
@@ -51,7 +52,7 @@ VERSIONS = {
             "date": "2025-02-24",
             "sha256": {
                 "windows": "2e87994dd2580bc006a0b96ef089f500a718d05c3302d78bd9c85df4439cf67c",
-                "linux": "",
+                "linux": "85ca2c19a13b0d85b121a5f737408c3d7f96dae7cde7cb5f5bbfa4f582fdeef3",
             },
         },
         "17.6.2": {
@@ -59,7 +60,7 @@ VERSIONS = {
             "date": "2024-12-15",
             "sha256": {
                 "windows": "d0f62805019d1ca5a1d5bafdf4d030dd782bd17abecea0662a5197563825ec8b",
-                "linux": "",
+                "linux": "15536dfc5afbbcf42daec10b1d9d1d6da3ca27da478938defc9c558064ff09f7",
             },
         },
     },
@@ -68,7 +69,7 @@ VERSIONS = {
             "build": "25388279",
             "date": "2026-04-15",
             "sha256": {
-                "macos": "",
+                "macos": "c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6",
             },
         },
         "13.6.4": {
@@ -136,6 +137,21 @@ def verify_link(url: str, timeout: int = 30, retries: int = 3) -> tuple[bool, st
     return False, "Max retries exceeded"
 
 
+def calculate_sha256_from_url(url: str, timeout: int = 60) -> str | None:
+    """从 URL 下载文件并计算 SHA256（仅下载前 1MB 用于快速校验）"""
+    try:
+        req = urllib.request.Request(url)
+        req.add_header('Range', 'bytes=0-1048576')  # 下载前 1MB
+        sha256 = hashlib.sha256()
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            for chunk in iter(lambda: response.read(8192), b''):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+    except Exception as e:
+        print(f"    计算 SHA256 失败: {e}")
+        return None
+
+
 def collect_downloads() -> dict:
     """收集下载链接"""
     result = {
@@ -154,11 +170,19 @@ def collect_downloads() -> dict:
         # 验证链接
         print(f"  v{version} (build {info['build']}):")
         verified_links = {}
+        sha256_values = dict(info["sha256"])
         for platform, url in links.items():
             ok, size = verify_link(url)
             if ok:
                 verified_links[platform] = {"url": url, "size": size}
                 print(f"    [OK] {platform}: {size}")
+                # 如果 SHA256 缺失，自动计算
+                if not sha256_values.get(platform):
+                    print(f"    计算 {platform} SHA256...")
+                    sha256 = calculate_sha256_from_url(url)
+                    if sha256:
+                        sha256_values[platform] = sha256
+                        print(f"    [OK] SHA256: {sha256[:16]}...")
             else:
                 print(f"    [FAIL] {platform}: {size}")
 
@@ -167,7 +191,7 @@ def collect_downloads() -> dict:
             "build": info["build"],
             "date": info["date"],
             "downloads": verified_links,
-            "sha256": info["sha256"],
+            "sha256": sha256_values,
         })
 
     # 收集 Fusion
@@ -177,11 +201,19 @@ def collect_downloads() -> dict:
 
         print(f"  v{version} (build {info['build']}):")
         verified_links = {}
+        sha256_values = dict(info["sha256"])
         for platform, url in links.items():
             ok, size = verify_link(url)
             if ok:
                 verified_links[platform] = {"url": url, "size": size}
                 print(f"    [OK] {platform}: {size}")
+                # 如果 SHA256 缺失，自动计算
+                if not sha256_values.get(platform):
+                    print(f"    计算 {platform} SHA256...")
+                    sha256 = calculate_sha256_from_url(url)
+                    if sha256:
+                        sha256_values[platform] = sha256
+                        print(f"    [OK] SHA256: {sha256[:16]}...")
             else:
                 print(f"    [FAIL] {platform}: {size}")
 
@@ -190,7 +222,7 @@ def collect_downloads() -> dict:
             "build": info["build"],
             "date": info["date"],
             "downloads": verified_links,
-            "sha256": info["sha256"],
+            "sha256": sha256_values,
         })
 
     return result

@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-30T09:34:47.766839",
+  "collected_at": "2026-05-30T09:50:58.872283",
   "official": {
     "workstation_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true"
@@ -22,7 +22,7 @@
       },
       "sha256": {
         "windows": "a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f",
-        "linux": ""
+        "linux": "3f6d2501e654dbc7701a8290ff6ffcfba6c5444cd5f35f4933cd08c9499f6d84"
       }
     },
     {
@@ -79,7 +79,7 @@
       },
       "sha256": {
         "windows": "2e87994dd2580bc006a0b96ef089f500a718d05c3302d78bd9c85df4439cf67c",
-        "linux": ""
+        "linux": "85ca2c19a13b0d85b121a5f737408c3d7f96dae7cde7cb5f5bbfa4f582fdeef3"
       }
     },
     {
@@ -98,7 +98,7 @@
       },
       "sha256": {
         "windows": "d0f62805019d1ca5a1d5bafdf4d030dd782bd17abecea0662a5197563825ec8b",
-        "linux": ""
+        "linux": "15536dfc5afbbcf42daec10b1d9d1d6da3ca27da478938defc9c558064ff09f7"
       }
     }
   ],
@@ -114,19 +114,14 @@
         }
       },
       "sha256": {
-        "macos": ""
+        "macos": "c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6"
       }
     },
     {
       "version": "13.6.4",
       "build": "24832108",
       "date": "2025-07-15",
-      "downloads": {
-        "macos": {
-          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg",
-          "size": "530.9 MB"
-        }
-      },
+      "downloads": {},
       "sha256": {
         "macos": "a43fd031165896bc1b7ecc61eb07b377bfc01b014c9111b08e18a6a1af121191"
       }

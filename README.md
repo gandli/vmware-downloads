@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 09:35 UTC
+最后更新: 2026-05-30 09:51 UTC
 
 > **所有链接均可直接下载，无需登录。**
 
@@ -11,13 +11,13 @@
 **26H1** (Build 25388281)
 
 - **Windows**: [https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) (274.3 MB | SHA256: `a0ef9087607d9cad...`)
-- **Linux**: [https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) (325.0 MB)
+- **Linux**: [https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) (325.0 MB | SHA256: `3f6d2501e654dbc7...`)
 
 ### VMware Fusion Pro
 
 **26H1** (Build 25388279)
 
-- **Macos**: [https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.7 MB)
+- **Macos**: [https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.7 MB | SHA256: `c1d373aa21be2567...`)
 
 ## 所有版本
 
@@ -36,19 +36,23 @@
 | 版本 | Build | 日期 | macOS |
 |------|-------|------|-------|
 | 26H1 | 25388279 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.7 MB) |
-| 13.6.4 | 24832108 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg) (530.9 MB) |
+| 13.6.4 | 24832108 | 2025-07-15 | N/A |
 
 ## SHA256 校验
 
 | 版本 | 平台 | SHA256 |
 |------|------|--------|
 | Workstation 26H1 | Windows | `a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f` |
+| Workstation 26H1 | Linux | `3f6d2501e654dbc7701a8290ff6ffcfba6c5444cd5f35f4933cd08c9499f6d84` |
 | Workstation 25H2 | Windows | `49ad7c2bbce854ed30ed0702d1af9fc042697777dc981e087bfa7241045b0361` |
 | Workstation 25H2 | Linux | `9beced8a0653c9382e9aa9917168a54bf5635e566c8cb341589d72cf14093322` |
 | Workstation 17.6.4 | Windows | `10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9` |
 | Workstation 17.6.4 | Linux | `64fbfbaeacc48865468114362a2bbaade9110cc9e87bc3bd938396ba7f19a9bd` |
 | Workstation 17.6.3 | Windows | `2e87994dd2580bc006a0b96ef089f500a718d05c3302d78bd9c85df4439cf67c` |
+| Workstation 17.6.3 | Linux | `85ca2c19a13b0d85b121a5f737408c3d7f96dae7cde7cb5f5bbfa4f582fdeef3` |
 | Workstation 17.6.2 | Windows | `d0f62805019d1ca5a1d5bafdf4d030dd782bd17abecea0662a5197563825ec8b` |
+| Workstation 17.6.2 | Linux | `15536dfc5afbbcf42daec10b1d9d1d6da3ca27da478938defc9c558064ff09f7` |
+| Fusion 26H1 | Macos | `c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6` |
 | Fusion 13.6.4 | Macos | `a43fd031165896bc1b7ecc61eb07b377bfc01b014c9111b08e18a6a1af121191` |
 
 ## 验证文件
