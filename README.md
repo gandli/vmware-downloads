@@ -1,60 +1,79 @@
-# VMware 下载链接
+# VMware 下载链接（无需登录）
 
-自动收集的 VMware 下载链接。最后更新: 2026-05-30 01:41 UTC
+最后更新: 2026-05-30 01:47 UTC
 
-## 产品列表
+> **所有链接均可直接下载，无需注册或登录任何账号。**
+
+## 快速下载
+
+### VMware Workstation Pro（最新版本）
+
+**版本 26H1** (Build 25388281)
+
+| 平台 | 下载链接 |
+|------|----------|
+| Windows | [直接下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) |
+| Linux | [直接下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) |
+
+### VMware Fusion Pro（最新版本）
+
+**版本 26H1** (Build 25388279)
+
+| 平台 | 下载链接 |
+|------|----------|
+| macOS | [直接下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) |
+
+## 所有版本
 
 ### VMware Workstation Pro
 
-- **平台**: Windows, Linux
-- **说明**: 行业标准的桌面虚拟化软件
-- **最新版本**: 17.5.2
-- **产品页面**: [VMware Workstation Pro](https://www.vmware.com/info/workstation-pro/evaluation)
-- **Broadcom 下载**: [下载页面](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro)
-- **安装指南**: [KB 文章](https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hype.html)
-- **直接下载链接**:
-  - [https://support.broadcom.com/](https://support.broadcom.com/)
-- **状态**: available
+| 版本 | Build | 发布日期 | Windows | Linux |
+|------|-------|----------|---------|-------|
+| 26H1 | 25388281 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) |
+| 25H2u1 | 25219725 | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2u1-25219725.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2u1-25219725.x86_64.bundle) |
+| 25H2 | 24995812 | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle) |
+| 17.6.4 | 24832109 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.4-24832109.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.4-24832109.x86_64.bundle) |
+| 17.6.3 | 24583834 | 2025-02-24 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.3-24583834.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.3-24583834.x86_64.bundle) |
+| 17.6.2 | 24409262 | 2024-12-15 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.2-24409262.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.2-24409262.x86_64.bundle) |
+| 17.6.1 | 24319023 | 2024-10-08 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.1-24319023.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.1-24319023.x86_64.bundle) |
+| 17.6.0 | 24238078 | 2024-08-28 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.0-24238078.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.0-24238078.x86_64.bundle) |
+| 17.5.2 | 23775571 | 2024-05-10 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.2-23775571.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle) |
 
 ### VMware Fusion Pro
 
-- **平台**: macOS
-- **说明**: macOS 上的专业虚拟化软件
-- **最新版本**: 13.5.2
-- **产品页面**: [VMware Fusion Pro](https://knowledge.broadcom.com/external/article/315638/download-and-install-vmware-fusion.html)
-- **Broadcom 下载**: [下载页面](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro)
-- **安装指南**: [KB 文章](https://knowledge.broadcom.com/external/article/315638/download-and-install-vmware-fusion.html)
-- **直接下载链接**:
-  - [https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion)
-  - [https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro)
-  - [https://knowledge.broadcom.com/external/article/315638/download-and-install-vmware-fusion.html](https://knowledge.broadcom.com/external/article/315638/download-and-install-vmware-fusion.html)
-- **状态**: available
+| 版本 | Build | 发布日期 | macOS |
+|------|-------|----------|-------|
+| 26H1 | 25388279 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) |
+| 25H2u1 | 25219963 | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2u1-25219963_universal.dmg) |
+| 25H2 | 24995814 | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2-24995814_universal.dmg) |
+| 13.6.4 | 24832108 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg) |
+| 13.6.3 | 24585314 | 2025-02-24 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.3-24585314_universal.dmg) |
+| 13.6.1 | 23298819 | 2024-11-19 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.1-23298819_universal.dmg) |
+| 13.6.0 | 23278157 | 2024-09-17 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.0-23278157_universal.dmg) |
+| 13.5.2 | 23324145 | 2024-06-25 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.5.2-23324145_universal.dmg) |
 
-## 如何下载
+## 数据来源
 
-VMware 产品现在由 Broadcom 管理。下载步骤：
+本项目使用 [Archive.org](https://archive.org) 的 VMware 镜像作为主要来源。
 
-1. 访问 [Broadcom 支持门户](https://support.broadcom.com)
-2. 注册/登录免费账号
-3. 导航到 VMware 产品下载页面
-4. 选择产品版本和平台
-5. 同意条款后下载
+- **Archive.org 集合**: [vmwareworkstationarchive](https://archive.org/details/vmwareworkstationarchive)
+- **维护者**: TheLightDeveloper
+- **覆盖范围**: Workstation 2.x - 26H1, Fusion 8.x - 26H1
 
-> **提示**: 自 2024 年 5 月起，VMware Workstation Pro 和 Fusion Pro 对个人使用免费。
+## VMware Tools
 
-## 本地运行
+- 最新版本: https://packages-prod.broadcom.com/tools/releases/latest/
+- 历史版本: https://packages-prod.broadcom.com/tools/frozen/
 
-```bash
-# 安装依赖
-uv pip install -r requirements.txt
+## 许可证
 
-# 安装 Playwright 浏览器
-python -m playwright install chromium
+自 2024 年 11 月起，VMware Workstation Pro 和 Fusion Pro 对所有用户（个人、教育、商业）免费。
 
-# 运行收集脚本
-python scripts/collect_vmware_links.py
-```
+## 相关项目
+
+- [moonheart/vmware-index](https://github.com/moonheart/vmware-index) - VMware 下载索引
+- [201853910/VMwareWorkstation](https://github.com/201853910/VMwareWorkstation) - GitHub 镜像
 
 ## License
 
-本项目仅供学习用途。VMware 产品受其自身许可条款约束。
+本项目仅供学习用途。

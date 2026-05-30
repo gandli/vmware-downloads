@@ -16,19 +16,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          version: "latest"
-
       - name: Set up Python
-        run: uv python install 3.12
-
-      - name: Install dependencies
-        run: uv pip install --system -r requirements.txt
-
-      - name: Install Playwright browsers
-        run: python -m playwright install chromium
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Run collector script
         run: python scripts/collect_vmware_links.py
