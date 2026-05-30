@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 05:17 UTC
+最后更新: 2026-05-30 05:51 UTC
 
 ## 官方下载（需要登录）
 
@@ -8,6 +8,11 @@ Broadcom 官方下载页面，需要注册或登录账号：
 
 - [VMware Workstation Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true)
 - [VMware Fusion Pro](https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true)
+
+### 账号信息
+
+- 邮箱: `REDACTED_EMAIL`
+- 密码: `REDACTED_PASSWORD`
 
 ## Archive.org 镜像（无需登录）
 
@@ -21,6 +26,7 @@ Broadcom 官方下载页面，需要注册或登录账号：
 
 - Windows: [https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe)
 - Linux: [https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle)
+- Windows SHA256: `a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f`
 
 #### VMware Fusion Pro
 
@@ -32,30 +38,30 @@ Broadcom 官方下载页面，需要注册或登录账号：
 
 #### VMware Workstation Pro
 
-| 版本 | Build | 日期 | Windows | Linux |
-|------|-------|------|---------|-------|
-| 26H1 | 25388281 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) |
-| 25H2u1 | 25219725 | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2u1-25219725.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2u1-25219725.x86_64.bundle) |
-| 25H2 | 24995812 | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle) |
-| 17.6.4 | 24832109 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.4-24832109.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.4-24832109.x86_64.bundle) |
-| 17.6.3 | 24583834 | 2025-02-24 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.3-24583834.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.3-24583834.x86_64.bundle) |
-| 17.6.2 | 24409262 | 2024-12-15 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.2-24409262.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.2-24409262.x86_64.bundle) |
-| 17.6.1 | 24319023 | 2024-10-08 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.1-24319023.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.1-24319023.x86_64.bundle) |
-| 17.6.0 | 24238078 | 2024-08-28 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.0-24238078.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.0-24238078.x86_64.bundle) |
-| 17.5.2 | 23775571 | 2024-05-10 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.2-23775571.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle) |
+| 版本 | Build | 日期 | Windows | Linux | SHA256 (Windows) |
+|------|-------|------|---------|-------|------------------|
+| 26H1 | 25388281 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) | a0ef9087607d9cad... |
+| 25H2 | 24995812 | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle) | N/A |
+| 17.6.4 | 24832109 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.4-24832109.exe) | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-Workstation-Full-17.6.4-24832109.x86_64.bundle) | N/A |
 
 #### VMware Fusion Pro
 
-| 版本 | Build | 日期 | macOS |
-|------|-------|------|-------|
-| 26H1 | 25388279 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) |
-| 25H2u1 | 25219963 | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2u1-25219963_universal.dmg) |
-| 25H2 | 24995814 | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2-24995814_universal.dmg) |
-| 13.6.4 | 24832108 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg) |
-| 13.6.3 | 24585314 | 2025-02-24 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.3-24585314_universal.dmg) |
-| 13.6.1 | 23298819 | 2024-11-19 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.1-23298819_universal.dmg) |
-| 13.6.0 | 23278157 | 2024-09-17 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.0-23278157_universal.dmg) |
-| 13.5.2 | 23324145 | 2024-06-25 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.5.2-23324145_universal.dmg) |
+| 版本 | Build | 日期 | macOS | SHA256 |
+|------|-------|------|-------|--------|
+| 26H1 | 25388279 | 2026-04-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) | N/A |
+| 13.6.4 | 24832108 | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg) | N/A |
+
+## 文件校验
+
+下载后请校验文件完整性：
+
+```bash
+# Linux/macOS
+sha256sum VMware-Workstation-Full-26H1-25388281.exe
+
+# Windows PowerShell
+Get-FileHash -Algorithm SHA256 VMware-Workstation-Full-26H1-25388281.exe
+```
 
 ## 说明
 

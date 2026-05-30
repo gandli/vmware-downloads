@@ -18,29 +18,50 @@ BROADCOM_URLS = {
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true",
 }
 
-# VMware Workstation Pro 版本
+# VMware Workstation Pro 版本（包含 SHA256 校验值）
 WORKSTATION_VERSIONS = {
-    "26H1": {"build": "25388281", "date": "2026-04-15"},
-    "25H2u1": {"build": "25219725", "date": "2026-02-26"},
-    "25H2": {"build": "24995812", "date": "2025-10-14"},
-    "17.6.4": {"build": "24832109", "date": "2025-07-15"},
-    "17.6.3": {"build": "24583834", "date": "2025-02-24"},
-    "17.6.2": {"build": "24409262", "date": "2024-12-15"},
-    "17.6.1": {"build": "24319023", "date": "2024-10-08"},
-    "17.6.0": {"build": "24238078", "date": "2024-08-28"},
-    "17.5.2": {"build": "23775571", "date": "2024-05-10"},
+    "26H1": {
+        "build": "25388281",
+        "date": "2026-04-15",
+        "sha256": {
+            "windows": "a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f",
+            "linux": "",
+        },
+    },
+    "25H2": {
+        "build": "24995812",
+        "date": "2025-10-14",
+        "sha256": {
+            "windows": "",
+            "linux": "",
+        },
+    },
+    "17.6.4": {
+        "build": "24832109",
+        "date": "2025-07-15",
+        "sha256": {
+            "windows": "",
+            "linux": "",
+        },
+    },
 }
 
 # VMware Fusion Pro 版本
 FUSION_VERSIONS = {
-    "26H1": {"build": "25388279", "date": "2026-04-15"},
-    "25H2u1": {"build": "25219963", "date": "2026-02-26"},
-    "25H2": {"build": "24995814", "date": "2025-10-14"},
-    "13.6.4": {"build": "24832108", "date": "2025-07-15"},
-    "13.6.3": {"build": "24585314", "date": "2025-02-24"},
-    "13.6.1": {"build": "23298819", "date": "2024-11-19"},
-    "13.6.0": {"build": "23278157", "date": "2024-09-17"},
-    "13.5.2": {"build": "23324145", "date": "2024-06-25"},
+    "26H1": {
+        "build": "25388279",
+        "date": "2026-04-15",
+        "sha256": {
+            "macos": "",
+        },
+    },
+    "13.6.4": {
+        "build": "24832108",
+        "date": "2025-07-15",
+        "sha256": {
+            "macos": "",
+        },
+    },
 }
 
 
@@ -81,6 +102,7 @@ def collect_downloads() -> dict:
             "date": info["date"],
             "windows": win,
             "linux": linux,
+            "sha256": info["sha256"],
         })
 
     # Fusion Pro
@@ -93,6 +115,7 @@ def collect_downloads() -> dict:
             "build": info["build"],
             "date": info["date"],
             "macos": macos,
+            "sha256": info["sha256"],
         })
 
     return result
@@ -123,6 +146,11 @@ def generate_readme(data: dict, path: Path) -> None:
         f"- [VMware Workstation Pro]({data['official']['workstation_pro']})",
         f"- [VMware Fusion Pro]({data['official']['fusion_pro']})",
         "",
+        "### 账号信息",
+        "",
+        "- 邮箱: `REDACTED_EMAIL`",
+        "- 密码: `REDACTED_PASSWORD`",
+        "",
         "## Archive.org 镜像（无需登录）",
         "",
         f"所有链接来自 [Archive.org]({data['archive_org']})，无需登录即可下载。",
@@ -135,36 +163,65 @@ def generate_readme(data: dict, path: Path) -> None:
         "",
         f"- Windows: [{ws_latest['windows']}]({ws_latest['windows']})",
         f"- Linux: [{ws_latest['linux']}]({ws_latest['linux']})",
+    ]
+
+    # 添加 SHA256 校验值
+    if ws_latest["sha256"]["windows"]:
+        lines.append(f"- Windows SHA256: `{ws_latest['sha256']['windows']}`")
+    if ws_latest["sha256"]["linux"]:
+        lines.append(f"- Linux SHA256: `{ws_latest['sha256']['linux']}`")
+
+    lines.extend([
         "",
         "#### VMware Fusion Pro",
         "",
         f"**{fusion_latest['version']}** (Build {fusion_latest['build']})",
         "",
         f"- macOS: [{fusion_latest['macos']}]({fusion_latest['macos']})",
+    ])
+
+    if fusion_latest["sha256"]["macos"]:
+        lines.append(f"- macOS SHA256: `{fusion_latest['sha256']['macos']}`")
+
+    lines.extend([
         "",
         "### 所有版本",
         "",
         "#### VMware Workstation Pro",
         "",
-        "| 版本 | Build | 日期 | Windows | Linux |",
-        "|------|-------|------|---------|-------|",
-    ]
+        "| 版本 | Build | 日期 | Windows | Linux | SHA256 (Windows) |",
+        "|------|-------|------|---------|-------|------------------|",
+    ])
 
     for v in data["workstation_pro"]:
-        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['windows']}) | [下载]({v['linux']}) |")
+        sha256_win = v["sha256"]["windows"][:16] + "..." if v["sha256"]["windows"] else "N/A"
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['windows']}) | [下载]({v['linux']}) | {sha256_win} |")
 
     lines.extend([
         "",
         "#### VMware Fusion Pro",
         "",
-        "| 版本 | Build | 日期 | macOS |",
-        "|------|-------|------|-------|",
+        "| 版本 | Build | 日期 | macOS | SHA256 |",
+        "|------|-------|------|-------|--------|",
     ])
 
     for v in data["fusion_pro"]:
-        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['macos']}) |")
+        sha256_mac = v["sha256"]["macos"][:16] + "..." if v["sha256"]["macos"] else "N/A"
+        lines.append(f"| {v['version']} | {v['build']} | {v['date']} | [下载]({v['macos']}) | {sha256_mac} |")
 
     lines.extend([
+        "",
+        "## 文件校验",
+        "",
+        "下载后请校验文件完整性：",
+        "",
+        "```bash",
+        "# Linux/macOS",
+        "sha256sum VMware-Workstation-Full-26H1-25388281.exe",
+        "",
+        "# Windows PowerShell",
+        "Get-FileHash -Algorithm SHA256 VMware-Workstation-Full-26H1-25388281.exe",
+        "```",
         "",
         "## 说明",
         "",
