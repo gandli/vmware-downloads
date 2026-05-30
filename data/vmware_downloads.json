@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-30T08:23:18.521133",
+  "collected_at": "2026-05-30T09:34:47.766839",
   "official": {
     "workstation_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Workstation%20Pro&freeDownloads=true",
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true"
@@ -40,8 +40,8 @@
         }
       },
       "sha256": {
-        "windows": "",
-        "linux": ""
+        "windows": "49ad7c2bbce854ed30ed0702d1af9fc042697777dc981e087bfa7241045b0361",
+        "linux": "9beced8a0653c9382e9aa9917168a54bf5635e566c8cb341589d72cf14093322"
       }
     },
     {
@@ -59,7 +59,45 @@
         }
       },
       "sha256": {
-        "windows": "",
+        "windows": "10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9",
+        "linux": "64fbfbaeacc48865468114362a2bbaade9110cc9e87bc3bd938396ba7f19a9bd"
+      }
+    },
+    {
+      "version": "17.6.3",
+      "build": "24583834",
+      "date": "2025-02-24",
+      "downloads": {
+        "windows": {
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.3-24583834.exe",
+          "size": "401.4 MB"
+        },
+        "linux": {
+          "url": "https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-Workstation-Full-17.6.3-24583834.x86_64.bundle",
+          "size": "335.2 MB"
+        }
+      },
+      "sha256": {
+        "windows": "2e87994dd2580bc006a0b96ef089f500a718d05c3302d78bd9c85df4439cf67c",
+        "linux": ""
+      }
+    },
+    {
+      "version": "17.6.2",
+      "build": "24409262",
+      "date": "2024-12-15",
+      "downloads": {
+        "windows": {
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.2-24409262.exe",
+          "size": "447.9 MB"
+        },
+        "linux": {
+          "url": "https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-Workstation-Full-17.6.2-24409262.x86_64.bundle",
+          "size": "372.5 MB"
+        }
+      },
+      "sha256": {
+        "windows": "d0f62805019d1ca5a1d5bafdf4d030dd782bd17abecea0662a5197563825ec8b",
         "linux": ""
       }
     }
@@ -90,7 +128,7 @@
         }
       },
       "sha256": {
-        "macos": ""
+        "macos": "a43fd031165896bc1b7ecc61eb07b377bfc01b014c9111b08e18a6a1af121191"
       }
     }
   ]

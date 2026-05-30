@@ -19,7 +19,7 @@ BROADCOM_URLS = {
     "fusion_pro": "https://support.broadcom.com/group/ecx/productdownloads?subfamily=VMware%20Fusion%20Pro&freeDownloads=true",
 }
 
-# 版本信息（从 Broadcom 官方获取的 SHA256）
+# 版本信息（从 Broadcom 官方和社区获取的 SHA256）
 VERSIONS = {
     "workstation": {
         "26H1": {
@@ -34,15 +34,31 @@ VERSIONS = {
             "build": "24995812",
             "date": "2025-10-14",
             "sha256": {
-                "windows": "",
-                "linux": "",
+                "windows": "49ad7c2bbce854ed30ed0702d1af9fc042697777dc981e087bfa7241045b0361",
+                "linux": "9beced8a0653c9382e9aa9917168a54bf5635e566c8cb341589d72cf14093322",
             },
         },
         "17.6.4": {
             "build": "24832109",
             "date": "2025-07-15",
             "sha256": {
-                "windows": "",
+                "windows": "10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9",
+                "linux": "64fbfbaeacc48865468114362a2bbaade9110cc9e87bc3bd938396ba7f19a9bd",
+            },
+        },
+        "17.6.3": {
+            "build": "24583834",
+            "date": "2025-02-24",
+            "sha256": {
+                "windows": "2e87994dd2580bc006a0b96ef089f500a718d05c3302d78bd9c85df4439cf67c",
+                "linux": "",
+            },
+        },
+        "17.6.2": {
+            "build": "24409262",
+            "date": "2024-12-15",
+            "sha256": {
+                "windows": "d0f62805019d1ca5a1d5bafdf4d030dd782bd17abecea0662a5197563825ec8b",
                 "linux": "",
             },
         },
@@ -59,7 +75,7 @@ VERSIONS = {
             "build": "24832108",
             "date": "2025-07-15",
             "sha256": {
-                "macos": "",
+                "macos": "a43fd031165896bc1b7ecc61eb07b377bfc01b014c9111b08e18a6a1af121191",
             },
         },
     },
