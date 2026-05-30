@@ -1,8 +1,37 @@
 # VMware 下载链接
 
-最后更新: 2026-05-30 02:11 UTC
+最后更新: 2026-05-30 03:12 UTC
 
 > **VMware Workstation Pro 和 Fusion Pro 对所有用户免费。**
+
+## 快速下载（使用 aria2）
+
+### 安装 aria2
+
+```bash
+# macOS
+brew install aria2
+
+# Ubuntu/Debian
+sudo apt install aria2
+
+# Windows (winget)
+winget install aria2
+```
+
+### 下载方法
+
+```bash
+# 下载所有版本
+bash download.sh
+
+# 或使用 PowerShell
+.\download.ps1
+
+# 下载单个文件
+aria2c --connect-to softwareupdate-prod.broadcom.com:443:softwareupdate-prod.broadcom.com.cdn.cloudflare.net:443 \
+  'https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar'
+```
 
 ## 下载方式
 
@@ -10,7 +39,7 @@
 
 Broadcom 官方 CDN 通过 Cloudflare 缓存提供，下载速度最快。
 
-**使用方法（Linux/macOS）：**
+**使用方法（Linux/macOS curl）：**
 
 ```bash
 # 下载 Workstation Pro（Windows）
@@ -20,28 +49,6 @@ curl -L --connect-to softwareupdate-prod.broadcom.com:443:softwareupdate-prod.br
 
 # 解压 .tar 文件获得 .exe 安装包
 tar -xf VMware-Workstation.exe.tar
-
-# 下载 Workstation Pro（Linux）
-curl -L --connect-to softwareupdate-prod.broadcom.com:443:softwareupdate-prod.broadcom.com.cdn.cloudflare.net:443 \
-  -o VMware-Workstation.bundle.tar \
-  "https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/26H1/25388281/linux/core/VMware-Workstation-26H1-25388281.x86_64.bundle.tar"
-
-# 解压
-tar -xf VMware-Workstation.bundle.tar
-```
-
-**使用方法（Windows PowerShell）：**
-
-```powershell
-# 修改 hosts 文件（需要管理员权限）
-# 在 C:\Windows\System32\drivers\etc\hosts 添加：
-# softwareupdate-prod.broadcom.com.cdn.cloudflare.net softwareupdate-prod.broadcom.com
-
-# 然后直接下载
-Invoke-WebRequest -Uri "https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar" -OutFile VMware-Workstation.tar
-
-# 解压
-tar -xf VMware-Workstation.tar
 ```
 
 ### 方式二：TechPowerUp
@@ -104,6 +111,18 @@ Archive.org 提供历史版本的镜像，无需登录。
 | 13.6.1 | 23298819 | 2024-11-19 | [CDN](https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.6.1/23298819/universal/core/com.vmware.fusion.zip.tar) | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.1-23298819_universal.dmg) |
 | 13.6.0 | 23278157 | 2024-09-17 | [CDN](https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.6.0/23278157/universal/core/com.vmware.fusion.zip.tar) | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.6.0-23278157_universal.dmg) |
 | 13.5.2 | 23324145 | 2024-06-25 | [CDN](https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/fusion/13.5.2/23324145/universal/core/com.vmware.fusion.zip.tar) | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.5.2-23324145_universal.dmg) |
+
+## 文件校验
+
+下载后请校验文件完整性：
+
+```bash
+# Linux/macOS
+sha256sum -c vmware-sha256.txt
+
+# Windows PowerShell
+Get-FileHash -Algorithm SHA256 VMware-Workstation-26H1-Windows.exe.tar
+```
 
 ## CDN 访问说明
 

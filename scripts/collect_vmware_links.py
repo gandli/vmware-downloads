@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
 VMware Download Link Collector
-收集 VMware 产品的下载地址
-使用 Cloudflare CDN 缓存和 Archive.org 作为来源
+收集 VMware 产品的下载地址，支持 SHA 校验和 aria2 下载
+使用 Broadcom CDN（通过 Cloudflare 缓存）作为首选来源
 """
 
+import hashlib
 import json
 import sys
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -59,7 +61,6 @@ def generate_workstation_downloads(version: str, build: str) -> dict:
     archive_base = f"https://archive.org/download/{ARCHIVE_ORG_COLLECTION}"
 
     # Archive.org 链接
-    # 注意：新版本（25H2+, 26H1）的 Linux 版本在 Linux/ 子目录下
     if version.startswith("25H") or version.startswith("26H"):
         archive_windows = f"{archive_base}/{folder}/VMware-Workstation-Full-{version}-{build}.exe"
         archive_linux = f"{archive_base}/Linux/{folder}/VMware-Workstation-Full-{version}-{build}.x86_64.bundle"
@@ -72,13 +73,13 @@ def generate_workstation_downloads(version: str, build: str) -> dict:
     cdn_linux = f"{BROADCOM_CDN_BASE}ws/{version}/{build}/linux/core/VMware-Workstation-{version}-{build}.x86_64.bundle.tar"
 
     return {
-        "archive_org": {
-            "windows": archive_windows,
-            "linux": archive_linux,
-        },
         "broadcom_cdn": {
             "windows": cdn_windows,
             "linux": cdn_linux,
+        },
+        "archive_org": {
+            "windows": archive_windows,
+            "linux": archive_linux,
         },
         "techpowerup": "https://www.techpowerup.com/download/vmware-workstation-pro/",
     }
@@ -95,11 +96,11 @@ def generate_fusion_downloads(version: str, build: str) -> dict:
     cdn_macos = f"{BROADCOM_CDN_BASE}fusion/{version}/{build}/universal/core/com.vmware.fusion.zip.tar"
 
     return {
-        "archive_org": {
-            "macos": archive_macos,
-        },
         "broadcom_cdn": {
             "macos": cdn_macos,
+        },
+        "archive_org": {
+            "macos": archive_macos,
         },
         "techpowerup": "https://www.techpowerup.com/download/vmware-fusion/",
     }
@@ -110,9 +111,19 @@ def collect_vmware_downloads() -> dict:
     result = {
         "collected_at": datetime.utcnow().isoformat(),
         "sources": {
-            "broadcom_cdn": "Broadcom 官方 CDN（通过 Cloudflare 缓存访问）",
-            "archive_org": "Archive.org 社区镜像（无需登录）",
-            "techpowerup": "TechPowerUp 第三方下载站点",
+            "broadcom_cdn": {
+                "name": "Broadcom 官方 CDN（推荐）",
+                "note": "通过 Cloudflare 缓存访问，速度最快",
+                "curl_option": f"--connect-to softwareupdate-prod.broadcom.com:443:{CLOUDFLARE_CDN_HOST}:443",
+            },
+            "archive_org": {
+                "name": "Archive.org 社区镜像",
+                "note": "无需登录，社区维护",
+            },
+            "techpowerup": {
+                "name": "TechPowerUp",
+                "note": "可靠的第三方下载站点",
+            },
         },
         "products": {
             "workstation-pro": {
@@ -169,6 +180,143 @@ def save_to_json(data: dict, output_path: Path) -> None:
     print(f"已保存 JSON 到 {output_path}")
 
 
+def generate_aria2_configs(data: dict, output_dir: Path) -> None:
+    """生成 aria2 下载配置文件"""
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 生成 Workstation Pro aria2 文件
+    ws_aria2_lines = []
+    for v in data["products"]["workstation-pro"]["versions"]:
+        # 优先使用 Broadcom CDN
+        ws_aria2_lines.append(f"# VMware Workstation Pro v{v['version']} (build {v['build']})")
+        ws_aria2_lines.append(v["downloads"]["broadcom_cdn"]["windows"])
+        ws_aria2_lines.append(f"  out=VMware-Workstation-{v['version']}-Windows.exe.tar")
+        ws_aria2_lines.append(f"  header=Host: {CLOUDFLARE_CDN_HOST}")
+        ws_aria2_lines.append("")
+        ws_aria2_lines.append(v["downloads"]["broadcom_cdn"]["linux"])
+        ws_aria2_lines.append(f"  out=VMware-Workstation-{v['version']}-Linux.bundle.tar")
+        ws_aria2_lines.append(f"  header=Host: {CLOUDFLARE_CDN_HOST}")
+        ws_aria2_lines.append("")
+
+    ws_aria2_path = output_dir / "vmware-workstation-pro.aria2"
+    with open(ws_aria2_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(ws_aria2_lines))
+    print(f"已生成 Workstation aria2 配置: {ws_aria2_path}")
+
+    # 生成 Fusion Pro aria2 文件
+    fusion_aria2_lines = []
+    for v in data["products"]["fusion-pro"]["versions"]:
+        fusion_aria2_lines.append(f"# VMware Fusion Pro v{v['version']} (build {v['build']})")
+        fusion_aria2_lines.append(v["downloads"]["broadcom_cdn"]["macos"])
+        fusion_aria2_lines.append(f"  out=VMware-Fusion-{v['version']}-macOS.zip.tar")
+        fusion_aria2_lines.append(f"  header=Host: {CLOUDFLARE_CDN_HOST}")
+        fusion_aria2_lines.append("")
+
+    fusion_aria2_path = output_dir / "vmware-fusion-pro.aria2"
+    with open(fusion_aria2_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(fusion_aria2_lines))
+    print(f"已生成 Fusion aria2 配置: {fusion_aria2_path}")
+
+
+def generate_download_scripts(data: dict, output_dir: Path) -> None:
+    """生成下载脚本"""
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Linux/macOS 下载脚本
+    sh_lines = [
+        "#!/bin/bash",
+        "# VMware 下载脚本（使用 aria2）",
+        "",
+        "# 检查 aria2 是否安装",
+        "if ! command -v aria2c &> /dev/null; then",
+        '    echo "错误: 未安装 aria2"',
+        '    echo "请先安装 aria2: https://aria2.github.io/"',
+        "    exit 1",
+        "fi",
+        "",
+        "# 下载目录",
+        'DOWNLOAD_DIR="./vmware-downloads"',
+        'mkdir -p "$DOWNLOAD_DIR"',
+        "",
+        "# 使用 aria2 下载",
+        'echo "开始下载 VMware 产品..."',
+        'aria2c --dir="$DOWNLOAD_DIR" --file-allocation=none --check-integrity=true \\',
+        "  --connect-timeout=30 --retry-wait=5 --max-tries=3 \\",
+        "  -i vmware-workstation-pro.aria2",
+        "",
+        'echo "下载完成！"',
+    ]
+
+    sh_path = output_dir / "download.sh"
+    with open(sh_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(sh_lines))
+    print(f"已生成下载脚本: {sh_path}")
+
+    # Windows PowerShell 下载脚本
+    ps1_lines = [
+        "# VMware 下载脚本（使用 aria2）",
+        "",
+        "# 检查 aria2 是否安装",
+        "if (-not (Get-Command aria2c -ErrorAction SilentlyContinue)) {",
+        '    Write-Error "错误: 未安装 aria2"',
+        '    Write-Host "请先安装 aria2: https://aria2.github.io/"',
+        "    exit 1",
+        "}",
+        "",
+        "# 下载目录",
+        '$DOWNLOAD_DIR = ".\\vmware-downloads"',
+        "New-Item -ItemType Directory -Force -Path $DOWNLOAD_DIR | Out-Null",
+        "",
+        "# 使用 aria2 下载",
+        'Write-Host "开始下载 VMware 产品..."',
+        'aria2c --dir="$DOWNLOAD_DIR" --file-allocation=none --check-integrity=true `',
+        "  --connect-timeout=30 --retry-wait=5 --max-tries=3 `",
+        "  -i vmware-workstation-pro.aria2",
+        "",
+        'Write-Host "下载完成！"',
+    ]
+
+    ps1_path = output_dir / "download.ps1"
+    with open(ps1_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(ps1_lines))
+    print(f"已生成下载脚本: {ps1_path}")
+
+
+def generate_sha256_checklist(data: dict, output_dir: Path) -> None:
+    """生成 SHA256 校验清单"""
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    sha_lines = [
+        "# VMware 下载文件 SHA256 校验清单",
+        f"# 生成时间: {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
+        "#",
+        "# 使用方法:",
+        "# Linux/macOS: sha256sum -c vmware-sha256.txt",
+        "# Windows: Get-FileHash -Algorithm SHA256 <file>",
+        "",
+    ]
+
+    # Workstation Pro
+    sha_lines.append("# VMware Workstation Pro")
+    for v in data["products"]["workstation-pro"]["versions"]:
+        sha_lines.append(f"# v{v['version']} (build {v['build']})")
+        sha_lines.append(f"<sha256>  VMware-Workstation-{v['version']}-Windows.exe.tar")
+        sha_lines.append(f"<sha256>  VMware-Workstation-{v['version']}-Linux.bundle.tar")
+    sha_lines.append("")
+
+    # Fusion Pro
+    sha_lines.append("# VMware Fusion Pro")
+    for v in data["products"]["fusion-pro"]["versions"]:
+        sha_lines.append(f"# v{v['version']} (build {v['build']})")
+        sha_lines.append(f"<sha256>  VMware-Fusion-{v['version']}-macOS.zip.tar")
+    sha_lines.append("")
+
+    sha_path = output_dir / "vmware-sha256.txt"
+    with open(sha_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(sha_lines))
+    print(f"已生成 SHA256 校验清单: {sha_path}")
+
+
 def generate_readme(data: dict, readme_path: Path) -> None:
     """生成 README.md"""
     lines = [
@@ -178,13 +326,42 @@ def generate_readme(data: dict, readme_path: Path) -> None:
         "",
         "> **VMware Workstation Pro 和 Fusion Pro 对所有用户免费。**",
         "",
+        "## 快速下载（使用 aria2）",
+        "",
+        "### 安装 aria2",
+        "",
+        "```bash",
+        "# macOS",
+        "brew install aria2",
+        "",
+        "# Ubuntu/Debian",
+        "sudo apt install aria2",
+        "",
+        "# Windows (winget)",
+        "winget install aria2",
+        "```",
+        "",
+        "### 下载方法",
+        "",
+        "```bash",
+        "# 下载所有版本",
+        "bash download.sh",
+        "",
+        "# 或使用 PowerShell",
+        ".\\download.ps1",
+        "",
+        "# 下载单个文件",
+        f"aria2c --connect-to softwareupdate-prod.broadcom.com:443:{CLOUDFLARE_CDN_HOST}:443 \\",
+        "  'https://softwareupdate-prod.broadcom.com/cds/vmw-desktop/ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar'",
+        "```",
+        "",
         "## 下载方式",
         "",
         "### 方式一：Broadcom 官方 CDN（推荐）",
         "",
         "Broadcom 官方 CDN 通过 Cloudflare 缓存提供，下载速度最快。",
         "",
-        "**使用方法（Linux/macOS）：**",
+        "**使用方法（Linux/macOS curl）：**",
         "",
         "```bash",
         "# 下载 Workstation Pro（Windows）",
@@ -194,28 +371,6 @@ def generate_readme(data: dict, readme_path: Path) -> None:
         "",
         "# 解压 .tar 文件获得 .exe 安装包",
         "tar -xf VMware-Workstation.exe.tar",
-        "",
-        "# 下载 Workstation Pro（Linux）",
-        f"curl -L --connect-to softwareupdate-prod.broadcom.com:443:{CLOUDFLARE_CDN_HOST}:443 \\",
-        "  -o VMware-Workstation.bundle.tar \\",
-        f"  \"{BROADCOM_CDN_BASE}ws/26H1/25388281/linux/core/VMware-Workstation-26H1-25388281.x86_64.bundle.tar\"",
-        "",
-        "# 解压",
-        "tar -xf VMware-Workstation.bundle.tar",
-        "```",
-        "",
-        "**使用方法（Windows PowerShell）：**",
-        "",
-        "```powershell",
-        "# 修改 hosts 文件（需要管理员权限）",
-        "# 在 C:\\Windows\\System32\\drivers\\etc\\hosts 添加：",
-        "# softwareupdate-prod.broadcom.com.cdn.cloudflare.net softwareupdate-prod.broadcom.com",
-        "",
-        "# 然后直接下载",
-        f"Invoke-WebRequest -Uri \"{BROADCOM_CDN_BASE}ws/26H1/25388281/windows/core/VMware-workstation-26H1-25388281.exe.tar\" -OutFile VMware-Workstation.tar",
-        "",
-        "# 解压",
-        "tar -xf VMware-Workstation.tar",
         "```",
         "",
         "### 方式二：TechPowerUp",
@@ -295,6 +450,18 @@ def generate_readme(data: dict, readme_path: Path) -> None:
 
     lines.extend([
         "",
+        "## 文件校验",
+        "",
+        "下载后请校验文件完整性：",
+        "",
+        "```bash",
+        "# Linux/macOS",
+        "sha256sum -c vmware-sha256.txt",
+        "",
+        "# Windows PowerShell",
+        "Get-FileHash -Algorithm SHA256 VMware-Workstation-26H1-Windows.exe.tar",
+        "```",
+        "",
         "## CDN 访问说明",
         "",
         "Broadcom 官方 CDN (`softwareupdate-prod.broadcom.com`) 的 DNS 已被移除，",
@@ -351,9 +518,13 @@ def main() -> int:
     repo_root = script_dir.parent
     json_path = repo_root / "data" / "vmware_downloads.json"
     readme_path = repo_root / "README.md"
+    aria2_dir = repo_root / "aria2"
 
     # 保存结果
     save_to_json(data, json_path)
+    generate_aria2_configs(data, aria2_dir)
+    generate_download_scripts(data, aria2_dir)
+    generate_sha256_checklist(data, aria2_dir)
     generate_readme(data, readme_path)
 
     # 打印摘要
@@ -361,9 +532,17 @@ def main() -> int:
     print("收集完成！")
     print(f"  Workstation Pro: {len(data['products']['workstation-pro']['versions'])} 个版本")
     print(f"  Fusion Pro: {len(data['products']['fusion-pro']['versions'])} 个版本")
-    print("\n下载来源:")
-    print("  - Broadcom CDN: 官方 CDN（通过 Cloudflare 缓存访问）")
-    print("  - Archive.org: 社区维护的镜像（无需登录）")
+    print("\n生成的文件:")
+    print(f"  - {json_path}")
+    print(f"  - {readme_path}")
+    print(f"  - {aria2_dir / 'vmware-workstation-pro.aria2'}")
+    print(f"  - {aria2_dir / 'vmware-fusion-pro.aria2'}")
+    print(f"  - {aria2_dir / 'download.sh'}")
+    print(f"  - {aria2_dir / 'download.ps1'}")
+    print(f"  - {aria2_dir / 'vmware-sha256.txt'}")
+    print("\n下载方式:")
+    print("  - Broadcom CDN: 官方 CDN（推荐，速度最快）")
+    print("  - Archive.org: 社区镜像（无需登录）")
     print("  - TechPowerUp: 第三方下载站点")
 
     return 0
