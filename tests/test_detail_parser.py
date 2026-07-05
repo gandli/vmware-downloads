@@ -143,3 +143,35 @@ def test_only_one_date_leaves_last_updated_empty():
     r = parse_detail_table(html)
     assert r[0]["release_date"] == "Jan 1, 2024"
     assert r[0]["last_updated"] == ""
+
+
+# ============================================================
+# 常量与预编译验证（回归保底：Gemini/Sourcery review 采纳的重构）
+# ============================================================
+
+def test_regex_patterns_precompiled_at_module_level():
+    """所有正则常量应在模块导入时预编译（避免每次调用重复编译）"""
+    import re
+    from vmware_lib import detail_parser as dp
+
+    for pat_name in ("_FILE_PAT", "_SIZE_PAT", "_BUILD_PAT",
+                     "_SHA256_PAT", "_MD5_PAT", "_DATE_PAT",
+                     "_HTML_TAG_PAT", "_NBSP_PAT", "_WHITESPACE_PAT"):
+        pat = getattr(dp, pat_name)
+        assert isinstance(pat, re.Pattern), f"{pat_name} 应是预编译 re.Pattern"
+
+
+def test_window_size_constant_exposed():
+    """魔法数字 2500 应通过具名常量暴露，便于 Broadcom 改版时调整"""
+    from vmware_lib import detail_parser as dp
+
+    assert dp._DETAIL_WINDOW_BYTES == 2500
+
+
+def test_parse_is_deterministic_across_calls():
+    """预编译后多次调用结果一致（预编译不能引入状态）"""
+    html = "VMware-Test.exe (10 MB) Build Number: 999 " + "a" * 64 + " Jan 1, 2024"
+    r1 = parse_detail_table(html)
+    r2 = parse_detail_table(html)
+    r3 = parse_detail_table(html)
+    assert r1 == r2 == r3
