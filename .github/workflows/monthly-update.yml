@@ -1,0 +1,136 @@
+name: Monthly VMware Metadata Update
+
+# Broadcom 发新版平均间隔 91 天（3 个月），按月执行绰绰有余
+# 数据来源：data/vmware_downloads.json 显示 2024-05 至 2026-05 共 9 次发布
+# 触发时机：每月 1 号 UTC 06:00（北京时间 14:00，Broadcom 美西上班后）
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'  # 每月 1 号 06:00 UTC
+  workflow_dispatch:  # 支持手动触发（测试用）
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fetch-and-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 装 Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安装 Python 依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright pytest
+
+      - name: 缓存 Playwright 浏览器（省 15 秒）
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-v1
+
+      - name: 装 Playwright Chromium（未命中缓存时）
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: playwright install --with-deps chromium
+
+      - name: 装 Playwright 系统依赖（命中缓存时）
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: playwright install-deps chromium
+
+      - name: 单元测试（回归保底）
+        run: pytest -q
+
+      - name: 抓取 Broadcom 官方元数据
+        env:
+          BROADCOM_USERNAME: ${{ secrets.BROADCOM_USERNAME }}
+          BROADCOM_PASSWORD: ${{ secrets.BROADCOM_PASSWORD }}
+        run: |
+          python scripts/fetch_broadcom.py
+
+      - name: 融合 archive.org + 渲染 README/checksums
+        run: |
+          python scripts/collect_vmware_links.py
+
+      - name: 检查是否有数据变化
+        id: check_diff
+        run: |
+          if git diff --quiet data/ README.md; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "✅ 无数据变化，跳过 PR 创建"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "🆕 检测到数据变化"
+            git diff --stat data/ README.md
+          fi
+
+      - name: 摘要变化条目（PR body 用）
+        if: steps.check_diff.outputs.changed == 'true'
+        id: summarize
+        run: |
+          python <<'PY' > /tmp/pr_body.md
+          import json, subprocess
+          # 拿 HEAD 版 vs 工作区版本
+          try:
+              head_data = json.loads(subprocess.check_output(
+                  ['git', 'show', 'HEAD:data/vmware_downloads.json']
+              ))
+          except Exception:
+              head_data = {}
+          with open('data/vmware_downloads.json') as f:
+              new_data = json.load(f)
+
+          def versions(d, key):
+              return {v['version']: v.get('build', '') for v in d.get(key, [])}
+
+          lines = ["## 🔄 自动检测到 Broadcom 元数据变化", ""]
+          for key, label in [('workstation_pro', 'Workstation Pro'), ('fusion_pro', 'Fusion Pro')]:
+              old = versions(head_data, key)
+              new = versions(new_data, key)
+              added = set(new) - set(old)
+              removed = set(old) - set(new)
+              changed = {v for v in old & new.keys() if old[v] != new[v]}
+              if added or removed or changed:
+                  lines.append(f"### {label}")
+                  for v in sorted(added):
+                      lines.append(f"- ➕ 新增: **{v}** (build {new[v]})")
+                  for v in sorted(removed):
+                      lines.append(f"- ➖ 移除: {v}")
+                  for v in sorted(changed):
+                      lines.append(f"- 🔄 更新: {v} (build {old[v]} → {new[v]})")
+                  lines.append("")
+          lines += [
+              "---",
+              "🤖 由 [.github/workflows/monthly-update.yml](./.github/workflows/monthly-update.yml) 自动生成",
+              f"运行时间：`${{{{ github.run_id }}}}` · [查看日志](https://github.com/${{{{ github.repository }}}}/actions/runs/${{{{ github.run_id }}}})",
+          ]
+          print('\n'.join(lines))
+          PY
+          echo "body_path=/tmp/pr_body.md" >> $GITHUB_OUTPUT
+
+      - name: 提 PR（若有变化）
+        if: steps.check_diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            chore(data): 月度自动更新 Broadcom 元数据
+
+            由 monthly-update.yml 触发，Broadcom Support Portal API 拦截抓取
+          title: "🤖 Monthly VMware Update - ${{ github.run_started_at }}"
+          body-path: /tmp/pr_body.md
+          branch: auto/monthly-update
+          delete-branch: true
+          labels: |
+            automated
+            data-update
