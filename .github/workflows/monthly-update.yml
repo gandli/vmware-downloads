@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: 装 Python 3.11
         uses: actions/setup-python@v5
@@ -86,7 +88,7 @@ jobs:
             chore(data): 月度自动更新 Broadcom 元数据
 
             由 monthly-update.yml 触发，Broadcom Support Portal API 拦截抓取
-          title: "🤖 Monthly VMware Update - ${{ github.run_started_at }}"
+          title: "🤖 Monthly VMware Update - run #${{ github.run_number }}"
           body-path: /tmp/pr_body.md
           branch: auto/monthly-update
           delete-branch: true
