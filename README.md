@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-07-05 17:24 UTC
+最后更新: 2026-07-05 17:34 UTC
 
 > **下载链接由 [archive.org](https://archive.org/details/vmwareworkstationarchive) 提供，SHA256/MD5 与发布日期来自 [Broadcom Support Portal](https://support.broadcom.com/group/ecx/productdownloads) 官方元数据。**
 
