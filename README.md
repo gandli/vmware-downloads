@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-07-05 17:34 UTC
+最后更新: 2026-07-05 17:37 UTC
 
 > **下载链接由 [archive.org](https://archive.org/details/vmwareworkstationarchive) 提供，SHA256/MD5 与发布日期来自 [Broadcom Support Portal](https://support.broadcom.com/group/ecx/productdownloads) 官方元数据。**
 
@@ -51,9 +51,23 @@
 
 ## 校验完整性
 
-所有 SHA256/MD5 由 **Broadcom Support Portal 官方元数据**导出，保存在 [`data/checksums.txt`](data/checksums.txt)。
+所有 SHA256/MD5/文件字节大小由 **Broadcom Support Portal 官方元数据**导出，保存在：
+
+- [`data/checksums.txt`](data/checksums.txt) — SHA256（可直接喂给 `shasum -c` / `sha256sum -c`）
+- [`data/vmware_downloads.json`](data/vmware_downloads.json) — 每个文件的 `size`（人类可读）/ SHA256 / MD5 / build 号等
 
 先把 `data/checksums.txt` 与下载好的 `.exe`/`.bundle`/`.dmg` 放在**同一目录**，然后：
+
+### 1️⃣ 快速预检（秒级） — 看文件大小对不对
+
+```bash
+# 与 vmware_downloads.json 里的 size 字段对比（比如 '405.72 MB'）
+ls -lh VMware-workstation-full-17.6.4-24832109.exe
+```
+
+如果尺寸差得多，说明**下载不完整或下错了**，无需再算哈希，直接重新下。
+
+### 2️⃣ SHA256 完整性校验（推荐，唯一权威）
 
 ```bash
 # Linux（GNU coreutils）
@@ -75,6 +89,14 @@ Get-Content checksums.txt | ForEach-Object {
 ```
 
 > `--ignore-missing` 让工具跳过当前目录不存在的文件，只校验你下载的那几个。
+
+### 3️⃣ 期望输出
+
+```
+VMware-workstation-full-17.6.4-24832109.exe: OK
+```
+
+看到 `OK` 就是**逐字节校验通过**，可以放心安装；出现 `FAILED` 或 `WARNING` 一律**别装**，重下。
 
 ## 数据来源
 
