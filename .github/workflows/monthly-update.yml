@@ -76,47 +76,7 @@ jobs:
 
       - name: 摘要变化条目（PR body 用）
         if: steps.check_diff.outputs.changed == 'true'
-        id: summarize
-        run: |
-          python <<'PY' > /tmp/pr_body.md
-          import json, subprocess
-          # 拿 HEAD 版 vs 工作区版本
-          try:
-              head_data = json.loads(subprocess.check_output(
-                  ['git', 'show', 'HEAD:data/vmware_downloads.json']
-              ))
-          except Exception:
-              head_data = {}
-          with open('data/vmware_downloads.json') as f:
-              new_data = json.load(f)
-
-          def versions(d, key):
-              return {v['version']: v.get('build', '') for v in d.get(key, [])}
-
-          lines = ["## 🔄 自动检测到 Broadcom 元数据变化", ""]
-          for key, label in [('workstation_pro', 'Workstation Pro'), ('fusion_pro', 'Fusion Pro')]:
-              old = versions(head_data, key)
-              new = versions(new_data, key)
-              added = set(new) - set(old)
-              removed = set(old) - set(new)
-              changed = {v for v in old & new.keys() if old[v] != new[v]}
-              if added or removed or changed:
-                  lines.append(f"### {label}")
-                  for v in sorted(added):
-                      lines.append(f"- ➕ 新增: **{v}** (build {new[v]})")
-                  for v in sorted(removed):
-                      lines.append(f"- ➖ 移除: {v}")
-                  for v in sorted(changed):
-                      lines.append(f"- 🔄 更新: {v} (build {old[v]} → {new[v]})")
-                  lines.append("")
-          lines += [
-              "---",
-              "🤖 由 [.github/workflows/monthly-update.yml](./.github/workflows/monthly-update.yml) 自动生成",
-              f"运行时间：`${{{{ github.run_id }}}}` · [查看日志](https://github.com/${{{{ github.repository }}}}/actions/runs/${{{{ github.run_id }}}})",
-          ]
-          print('\n'.join(lines))
-          PY
-          echo "body_path=/tmp/pr_body.md" >> $GITHUB_OUTPUT
+        run: python scripts/summarize_changes.py > /tmp/pr_body.md
 
       - name: 提 PR（若有变化）
         if: steps.check_diff.outputs.changed == 'true'
