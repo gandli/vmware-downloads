@@ -1,6 +1,6 @@
 # VMware 下载链接
 
-最后更新: 2026-07-05 17:08 UTC
+最后更新: 2026-07-05 17:24 UTC
 
 > **下载链接由 [archive.org](https://archive.org/details/vmwareworkstationarchive) 提供，SHA256/MD5 与发布日期来自 [Broadcom Support Portal](https://support.broadcom.com/group/ecx/productdownloads) 官方元数据。**
 
@@ -53,16 +53,28 @@
 
 所有 SHA256/MD5 由 **Broadcom Support Portal 官方元数据**导出，保存在 [`data/checksums.txt`](data/checksums.txt)。
 
+先把 `data/checksums.txt` 与下载好的 `.exe`/`.bundle`/`.dmg` 放在**同一目录**，然后：
+
 ```bash
-# Linux / macOS：批量校验
+# Linux（GNU coreutils）
 sha256sum -c checksums.txt --ignore-missing
 
-# macOS 单文件
-shasum -a 256 VMware-Fusion-*.dmg
-
-# Windows PowerShell
-Get-FileHash -Algorithm SHA256 VMware-Workstation-Full-*.exe
+# macOS（系统自带 shasum，无需安装 coreutils）
+shasum -a 256 -c checksums.txt --ignore-missing
 ```
+
+```powershell
+# Windows PowerShell 5.1+（一键校验，非匹配报 FAIL）
+Get-Content checksums.txt | ForEach-Object {
+    $h, $f = $_ -split '  ', 2
+    if (-not (Test-Path $f)) { return }
+    $actual = (Get-FileHash $f).Hash.ToLower()
+    $ok = $actual -eq $h.ToLower()
+    '{0}  {1}' -f $(if ($ok) {'OK  '} else {'FAIL'}), $f
+}
+```
+
+> `--ignore-missing` 让工具跳过当前目录不存在的文件，只校验你下载的那几个。
 
 ## 数据来源
 
