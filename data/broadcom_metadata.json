@@ -1,9 +1,9 @@
 {
-  "collected_at": "2026-07-05T17:32:54.930553+00:00",
+  "collected_at": "2026-07-05T18:14:28.156815+00:00",
   "source": "Broadcom Support Portal API (getDownloadableFiles)",
   "method": "playwright async + asyncio.Semaphore",
   "worker_count": 5,
-  "elapsed_sec": 61.3,
+  "elapsed_sec": 62.3,
   "total_entries": 27,
   "total_files": 27,
   "entries": [
