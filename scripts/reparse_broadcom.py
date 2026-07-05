@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from probe_broadcom_full import parse_detail_table
+from vmware_lib.detail_parser import parse_detail_table
 
 DUMP = Path("probe_output/full")
 files = sorted(DUMP.glob("detail_*.html"))
