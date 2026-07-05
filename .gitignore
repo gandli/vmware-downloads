@@ -2,23 +2,27 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
+*.egg-info/
+.venv/
 venv/
-env/
 
-# Environment variables
-.env
+# Test / build
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
 
-# Temporary downloads
+# 临时下载
 tmp_downloads/
+probe_output/
+*.exe
+*.bundle
+*.dmg
 
 # IDE
 .vscode/
 .idea/
 *.swp
-*.swo
-
-# OS
 .DS_Store
-Thumbs.db
