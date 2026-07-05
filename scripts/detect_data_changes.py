@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -89,11 +90,16 @@ def has_readme_change() -> bool:
         work = ""
 
     def strip_ts(text: str) -> str:
-        """删除"最后更新: YYYY-MM-DD HH:MM UTC"这一行"""
-        return "\n".join(
-            line for line in text.splitlines()
-            if not line.startswith("最后更新:")
+        """删除"最后更新: YYYY-MM-DD HH:MM UTC"这一行
+
+        用正则匹配日期格式而非硬编码前缀，避免文案/语言调整时误判。
+        """
+        # 匹配任意包含 YYYY-MM-DD HH:MM UTC 时间戳的整行
+        ts_line = re.compile(
+            r"^.*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s*UTC.*$",
+            re.MULTILINE,
         )
+        return ts_line.sub("", text)
 
     return strip_ts(head) != strip_ts(work)
 

@@ -100,3 +100,39 @@ def test_new_version_added_is_detected():
         ],
     }
     assert strip_noise(old) != strip_noise(new)
+
+
+# ============================================================
+# README 时间戳正则匹配（不依赖硬编码前缀）
+# ============================================================
+
+def test_readme_strip_regex_matches_various_prefixes():
+    """正则应识别任意包含 YYYY-MM-DD HH:MM UTC 的行，不限前缀"""
+    import re
+    ts_line = re.compile(
+        r"^.*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s*UTC.*$",
+        re.MULTILINE,
+    )
+
+    # 三种前缀都应被清除
+    text_zh = "最后更新: 2026-07-05 17:47 UTC\n真实内容"
+    text_en = "Last updated: 2026-07-05 17:47 UTC\n真实内容"
+    text_mixed = "更新时间：2026-07-05 17:47 UTC · 数据来源 Broadcom\n真实内容"
+
+    for text in (text_zh, text_en, text_mixed):
+        stripped = ts_line.sub("", text)
+        assert "2026-07-05" not in stripped
+        assert "真实内容" in stripped
+
+
+def test_readme_strip_regex_ignores_dates_without_time():
+    """只带日期无 UTC 时间戳的行不应被误删（保留发布日期等）"""
+    import re
+    ts_line = re.compile(
+        r"^.*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}\s*UTC.*$",
+        re.MULTILINE,
+    )
+    text = "Workstation Pro 17.6.4 发布于 2024-05-14\n最后更新: 2026-07-05 17:47 UTC"
+    stripped = ts_line.sub("", text)
+    assert "2024-05-14" in stripped  # 保留
+    assert "17:47 UTC" not in stripped  # 清除
