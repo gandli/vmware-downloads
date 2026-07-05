@@ -1,0 +1,27 @@
+[project]
+name = "vmware-downloads"
+version = "2.0.0"
+description = "自动收集 VMware Workstation/Fusion 下载链接"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+# E501 由 formatter 处理；UP017 建议 datetime.UTC 是 3.11+ alias，我们保留 timezone.utc 兼容更广
+ignore = ["E501", "UP017"]
