@@ -136,3 +136,56 @@ def test_readme_strip_regex_ignores_dates_without_time():
     stripped = ts_line.sub("", text)
     assert "2024-05-14" in stripped  # 保留
     assert "17:47 UTC" not in stripped  # 清除
+
+
+def test_last_analysis_date_is_stripped_as_noise():
+    """VirusTotal 的 last_analysis_date 每次查询可能变化，应视为噪声"""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+    from detect_data_changes import NOISE_FIELDS, strip_noise
+
+    assert "last_analysis_date" in NOISE_FIELDS
+
+    old = {
+        "workstation_pro": [{
+            "downloads": {
+                "windows": {
+                    "sha256": "a" * 64,
+                    "virustotal": {
+                        "status": "clean",
+                        "harmless": 70,
+                        "last_analysis_date": "2026-01-01T00:00:00+00:00",
+                    }
+                }
+            }
+        }]
+    }
+    new = {
+        "workstation_pro": [{
+            "downloads": {
+                "windows": {
+                    "sha256": "a" * 64,
+                    "virustotal": {
+                        "status": "clean",
+                        "harmless": 70,
+                        "last_analysis_date": "2026-07-05T18:00:00+00:00",
+                    }
+                }
+            }
+        }]
+    }
+    # strip 后应相等（因为只是时间戳差异）
+    assert strip_noise(old) == strip_noise(new)
+
+
+def test_vt_status_change_is_detected_as_real():
+    """VT status 从 clean 变 malicious 必须被检测为真变化（供应链攻击信号）"""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+    from detect_data_changes import strip_noise
+
+    old = {"downloads": {"win": {"virustotal": {"status": "clean", "malicious": 0}}}}
+    new = {"downloads": {"win": {"virustotal": {"status": "malicious", "malicious": 5}}}}
+    assert strip_noise(old) != strip_noise(new)

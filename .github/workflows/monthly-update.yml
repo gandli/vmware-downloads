@@ -60,6 +60,12 @@ jobs:
         run: |
           python scripts/fetch_broadcom.py
 
+      - name: VirusTotal 扫描（用 SHA256 查库，不下载安装包）
+        env:
+          VT_API_KEY: ${{ secrets.VT_API_KEY }}
+        run: |
+          python scripts/scan_virustotal.py || echo "⚠️ VT 扫描非零退出，继续（可能是恶意样本告警）"
+
       - name: 融合 archive.org + 渲染 README/checksums
         run: |
           python scripts/collect_vmware_links.py

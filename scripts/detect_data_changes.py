@@ -29,8 +29,9 @@ from pathlib import Path
 
 # 这些字段每次运行都变，但不代表数据本身变化，对比时剔除
 NOISE_FIELDS = {
-    "collected_at",   # ISO 时间戳
-    "elapsed_sec",    # 抓取耗时
+    "collected_at",         # ISO 时间戳
+    "elapsed_sec",          # 抓取耗时
+    "last_analysis_date",   # VirusTotal 最近一次扫描时间（每次查询可能不同）
 }
 
 

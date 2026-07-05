@@ -19,6 +19,39 @@ def _short_sha256(h: str) -> str:
     return f"{h[:16]}..." if h else ""
 
 
+def _vt_badge(info: dict) -> str:
+    """VirusTotal 扫描结果徽章（供最新版列表 + 表格用）
+
+    输入：downloads[platform] dict，含可选 "virustotal" 子字段
+    输出：Markdown 片段，如 "🟢 [70/70 洁净](https://vt.com/xxx)"
+    无 VT 数据时返回空字符串。
+    """
+    vt = info.get("virustotal") if info else None
+    if not isinstance(vt, dict):
+        return ""
+
+    status = vt.get("status", "")
+    m = vt.get("malicious", 0)
+    s = vt.get("suspicious", 0)
+    h = vt.get("harmless", 0)
+    u = vt.get("undetected", 0)
+    url = vt.get("vt_url", "")
+
+    total_engines = m + s + h + u
+    if status == "clean" and total_engines > 0:
+        label = f"🟢 {h}/{total_engines} 洁净"
+    elif status == "malicious":
+        label = f"🔴 {m} 引擎报毒"
+    elif status == "suspicious":
+        label = f"🟡 {s} 可疑"
+    elif status == "unknown":
+        label = "⚪ VT 待扫"
+    else:
+        return ""
+
+    return f"[{label}]({url})" if url else label
+
+
 def _filename_link(info: dict) -> str:
     """快速下载区块的文件名渲染。
 
@@ -76,9 +109,11 @@ def render_readme(data: dict) -> str:
         for plat, info in ws_latest["downloads"].items():
             sha256 = info.get("sha256", "")
             sha_str = f" · SHA256: `{_short_sha256(sha256)}`" if sha256 else ""
+            vt = _vt_badge(info)
+            vt_str = f" · {vt}" if vt else ""
             lines.append(
                 f"- **{_pretty_platform(plat)}**: {_filename_link(info)} "
-                f"({info['size']}{sha_str})"
+                f"({info['size']}{sha_str}{vt_str})"
             )
         lines.append("")
 
@@ -92,9 +127,11 @@ def render_readme(data: dict) -> str:
         for plat, info in fusion_latest["downloads"].items():
             sha256 = info.get("sha256", "")
             sha_str = f" · SHA256: `{_short_sha256(sha256)}`" if sha256 else ""
+            vt = _vt_badge(info)
+            vt_str = f" · {vt}" if vt else ""
             lines.append(
                 f"- **{_pretty_platform(plat)}**: {_filename_link(info)} "
-                f"({info['size']}{sha_str})"
+                f"({info['size']}{sha_str}{vt_str})"
             )
         lines.append("")
 
