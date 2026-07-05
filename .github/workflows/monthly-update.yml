@@ -62,16 +62,15 @@ jobs:
         run: |
           python scripts/collect_vmware_links.py
 
-      - name: 检查是否有数据变化
+      - name: 检查是否有真实数据变化（剔除时间戳噪声）
         id: check_diff
         run: |
-          if git diff --quiet data/ README.md; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "✅ 无数据变化，跳过 PR 创建"
-          else
+          if python scripts/detect_data_changes.py; then
             echo "changed=true" >> $GITHUB_OUTPUT
-            echo "🆕 检测到数据变化"
-            git diff --stat data/ README.md
+            echo "🆕 检测到真实数据变化，准备开 PR"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "🔇 仅时间戳被刷新，静默跳过"
           fi
 
       - name: 摘要变化条目（PR body 用）
