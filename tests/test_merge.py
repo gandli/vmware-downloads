@@ -158,3 +158,106 @@ def test_empty_broadcom_gives_empty_result() -> None:
     idx = build_archive_filename_index(ARCHIVE_METADATA)
     merged = merge_broadcom_with_archive({"workstation": [], "fusion": []}, idx)
     assert merged == {"workstation": [], "fusion": []}
+
+
+# ---------- Fusion 合并回归 ----------
+
+FUSION_ARCHIVE_METADATA = {
+    "files": [
+        {
+            "name": "Fusion/13.x/VMware-Fusion-13.6.4-24832108_universal.dmg",
+            "size": "556644000",
+            "sha1": "cccccccc3333333333333333333333333333cccc",
+            "md5": "abc123abc123abc123abc123abc123ab",
+        },
+    ]
+}
+
+FUSION_BROADCOM_ENTRIES = {
+    "workstation": [],
+    "fusion": [
+        {
+            "version": "26H1",
+            "platform": "macos",
+            "build": "25388279",
+            "filename": "VMware-Fusion-26H1-25388279_universal.dmg",
+            "size": "480.71 MB",
+            "sha256": "f" * 64,
+            "md5": "f" * 32,
+            "release_date": "2026-04-15",
+            "last_updated": "2026-04-15",
+        },
+        {
+            "version": "13.6.4",
+            "platform": "macos",
+            "build": "24832108",
+            "filename": "VMware-Fusion-13.6.4-24832108_universal.dmg",
+            "size": "530.91 MB",
+            "sha256": "b" * 64,
+            "md5": "abc123abc123abc123abc123abc123ab",  # 与 archive 一致
+            "release_date": "2025-07-15",
+            "last_updated": "2025-07-09",
+        },
+    ],
+}
+
+
+def test_fusion_merge_two_entries() -> None:
+    idx = build_archive_filename_index(FUSION_ARCHIVE_METADATA)
+    merged = merge_broadcom_with_archive(FUSION_BROADCOM_ENTRIES, idx)
+    assert len(merged.get("fusion", [])) == 2
+
+
+def test_fusion_sorted_newest_first() -> None:
+    idx = build_archive_filename_index(FUSION_ARCHIVE_METADATA)
+    merged = merge_broadcom_with_archive(FUSION_BROADCOM_ENTRIES, idx)
+    versions = [v["version"] for v in merged["fusion"]]
+    assert versions[0] == "26H1", "Fusion 应按新版优先排序"
+
+
+def test_fusion_26h1_is_broadcom_only() -> None:
+    """26H1 archive.org 未镜像，Fusion 侧同样要走 broadcom-only 分支"""
+    idx = build_archive_filename_index(FUSION_ARCHIVE_METADATA)
+    merged = merge_broadcom_with_archive(FUSION_BROADCOM_ENTRIES, idx)
+    entry = next(v for v in merged["fusion"] if v["version"] == "26H1")
+    macos = entry["downloads"]["macos"]
+    assert macos.get("source") == "broadcom-only"
+    assert macos.get("url", "") == ""
+
+
+def test_fusion_13_6_4_is_dual_source() -> None:
+    idx = build_archive_filename_index(FUSION_ARCHIVE_METADATA)
+    merged = merge_broadcom_with_archive(FUSION_BROADCOM_ENTRIES, idx)
+    entry = next(v for v in merged["fusion"] if v["version"] == "13.6.4")
+    macos = entry["downloads"]["macos"]
+    assert macos.get("source") == "broadcom+archive"
+    assert "archive.org" in macos.get("url", "")
+
+
+def test_fusion_release_date_carried_over() -> None:
+    """确认 Fusion 分支也传递 date/last_updated（回归 Workstation 特化 bug）"""
+    idx = build_archive_filename_index(FUSION_ARCHIVE_METADATA)
+    merged = merge_broadcom_with_archive(FUSION_BROADCOM_ENTRIES, idx)
+    entry = next(v for v in merged["fusion"] if v["version"] == "13.6.4")
+    assert entry.get("date") == "2025-07-15"
+    assert entry.get("last_updated") == "2025-07-09"
+
+
+# ---------- 哈希大小写归一化 ----------
+
+def test_archive_hash_normalized_to_lowercase() -> None:
+    """archive.org 若返回大写 md5/sha1，索引里必须归一为小写，避免虚假 md5_mismatch"""
+    metadata_upper = {
+        "files": [
+            {
+                "name": "workstation/17.6.4/VMware-workstation-full-17.6.4-24832109.exe",
+                "size": "425506000",
+                "sha1": "AAAAAAAA1111111111111111111111111111AAAA",  # 大写
+                "md5": "B387E0A655798BA356D9A7331D98851A",  # 大写
+            },
+        ]
+    }
+    idx = build_archive_filename_index(metadata_upper)
+    entry = idx["vmware-workstation-full-17.6.4-24832109.exe"]
+    assert entry["sha1"] == "aaaaaaaa1111111111111111111111111111aaaa"
+    assert entry["md5_archive"] == "b387e0a655798ba356d9a7331d98851a"

@@ -19,6 +19,31 @@ def _short_sha256(h: str) -> str:
     return f"{h[:16]}..." if h else ""
 
 
+def _filename_link(info: dict) -> str:
+    """快速下载区块的文件名渲染。
+
+    有 archive.org URL → Markdown 链接
+    仅 Broadcom 有（url 为空）→ 纯 code 文件名 + 官方提示，避免生成 `[filename]()`
+    """
+    filename = info.get("filename", "")
+    url = info.get("url", "").strip()
+    if url:
+        return f"[{filename}]({url})"
+    return f"`{filename}` · 需登录 Broadcom Support Portal 获取"
+
+
+def _download_cell(info: dict | None) -> str:
+    """表格里"下载"单元格。archive.org 未镜像时给出提示，不生成空链接"""
+    if not info:
+        return "—"
+    url = info.get("url", "").strip()
+    size = info.get("size", "")
+    if url:
+        return f"[下载]({url}) ({size})"
+    # broadcom-only 情况：archive.org 未镜像，Broadcom 官方需要登录
+    return f"仅 Broadcom · {size}" if size else "仅 Broadcom"
+
+
 def _now_utc_str() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
@@ -52,7 +77,7 @@ def render_readme(data: dict) -> str:
             sha256 = info.get("sha256", "")
             sha_str = f" · SHA256: `{_short_sha256(sha256)}`" if sha256 else ""
             lines.append(
-                f"- **{_pretty_platform(plat)}**: [{info['filename']}]({info['url']}) "
+                f"- **{_pretty_platform(plat)}**: {_filename_link(info)} "
                 f"({info['size']}{sha_str})"
             )
         lines.append("")
@@ -68,7 +93,7 @@ def render_readme(data: dict) -> str:
             sha256 = info.get("sha256", "")
             sha_str = f" · SHA256: `{_short_sha256(sha256)}`" if sha256 else ""
             lines.append(
-                f"- **{_pretty_platform(plat)}**: [{info['filename']}]({info['url']}) "
+                f"- **{_pretty_platform(plat)}**: {_filename_link(info)} "
                 f"({info['size']}{sha_str})"
             )
         lines.append("")
@@ -86,8 +111,8 @@ def render_readme(data: dict) -> str:
         for v in ws_list:
             win = v["downloads"].get("windows")
             linux = v["downloads"].get("linux")
-            win_str = f"[下载]({win['url']}) ({win['size']})" if win else "—"
-            linux_str = f"[下载]({linux['url']}) ({linux['size']})" if linux else "—"
+            win_str = _download_cell(win)
+            linux_str = _download_cell(linux)
             sha_parts = []
             if win and win.get("sha256"):
                 sha_parts.append(f"Win: `{win['sha256']}`")
@@ -108,7 +133,7 @@ def render_readme(data: dict) -> str:
         ]
         for v in fusion_list:
             macos = v["downloads"].get("macos")
-            macos_str = f"[下载]({macos['url']}) ({macos['size']})" if macos else "—"
+            macos_str = _download_cell(macos)
             sha256 = macos.get("sha256", "") if macos else ""
             sha_str = f"`{sha256}`" if sha256 else "详见 checksums.txt"
             lines.append(

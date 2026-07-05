@@ -130,8 +130,8 @@ def parse_detail_table(html: str) -> list[dict]:
 
         size_m = re.search(r"\((\d+(?:\.\d+)?\s*(?:KB|MB|GB))\)", window_text, re.IGNORECASE)
         build_m = re.search(r"Build\s+Number:?\s*(\d+)", window_text, re.IGNORECASE)
-        sha256_m = re.search(r"\b([a-f0-9]{64})\b", window_text)
-        md5_m = re.search(r"\b([a-f0-9]{32})\b", window_text)
+        sha256_m = re.search(r"\b([a-fA-F0-9]{64})\b", window_text)
+        md5_m = re.search(r"\b([a-fA-F0-9]{32})\b", window_text)
         dates = re.findall(r"([A-Z][a-z]{2}\s+\d{1,2},\s+\d{4})", window_text)
 
         results.append(
@@ -199,8 +199,11 @@ def probe_detail(page: Page, entry: dict, idx: int, total: int) -> dict:
 
 
 def main() -> int:
-    username = os.environ["BROADCOM_USERNAME"]
-    password = os.environ["BROADCOM_PASSWORD"]
+    username = os.environ.get("BROADCOM_USERNAME", "").strip()
+    password = os.environ.get("BROADCOM_PASSWORD", "").strip()
+    if not (username and password):
+        print("❌ 缺少环境变量 BROADCOM_USERNAME / BROADCOM_PASSWORD")
+        return 2
 
     all_entries = []
     started_at = datetime.now(timezone.utc).isoformat()

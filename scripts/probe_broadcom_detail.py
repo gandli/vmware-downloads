@@ -29,8 +29,10 @@ def mask(t):
 
 
 def main():
-    username = os.environ["BROADCOM_USERNAME"]
-    password = os.environ["BROADCOM_PASSWORD"]
+    username = os.environ.get("BROADCOM_USERNAME", "").strip()
+    password = os.environ.get("BROADCOM_PASSWORD", "").strip()
+    if not (username and password):
+        raise SystemExit("❌ 缺少环境变量 BROADCOM_USERNAME / BROADCOM_PASSWORD")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -119,9 +121,9 @@ def main():
 
         # 抓页面上所有 SHA256
         html = page.content()
-        sha256 = sorted(set(re.findall(r"\b[a-f0-9]{64}\b", html)))
-        sha1 = sorted(set(re.findall(r"\b[a-f0-9]{40}\b", html)))
-        md5 = sorted(set(re.findall(r"\b[a-f0-9]{32}\b", html)))
+        sha256 = sorted({h.lower() for h in re.findall(r"\b[a-fA-F0-9]{64}\b", html)})
+        sha1 = sorted({h.lower() for h in re.findall(r"\b[a-fA-F0-9]{40}\b", html)})
+        md5 = sorted({h.lower() for h in re.findall(r"\b[a-fA-F0-9]{32}\b", html)})
         files = sorted(set(re.findall(r"VMware[-_][A-Za-z0-9_.-]+\.(?:exe|bundle|dmg|zip)", html)))
 
         result = {

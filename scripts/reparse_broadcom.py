@@ -20,8 +20,7 @@ entries = old_json["entries"]
 updated = []
 total_files, with_sha256, with_md5 = 0, 0, 0
 
-for entry in entries:
-    idx = entries.index(entry) + 1
+for idx, entry in enumerate(entries, 1):
     # 找对应 HTML
     tag = f"{entry['subFamily']}_{entry['release']}".replace(" ", "_").replace("/", "_")
     tag = re.sub(r"[^A-Za-z0-9_.-]", "", tag)

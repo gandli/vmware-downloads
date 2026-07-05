@@ -218,8 +218,11 @@ async def probe_one(
 
 
 async def main() -> int:
-    username = os.environ["BROADCOM_USERNAME"]
-    password = os.environ["BROADCOM_PASSWORD"]
+    username = os.environ.get("BROADCOM_USERNAME", "").strip()
+    password = os.environ.get("BROADCOM_PASSWORD", "").strip()
+    if not (username and password):
+        print("❌ 缺少环境变量 BROADCOM_USERNAME / BROADCOM_PASSWORD")
+        return 2
     started_at = datetime.now(timezone.utc).isoformat()
     t_start = time.monotonic()
 

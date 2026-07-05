@@ -149,9 +149,9 @@ def detect_blockers(page_or_text) -> list[str]:
 def extract_data(html: str) -> dict:
     """从渲染后 HTML 挖数据"""
     return {
-        "sha256": sorted(set(re.findall(r"\b[a-f0-9]{64}\b", html))),
-        "sha1": sorted(set(re.findall(r"\b[a-f0-9]{40}\b", html))),
-        "md5": sorted(set(re.findall(r"\b[a-f0-9]{32}\b", html))),
+        "sha256": sorted({h.lower() for h in re.findall(r"\b[a-fA-F0-9]{64}\b", html)}),
+        "sha1": sorted({h.lower() for h in re.findall(r"\b[a-fA-F0-9]{40}\b", html)}),
+        "md5": sorted({h.lower() for h in re.findall(r"\b[a-fA-F0-9]{32}\b", html)}),
         "builds": sorted(set(re.findall(r"\b(2[0-9]{7})\b", html))),
         "filenames": sorted(
             set(re.findall(r"VMware[-_][A-Za-z0-9_.-]+\.(?:exe|bundle|dmg|zip|iso)", html))

@@ -215,3 +215,100 @@ def test_skip_files_without_sha256(tmp_path: Path) -> None:
     metadata = load_broadcom_metadata(p)
     entries = build_download_entries(metadata, skip_incomplete=True)
     assert entries["workstation"] == []
+
+
+def test_keep_files_without_sha256_when_not_skipping(tmp_path: Path) -> None:
+    """skip_incomplete=False 时保留 SHA256 空的条目，结构完整且哈希字段为空串"""
+    fixture = dict(FIXTURE)
+    fixture["entries"] = [dict(FIXTURE["entries"][0])]
+    fixture["entries"][0]["files"] = [
+        {
+            "filename": "VMware-Test-9.9.9.exe",
+            "size": "100 MB",
+            "build": "12345",
+            "sha256": "",
+            "md5": "",
+            "release_date": "Jan 1, 2030",
+            "last_updated": "",
+        }
+    ]
+    p = tmp_path / "incomplete.json"
+    p.write_text(json.dumps(fixture), encoding="utf-8")
+    metadata = load_broadcom_metadata(p)
+    entries = build_download_entries(metadata, skip_incomplete=False)
+
+    # 条目应被保留
+    assert len(entries["workstation"]) == 1
+    e = entries["workstation"][0]
+
+    # 哈希字段应为空串（而非 None / 缺 key）
+    assert e["sha256"] == ""
+    assert e["md5"] == ""
+
+    # 其余元数据仍需正确
+    assert e["filename"] == "VMware-Test-9.9.9.exe"
+    assert e["size"] == "100 MB"
+    assert e["build"] == "12345"
+    assert e["release_date"] == "2030-01-01"
+
+
+def test_skip_unknown_platform_entries(tmp_path: Path) -> None:
+    """平台推断失败（unknown）的条目应被静默跳过，避免污染 downloads['unknown']"""
+    fixture = {
+        "collected_at": "2026-07-06T00:00:00+00:00",
+        "entries": [
+            {
+                "product": "workstation",
+                "subFamily": "Mystery Product",
+                "displayGroup": "Mystery Group",
+                "release": "1.0",
+                "servicePk": "999",
+                "files": [
+                    {
+                        "filename": "some-weird-package.tar",  # 非 exe/bundle/dmg
+                        "size": "1 MB",
+                        "build": "1",
+                        "sha256": "a" * 64,  # 有 SHA256 但平台推断不出
+                        "md5": "b" * 32,
+                        "release_date": "Jan 1, 2026",
+                        "last_updated": "Jan 1, 2026",
+                    }
+                ],
+            }
+        ],
+    }
+    p = tmp_path / "unknown.json"
+    p.write_text(json.dumps(fixture), encoding="utf-8")
+    metadata = load_broadcom_metadata(p)
+    entries = build_download_entries(metadata, skip_incomplete=True)
+
+    # 应该被跳过，不会出现在任何产品下
+    assert entries.get("workstation") == []
+    assert entries.get("fusion") == []
+    assert "unknown" not in entries  # 也不该单开 unknown key
+
+
+def test_hashes_normalized_to_lowercase(tmp_path: Path) -> None:
+    """跨源对比需要哈希小写归一化，避免大小写不同触发误报 md5_mismatch"""
+    fixture = dict(FIXTURE)
+    fixture["entries"] = [dict(FIXTURE["entries"][0])]
+    fixture["entries"][0]["files"] = [
+        {
+            "filename": "VMware-Uppercase.exe",
+            "size": "1 MB",
+            "build": "1",
+            "sha256": "ABCDEF" + "0" * 58,  # 大写 SHA256
+            "md5": "AABBCC" + "0" * 26,      # 大写 MD5
+            "release_date": "Jan 1, 2026",
+            "last_updated": "",
+        }
+    ]
+    p = tmp_path / "upper.json"
+    p.write_text(json.dumps(fixture), encoding="utf-8")
+    metadata = load_broadcom_metadata(p)
+    entries = build_download_entries(metadata, skip_incomplete=True)
+
+    assert len(entries["workstation"]) == 1
+    e = entries["workstation"][0]
+    assert e["sha256"] == "abcdef" + "0" * 58  # 全小写
+    assert e["md5"] == "aabbcc" + "0" * 26

@@ -102,3 +102,61 @@ class TestRenderChecksums:
             "c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6  VMware-Fusion-26H1-25388279_universal.dmg"
             in txt
         )
+
+
+class TestBroadcomOnlyRendering:
+    """回归 CodeRabbit review：archive.org 未镜像时 url='' 会渲染出空链接 [filename]()"""
+
+    BROADCOM_ONLY_DATA = {
+        "collected_at": "2026-07-06T00:00:00+00:00",
+        "workstation_pro": [
+            {
+                "version": "26H2",
+                "build": "99999999",
+                "date": "2026-10-01",
+                "downloads": {
+                    "windows": {
+                        "url": "",  # ← archive.org 还没镜像
+                        "filename": "VMware-Workstation-Full-26H2-99999999.exe",
+                        "size": "280.5 MB",
+                        "sha256": "d" * 64,
+                        "source": "broadcom-only",
+                    },
+                },
+            }
+        ],
+        "fusion_pro": [
+            {
+                "version": "26H2",
+                "build": "99999998",
+                "date": "2026-10-01",
+                "downloads": {
+                    "macos": {
+                        "url": "",
+                        "filename": "VMware-Fusion-26H2-99999998_universal.dmg",
+                        "size": "485.0 MB",
+                        "sha256": "e" * 64,
+                        "source": "broadcom-only",
+                    },
+                },
+            }
+        ],
+    }
+
+    def test_no_empty_markdown_link_in_readme(self):
+        """不能出现 [xxx]() 空 href 链接"""
+        md = render_readme(self.BROADCOM_ONLY_DATA)
+        # 不应该有任何空 href 的 markdown 链接：]() 是明确信号
+        assert "]()" not in md, "broadcom-only 条目渲染出空链接"
+
+    def test_filename_still_visible_when_url_empty(self):
+        """即便无 URL，文件名仍需显示，让用户知道有这个版本"""
+        md = render_readme(self.BROADCOM_ONLY_DATA)
+        assert "VMware-Workstation-Full-26H2-99999999.exe" in md
+        assert "VMware-Fusion-26H2-99999998_universal.dmg" in md
+
+    def test_broadcom_only_hint_shown(self):
+        """应给出明确提示：仅 Broadcom 有 / 需登录官方"""
+        md = render_readme(self.BROADCOM_ONLY_DATA)
+        # 快速下载区块或表格里，其中之一应包含 Broadcom 关键词
+        assert "Broadcom" in md

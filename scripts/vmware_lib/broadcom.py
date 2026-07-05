@@ -7,9 +7,12 @@
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 # 月份缩写 → 数字
 _MONTHS = {
@@ -144,10 +147,17 @@ def build_download_entries(
     （Broadcom 新版发布后几天才补 SHA，这段时间不给假数据）
     """
     result: dict[str, list[dict]] = {"workstation": [], "fusion": []}
+    skipped_unknown = 0
 
     for v in versions:
         for f in v.files:
             if skip_incomplete and not f.sha256:
+                continue
+            if v.platform == "unknown":
+                # 平台推断失败：display_group/文件名都识别不出来，跳过并告警
+                # 避免下游 merge_broadcom_with_archive 把它放进 downloads["unknown"]
+                # 静默丢失
+                skipped_unknown += 1
                 continue
             entry = {
                 "version": v.version,
@@ -155,13 +165,19 @@ def build_download_entries(
                 "build": f.build,
                 "filename": f.filename,
                 "size": f.size,
-                "sha256": f.sha256,
-                "md5": f.md5,
+                "sha256": (f.sha256 or "").lower(),
+                "md5": (f.md5 or "").lower(),
                 "release_date": parse_release_date(f.release_date),
                 "last_updated": parse_release_date(f.last_updated),
                 "display_group": v.display_group,
                 "service_pk": v.service_pk,
             }
             result.setdefault(v.product, []).append(entry)
+
+    if skipped_unknown:
+        logger.warning(
+            "build_download_entries: 跳过 %d 个平台推断失败(unknown)的条目",
+            skipped_unknown,
+        )
 
     return result

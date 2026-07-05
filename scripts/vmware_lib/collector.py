@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import urllib.request
 from collections import defaultdict
@@ -10,6 +11,8 @@ from datetime import datetime, timezone
 from typing import Any
 
 from vmware_lib.parser import VMwareFile, parse_filename
+
+logger = logging.getLogger(__name__)
 
 ARCHIVE_COLLECTION = "vmwareworkstationarchive"
 METADATA_URL = f"https://archive.org/metadata/{ARCHIVE_COLLECTION}"
@@ -197,15 +200,31 @@ def build_archive_filename_index(metadata: dict) -> dict[str, dict]:
         except (ValueError, TypeError):
             size_bytes = 0
         base = name.rsplit("/", 1)[-1]  # 去目录，只留 basename
+        key = base.lower()
         entry = {
             "url": build_download_url(name),
             "path": name,
             "size_bytes": size_bytes,
-            "sha1": file_info.get("sha1", ""),
-            "md5_archive": file_info.get("md5", ""),
+            "sha1": file_info.get("sha1", "").lower(),
+            "md5_archive": file_info.get("md5", "").lower(),
             "mtime": file_info.get("mtime", ""),
         }
-        index[base.lower()] = entry
+        # 冲突检测：同 basename 不同目录时，保留 size 更大的（多为完整包）
+        if key in index:
+            prev = index[key]
+            if entry["size_bytes"] >= prev["size_bytes"]:
+                logger.warning(
+                    "archive basename 冲突: %s (取 size=%d 覆盖 size=%d)",
+                    base, entry["size_bytes"], prev["size_bytes"],
+                )
+                index[key] = entry
+            else:
+                logger.warning(
+                    "archive basename 冲突: %s (保留 size=%d 忽略 size=%d)",
+                    base, prev["size_bytes"], entry["size_bytes"],
+                )
+        else:
+            index[key] = entry
     return index
 
 

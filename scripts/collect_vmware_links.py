@@ -83,7 +83,12 @@ def main() -> int:
             archive_metadata = json.load(f)
     else:
         print("  拉取网络 metadata...")
-        archive_metadata = fetch_metadata()
+        try:
+            archive_metadata = fetch_metadata()
+        except Exception as e:
+            print(f"  ❌ 拉取 archive.org metadata 失败: {type(e).__name__}: {e}")
+            print("     可尝试：--dry-run <本地 metadata.json> 使用离线缓存")
+            return 1
     archive_index = build_archive_filename_index(archive_metadata)
     print(f"  ✓ archive.org 索引: {len(archive_index)} 个文件")
 
