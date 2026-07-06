@@ -221,6 +221,50 @@ def test_merge_respects_top_n_cap():
     assert len(r) == 3
 
 
+def test_merge_never_truncates_broadcom():
+    """回归测试（CodeRabbit review）：top_n 小于 Broadcom 数量时，Broadcom 不能被截断
+
+    Broadcom 官方版本带权威 SHA256，绝不能因 top_n 设小而被静默丢弃。
+    只有 archive.org 追加版本受 top_n 限制。
+    """
+    broadcom = [
+        {"version": "v500", "build": "500", "downloads": {"windows": {"sha256": "OFFICIAL500"}}},
+        {"version": "v400", "build": "400", "downloads": {"windows": {"sha256": "OFFICIAL400"}}},
+        {"version": "v300", "build": "300", "downloads": {"windows": {"sha256": "OFFICIAL300"}}},
+    ]
+    archive = [
+        {"version": "v250", "build": "250", "downloads": {}},
+        {"version": "v200", "build": "200", "downloads": {}},
+    ]
+
+    # top_n=2 < Broadcom 数量（3）→ 应保留全部 3 个 Broadcom，archive 一条不追加
+    r = merge_with_broadcom(broadcom, archive, top_n=2)
+    sources = [v["build"] for v in r]
+    assert sources == ["500", "400", "300"], f"Broadcom 被截断: {sources}"
+    # 每个 Broadcom 版本的 SHA256 应完整保留
+    for v in r:
+        assert v["downloads"]["windows"]["sha256"].startswith("OFFICIAL"), \
+            "Broadcom SHA256 被 archive 覆盖"
+
+
+def test_merge_broadcom_full_plus_limited_archive():
+    """top_n=4：3 个 Broadcom + 1 个 archive（archive 只取 build 号最大的）"""
+    broadcom = [
+        {"version": "v500", "build": "500", "downloads": {}},
+        {"version": "v400", "build": "400", "downloads": {}},
+        {"version": "v300", "build": "300", "downloads": {}},
+    ]
+    archive = [
+        {"version": "v250", "build": "250", "downloads": {}},  # 应入选（最新）
+        {"version": "v200", "build": "200", "downloads": {}},  # 应舍弃
+        {"version": "v100", "build": "100", "downloads": {}},  # 应舍弃
+    ]
+
+    r = merge_with_broadcom(broadcom, archive, top_n=4)
+    builds = [v["build"] for v in r]
+    assert builds == ["500", "400", "300", "250"], f"Unexpected: {builds}"
+
+
 def test_merge_preserves_broadcom_sha256_over_archive_md5():
     """核心保证：Broadcom 官方 SHA256 不会被 archive.org 只有 MD5 的版本覆盖"""
     broadcom = [

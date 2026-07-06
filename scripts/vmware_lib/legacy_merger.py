@@ -114,26 +114,35 @@ def merge_with_broadcom(
 ) -> list[dict]:
     """把 Broadcom 官方版本与 archive.org 历史版本合并
 
-    规则：
-    1. Broadcom 版本优先（已在 broadcom_list），保留原始字段
-    2. archive.org 独有的版本（按 build 号判定）追加到列表末尾
+    规则（review 修复后）：
+    1. **Broadcom 版本全量保留**：官方 SHA256 权威数据不可截断
+    2. archive.org 独有的版本（按 build 号去重）追加，直到达到 top_n
     3. 结果按 build 号降序排列
-    4. 截断到 top_n
+    4. 若 Broadcom 版本数已 >= top_n，archive 一条也不追加，但 Broadcom 仍完整保留
 
     去重时统一将 build 转为字符串比较，防止 int/str 类型不匹配导致重复。
     """
     # 统一转字符串比较，防止 int 和 str build 号混杂时去重失败
     known_builds = {str(v["build"]) for v in broadcom_list if v.get("build")}
 
-    merged = list(broadcom_list)  # 复制 Broadcom
-    for arc_ver in archive_list:
-        b = arc_ver.get("build")
-        if b is not None and str(b) not in known_builds:
-            merged.append(arc_ver)
+    # 计算 archive 追加名额：至少 0，剩余名额 = top_n - Broadcom 数量
+    archive_slots = max(0, top_n - len(broadcom_list))
 
-    # 按 build 降序（新在前），健壮处理各种 build 类型
+    # 过滤 archive_list：去重 + 排序（build 降序），取前 archive_slots 个
+    unique_archive = [
+        v
+        for v in archive_list
+        if v.get("build") is not None and str(v["build"]) not in known_builds
+    ]
+    unique_archive.sort(
+        key=lambda v: build_sort_key(v.get("build", "")), reverse=True
+    )
+    archive_picks = unique_archive[:archive_slots]
+
+    # 合并：Broadcom 全量 + archive 追加，最后统一 build 降序
+    merged = list(broadcom_list) + archive_picks
     merged.sort(key=lambda v: build_sort_key(v.get("build", "")), reverse=True)
-    return merged[:top_n]
+    return merged
 
 
 def fetch_and_merge(
