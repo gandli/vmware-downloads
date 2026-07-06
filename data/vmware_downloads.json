@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-06T03:10:36.223928+00:00",
+  "collected_at": "2026-07-06T03:42:03.837923+00:00",
   "source": {
     "primary": {
       "broadcom": "https://support.broadcom.com/group/ecx/productdownloads",
@@ -321,23 +321,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-16.2.5-20904516.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.5-20904516.exe",
-          "size": "615.58 MB",
-          "size_bytes": 645480472,
-          "md5": "b72276af0d1f093c146c6623c463218f",
-          "sha1": "01ddbeb179444bb6bf9ee41e070de362c6134ce9",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "16.2.5",
-      "build": "20904516"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-17.0.0-20800274.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.0.0-20800274.exe",
           "size": "607.88 MB",
@@ -351,6 +334,23 @@
       "source": "archive.org",
       "version": "17.0.0",
       "build": "20800274"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-16.2.5-20904516.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.5-20904516.exe",
+          "size": "615.58 MB",
+          "size_bytes": 645480472,
+          "md5": "b72276af0d1f093c146c6623c463218f",
+          "sha1": "01ddbeb179444bb6bf9ee41e070de362c6134ce9",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "16.2.5",
+      "build": "20904516"
     },
     {
       "downloads": {
@@ -491,23 +491,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-15.5.7-17171714.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.7-17171714.exe",
-          "size": "552.28 MB",
-          "size_bytes": 579107976,
-          "md5": "8cb641951abb0f144d2967e56aa45a5b",
-          "sha1": "f8354f02fbd3c22a83c2beeacba366bd6b522364",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "15.5.7",
-      "build": "17171714"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-16.0.0-16894299.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.0.0-16894299.exe",
           "size": "619.26 MB",
@@ -521,6 +504,23 @@
       "source": "archive.org",
       "version": "16.0.0",
       "build": "16894299"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-15.5.7-17171714.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.7-17171714.exe",
+          "size": "552.28 MB",
+          "size_bytes": 579107976,
+          "md5": "8cb641951abb0f144d2967e56aa45a5b",
+          "sha1": "f8354f02fbd3c22a83c2beeacba366bd6b522364",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "15.5.7",
+      "build": "17171714"
     },
     {
       "downloads": {
@@ -593,23 +593,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-14.1.8-14921873.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.8-14921873.exe",
-          "size": "487.14 MB",
-          "size_bytes": 510807088,
-          "md5": "5afdb47adeb97b2075cc1dede0c0ac25",
-          "sha1": "2aa5a35487ec36f76aa6e54c1c76d9009bd33772",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "14.1.8",
-      "build": "14921873"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-15.5.0-14665864.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.0-14665864.exe",
           "size": "541.05 MB",
@@ -661,23 +644,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-14.1.7-12989993.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.7-12989993.exe",
-          "size": "487.15 MB",
-          "size_bytes": 510811184,
-          "md5": "e838b874a8e40bf0ebd50df5627ad923",
-          "sha1": "7c7c8205a3c67b6afd69d75f7d68291bcc5fb4e6",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "14.1.7",
-      "build": "12989993"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-15.0.3-12422535.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.3-12422535.exe",
           "size": "511.35 MB",
@@ -691,23 +657,6 @@
       "source": "archive.org",
       "version": "15.0.3",
       "build": "12422535"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-full-14.1.6-12368378.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.6-12368378.exe",
-          "size": "487.14 MB",
-          "size_bytes": 510802992,
-          "md5": "1f394a798bd332d313555b5ed8190704",
-          "sha1": "7ed4c1040a1c1b176fac4fac9fcb4e077a88deed",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "14.1.6",
-      "build": "12368378"
     },
     {
       "downloads": {
@@ -729,23 +678,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-14.1.5-10950780.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.5-10950780.exe",
-          "size": "487.13 MB",
-          "size_bytes": 510791216,
-          "md5": "618e3c62e3c850c49cc0bb46ccc745c0",
-          "sha1": "61ed621cbda3db7f3ee7d3ed9161284461129c62",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "14.1.5",
-      "build": "10950780"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-15.0.1-10737736.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.1-10737736.exe",
           "size": "511.87 MB",
@@ -763,23 +695,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-14.1.4-10722678.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.4-10722678.exe",
-          "size": "487.12 MB",
-          "size_bytes": 510778928,
-          "md5": "994ac1b2b096a1767085ec4499a5ab4f",
-          "sha1": "af4925fddf99960fa08d5f89e63632de4b525132",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "14.1.4",
-      "build": "10722678"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-15.0.0-10134415.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.0-10134415.exe",
           "size": "511.75 MB",
@@ -793,6 +708,91 @@
       "source": "archive.org",
       "version": "15.0.0",
       "build": "10134415"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-14.1.8-14921873.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.8-14921873.exe",
+          "size": "487.14 MB",
+          "size_bytes": 510807088,
+          "md5": "5afdb47adeb97b2075cc1dede0c0ac25",
+          "sha1": "2aa5a35487ec36f76aa6e54c1c76d9009bd33772",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "14.1.8",
+      "build": "14921873"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-14.1.7-12989993.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.7-12989993.exe",
+          "size": "487.15 MB",
+          "size_bytes": 510811184,
+          "md5": "e838b874a8e40bf0ebd50df5627ad923",
+          "sha1": "7c7c8205a3c67b6afd69d75f7d68291bcc5fb4e6",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "14.1.7",
+      "build": "12989993"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-14.1.6-12368378.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.6-12368378.exe",
+          "size": "487.14 MB",
+          "size_bytes": 510802992,
+          "md5": "1f394a798bd332d313555b5ed8190704",
+          "sha1": "7ed4c1040a1c1b176fac4fac9fcb4e077a88deed",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "14.1.6",
+      "build": "12368378"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-14.1.5-10950780.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.5-10950780.exe",
+          "size": "487.13 MB",
+          "size_bytes": 510791216,
+          "md5": "618e3c62e3c850c49cc0bb46ccc745c0",
+          "sha1": "61ed621cbda3db7f3ee7d3ed9161284461129c62",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "14.1.5",
+      "build": "10950780"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-14.1.4-10722678.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.4-10722678.exe",
+          "size": "487.12 MB",
+          "size_bytes": 510778928,
+          "md5": "994ac1b2b096a1767085ec4499a5ab4f",
+          "sha1": "af4925fddf99960fa08d5f89e63632de4b525132",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "14.1.4",
+      "build": "10722678"
     },
     {
       "downloads": {
@@ -831,23 +831,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-12.5.9-7535481.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.9-7535481.exe",
-          "size": "400.86 MB",
-          "size_bytes": 420333000,
-          "md5": "ec799d611f1617284ea9205d1d029a8b",
-          "sha1": "7a744739357b5adb33172b1e30c949e2c8e69920",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "12.5.9",
-      "build": "7535481"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-14.1.1-7528167.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.1-7528167.exe",
           "size": "465.21 MB",
@@ -882,23 +865,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-12.5.8-7098237.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.8-7098237.exe",
-          "size": "400.83 MB",
-          "size_bytes": 420303816,
-          "md5": "79b83cd2f5914fd05a58fae98fa5e88c",
-          "sha1": "c98661661a09d465c864b96a8694db36cf6cee06",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "12.5.8",
-      "build": "7098237"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-14.0.0-6661328.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.0.0-6661328.exe",
           "size": "462.92 MB",
@@ -912,6 +878,40 @@
       "source": "archive.org",
       "version": "14.0.0",
       "build": "6661328"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-12.5.9-7535481.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.9-7535481.exe",
+          "size": "400.86 MB",
+          "size_bytes": 420333000,
+          "md5": "ec799d611f1617284ea9205d1d029a8b",
+          "sha1": "7a744739357b5adb33172b1e30c949e2c8e69920",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "12.5.9",
+      "build": "7535481"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-12.5.8-7098237.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.8-7098237.exe",
+          "size": "400.83 MB",
+          "size_bytes": 420303816,
+          "md5": "79b83cd2f5914fd05a58fae98fa5e88c",
+          "sha1": "c98661661a09d465c864b96a8694db36cf6cee06",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "12.5.8",
+      "build": "7098237"
     },
     {
       "downloads": {
@@ -1052,23 +1052,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-11.1.4-3848939.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.4-3848939.exe",
-          "size": "303.11 MB",
-          "size_bytes": 317836072,
-          "md5": "1209981ec487e5c2e505997092399204",
-          "sha1": "0c72dd9fc8860796f33164e4e34d243d488e52cf",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "11.1.4",
-      "build": "3848939"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-12.1.1-3770994.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.1.1-3770994.exe",
           "size": "293.67 MB",
@@ -1099,23 +1082,6 @@
       "source": "archive.org",
       "version": "12.1.0",
       "build": "3272444"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-full-11.1.3-3206955.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.3-3206955.exe",
-          "size": "302.90 MB",
-          "size_bytes": 317611528,
-          "md5": "fbdd890de81a0e6a2b729693e24027df",
-          "sha1": "e396638d1dffc62371481d6aa78aaf097ee37708",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "11.1.3",
-      "build": "3206955"
     },
     {
       "downloads": {
@@ -1154,19 +1120,36 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-10.0.7-2844087.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.7-2844087.exe",
-          "size": "495.52 MB",
-          "size_bytes": 519588936,
-          "md5": "2b385d448ce8a117edeab01d0c678703",
-          "sha1": "66e5cc808c4667ba14c0a709e4e1230333cfbafe",
+          "filename": "VMware-workstation-full-11.1.4-3848939.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.4-3848939.exe",
+          "size": "303.11 MB",
+          "size_bytes": 317836072,
+          "md5": "1209981ec487e5c2e505997092399204",
+          "sha1": "0c72dd9fc8860796f33164e4e34d243d488e52cf",
           "sha256": "",
           "sha256_verified": false
         }
       },
       "source": "archive.org",
-      "version": "10.0.7",
-      "build": "2844087"
+      "version": "11.1.4",
+      "build": "3848939"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-11.1.3-3206955.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.3-3206955.exe",
+          "size": "302.90 MB",
+          "size_bytes": 317611528,
+          "md5": "fbdd890de81a0e6a2b729693e24027df",
+          "sha1": "e396638d1dffc62371481d6aa78aaf097ee37708",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "11.1.3",
+      "build": "3206955"
     },
     {
       "downloads": {
@@ -1205,23 +1188,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-10.0.6-2700073.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.6-2700073.exe",
-          "size": "495.79 MB",
-          "size_bytes": 519872056,
-          "md5": "242d7853bcd6fcba5fb15a0afa56801f",
-          "sha1": "965b92dcb4a07c6ffb7d769d8519c60214c39c7d",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "10.0.6",
-      "build": "2700073"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-11.1.0-2496824.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.0-2496824.exe",
           "size": "301.58 MB",
@@ -1235,23 +1201,6 @@
       "source": "archive.org",
       "version": "11.1.0",
       "build": "2496824"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-full-10.0.5-2443746.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.5-2443746.exe",
-          "size": "491.12 MB",
-          "size_bytes": 514979328,
-          "md5": "edd7a3f0d10fb6a8f8f7bad09964e1e3",
-          "sha1": "8928c4cea435155490e2e3c03cba72481148ac1b",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "10.0.5",
-      "build": "2443746"
     },
     {
       "downloads": {
@@ -1273,6 +1222,57 @@
     {
       "downloads": {
         "windows": {
+          "filename": "VMware-workstation-full-10.0.7-2844087.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.7-2844087.exe",
+          "size": "495.52 MB",
+          "size_bytes": 519588936,
+          "md5": "2b385d448ce8a117edeab01d0c678703",
+          "sha1": "66e5cc808c4667ba14c0a709e4e1230333cfbafe",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "10.0.7",
+      "build": "2844087"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-10.0.6-2700073.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.6-2700073.exe",
+          "size": "495.79 MB",
+          "size_bytes": 519872056,
+          "md5": "242d7853bcd6fcba5fb15a0afa56801f",
+          "sha1": "965b92dcb4a07c6ffb7d769d8519c60214c39c7d",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "10.0.6",
+      "build": "2700073"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-10.0.5-2443746.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.5-2443746.exe",
+          "size": "491.12 MB",
+          "size_bytes": 514979328,
+          "md5": "edd7a3f0d10fb6a8f8f7bad09964e1e3",
+          "sha1": "8928c4cea435155490e2e3c03cba72481148ac1b",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "10.0.5",
+      "build": "2443746"
+    },
+    {
+      "downloads": {
+        "windows": {
           "filename": "VMware-workstation-full-10.0.4-2249910.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.4-2249910.exe",
           "size": "491.13 MB",
@@ -1286,23 +1286,6 @@
       "source": "archive.org",
       "version": "10.0.4",
       "build": "2249910"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-full-9.0.4-1945795.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.4-1945795.exe",
-          "size": "476.16 MB",
-          "size_bytes": 499292776,
-          "md5": "2b1e7d525f1a2befda1df2e49a0732f5",
-          "sha1": "d85e0d90532e1b101e535a9a65ff282a86c4fa99",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "9.0.4",
-      "build": "1945795"
     },
     {
       "downloads": {
@@ -1341,23 +1324,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-9.0.3-1410761.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.3-1410761.exe",
-          "size": "431.10 MB",
-          "size_bytes": 452038168,
-          "md5": "d5885660c6e1b718ab27666a5072d592",
-          "sha1": "ac1b56776c57c023d151b6e70346dfc66b708147",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "9.0.3",
-      "build": "1410761"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-10.0.1-1379776.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.1-1379776.exe",
           "size": "490.28 MB",
@@ -1392,19 +1358,36 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-8.0.6-1035888.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.6-1035888.exe",
-          "size": "465.41 MB",
-          "size_bytes": 488014688,
-          "md5": "6ac88cda44b68968e78bdf95d8403a26",
-          "sha1": "04aed0397654173806d6bc8119c52d93be9b5daa",
+          "filename": "VMware-workstation-full-9.0.4-1945795.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.4-1945795.exe",
+          "size": "476.16 MB",
+          "size_bytes": 499292776,
+          "md5": "2b1e7d525f1a2befda1df2e49a0732f5",
+          "sha1": "d85e0d90532e1b101e535a9a65ff282a86c4fa99",
           "sha256": "",
           "sha256_verified": false
         }
       },
       "source": "archive.org",
-      "version": "8.0.6",
-      "build": "1035888"
+      "version": "9.0.4",
+      "build": "1945795"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-9.0.3-1410761.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.3-1410761.exe",
+          "size": "431.10 MB",
+          "size_bytes": 452038168,
+          "md5": "d5885660c6e1b718ab27666a5072d592",
+          "sha1": "ac1b56776c57c023d151b6e70346dfc66b708147",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "9.0.3",
+      "build": "1410761"
     },
     {
       "downloads": {
@@ -1443,23 +1426,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-8.0.5-893925.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.5-893925.exe",
-          "size": "465.69 MB",
-          "size_bytes": 488308208,
-          "md5": "d67a9eee7d42efddbb1b24d7d62c90c7",
-          "sha1": "5a190e843c7adc57796d9042deaaabc969f6a944",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "8.0.5",
-      "build": "893925"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-9.0.0-812388.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.0-812388.exe",
           "size": "425.99 MB",
@@ -1477,19 +1443,36 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-7.1.6-744570.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.6-744570.exe",
-          "size": "572.21 MB",
-          "size_bytes": 600002928,
-          "md5": "f7856421babd716dace2f0250ae271f7",
-          "sha1": "9eaf4b17afec36b8a166bad81be851bd8cfda709",
+          "filename": "VMware-workstation-full-8.0.6-1035888.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.6-1035888.exe",
+          "size": "465.41 MB",
+          "size_bytes": 488014688,
+          "md5": "6ac88cda44b68968e78bdf95d8403a26",
+          "sha1": "04aed0397654173806d6bc8119c52d93be9b5daa",
           "sha256": "",
           "sha256_verified": false
         }
       },
       "source": "archive.org",
-      "version": "7.1.6",
-      "build": "744570"
+      "version": "8.0.6",
+      "build": "1035888"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-8.0.5-893925.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.5-893925.exe",
+          "size": "465.69 MB",
+          "size_bytes": 488308208,
+          "md5": "d67a9eee7d42efddbb1b24d7d62c90c7",
+          "sha1": "5a190e843c7adc57796d9042deaaabc969f6a944",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "8.0.5",
+      "build": "893925"
     },
     {
       "downloads": {
@@ -1562,23 +1545,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-full-7.1.5-491717.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.5-491717.exe",
-          "size": "571.00 MB",
-          "size_bytes": 598740792,
-          "md5": "40a0a39377a6ba804d5e76e59449d51f",
-          "sha1": "25462e18bf9439876c63948415f7ba7b09baa8e6",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "7.1.5",
-      "build": "491717"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-8.0.0-471780.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.0-471780.exe",
           "size": "473.17 MB",
@@ -1596,6 +1562,40 @@
     {
       "downloads": {
         "windows": {
+          "filename": "VMware-workstation-full-7.1.6-744570.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.6-744570.exe",
+          "size": "572.21 MB",
+          "size_bytes": 600002928,
+          "md5": "f7856421babd716dace2f0250ae271f7",
+          "sha1": "9eaf4b17afec36b8a166bad81be851bd8cfda709",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "7.1.6",
+      "build": "744570"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-7.1.5-491717.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.5-491717.exe",
+          "size": "571.00 MB",
+          "size_bytes": 598740792,
+          "md5": "40a0a39377a6ba804d5e76e59449d51f",
+          "sha1": "25462e18bf9439876c63948415f7ba7b09baa8e6",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "7.1.5",
+      "build": "491717"
+    },
+    {
+      "downloads": {
+        "windows": {
           "filename": "VMware-workstation-full-7.1.4-385536.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.4-385536.exe",
           "size": "571.80 MB",
@@ -1609,23 +1609,6 @@
       "source": "archive.org",
       "version": "7.1.4",
       "build": "385536"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-6.5.5-328052.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.5-328052.exe",
-          "size": "507.13 MB",
-          "size_bytes": 531762016,
-          "md5": "7bff9b621529efb0de808a45e7821274",
-          "sha1": "41af7a9a78717cb85dd30b4d830e99fd5de49cc1",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "6.5.5",
-      "build": "328052"
     },
     {
       "downloads": {
@@ -1698,23 +1681,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-6.5.4-246459.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.4-246459.exe",
-          "size": "507.22 MB",
-          "size_bytes": 531861960,
-          "md5": "2dc393fcc4e78dcf2165098a4938699a",
-          "sha1": "acfff457860c8c53c637c01f74f8aaa72d1c9569",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "6.5.4",
-      "build": "246459"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-full-7.0.1-227600.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.0.1-227600.exe",
           "size": "514.64 MB",
@@ -1745,6 +1711,40 @@
       "source": "archive.org",
       "version": "7.0.0",
       "build": "203739"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-6.5.5-328052.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.5-328052.exe",
+          "size": "507.13 MB",
+          "size_bytes": 531762016,
+          "md5": "7bff9b621529efb0de808a45e7821274",
+          "sha1": "41af7a9a78717cb85dd30b4d830e99fd5de49cc1",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "6.5.5",
+      "build": "328052"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-6.5.4-246459.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.4-246459.exe",
+          "size": "507.22 MB",
+          "size_bytes": 531861960,
+          "md5": "2dc393fcc4e78dcf2165098a4938699a",
+          "sha1": "acfff457860c8c53c637c01f74f8aaa72d1c9569",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "6.5.4",
+      "build": "246459"
     },
     {
       "downloads": {
@@ -1800,23 +1800,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-5.5.9-126128.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.9-126128.exe",
-          "size": "92.66 MB",
-          "size_bytes": 97160064,
-          "md5": "509c7b323a8ac42c0a92b0a1446bb0f8",
-          "sha1": "675a66ce42af6bf885d49b948e23ec831f145431",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "5.5.9",
-      "build": "126128"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-6.5.0-118166.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.0-118166.exe",
           "size": "555.34 MB",
@@ -1851,23 +1834,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-5.5.8-108000.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.8-108000.exe",
-          "size": "92.67 MB",
-          "size_bytes": 97167744,
-          "md5": "745c3250e5254eaf6e65fcfc4172070f",
-          "sha1": "44401c14f5389e0d48d53d5e7b159e8dacebacd4",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "5.5.8",
-      "build": "108000"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-6.0.4-93057.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.4-93057.exe",
           "size": "318.99 MB",
@@ -1881,40 +1847,6 @@
       "source": "archive.org",
       "version": "6.0.4",
       "build": "93057"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-5.5.7-91707.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.7-91707.exe",
-          "size": "92.64 MB",
-          "size_bytes": 97136512,
-          "md5": "4c6a6653b7296240197aac048591c659",
-          "sha1": "55d4f8439bf928ff20d49ad71b18ab45b087609a",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "5.5.7",
-      "build": "91707"
-    },
-    {
-      "downloads": {
-        "windows": {
-          "filename": "VMware-workstation-5.5.6-80404.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.6-80404.exe",
-          "size": "92.64 MB",
-          "size_bytes": 97140096,
-          "md5": "9c2dd94db5eed93d7f64e8d6ba8d8bd3",
-          "sha1": "2947ae865924b79d71cdf5fdfa9874297fa41f86",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "5.5.6",
-      "build": "80404"
     },
     {
       "downloads": {
@@ -1953,23 +1885,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-5.5.5-56455.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.5-56455.exe",
-          "size": "92.52 MB",
-          "size_bytes": 97016704,
-          "md5": "7c6962fb97b42d35ddda87baab001f88",
-          "sha1": "6fabee26ed8fb0b6d4343c7b8a0ef29d16010463",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "5.5.5",
-      "build": "56455"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-6.0.1-55017.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.1-55017.exe",
           "size": "314.41 MB",
@@ -2000,6 +1915,91 @@
       "source": "archive.org",
       "version": "6.0.0",
       "build": "45731"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-5.5.9-126128.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.9-126128.exe",
+          "size": "92.66 MB",
+          "size_bytes": 97160064,
+          "md5": "509c7b323a8ac42c0a92b0a1446bb0f8",
+          "sha1": "675a66ce42af6bf885d49b948e23ec831f145431",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "5.5.9",
+      "build": "126128"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-5.5.8-108000.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.8-108000.exe",
+          "size": "92.67 MB",
+          "size_bytes": 97167744,
+          "md5": "745c3250e5254eaf6e65fcfc4172070f",
+          "sha1": "44401c14f5389e0d48d53d5e7b159e8dacebacd4",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "5.5.8",
+      "build": "108000"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-5.5.7-91707.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.7-91707.exe",
+          "size": "92.64 MB",
+          "size_bytes": 97136512,
+          "md5": "4c6a6653b7296240197aac048591c659",
+          "sha1": "55d4f8439bf928ff20d49ad71b18ab45b087609a",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "5.5.7",
+      "build": "91707"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-5.5.6-80404.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.6-80404.exe",
+          "size": "92.64 MB",
+          "size_bytes": 97140096,
+          "md5": "9c2dd94db5eed93d7f64e8d6ba8d8bd3",
+          "sha1": "2947ae865924b79d71cdf5fdfa9874297fa41f86",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "5.5.6",
+      "build": "80404"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-5.5.5-56455.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.5-56455.exe",
+          "size": "92.52 MB",
+          "size_bytes": 97016704,
+          "md5": "7c6962fb97b42d35ddda87baab001f88",
+          "sha1": "6fabee26ed8fb0b6d4343c7b8a0ef29d16010463",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "5.5.5",
+      "build": "56455"
     },
     {
       "downloads": {
@@ -2055,23 +2055,6 @@
     {
       "downloads": {
         "windows": {
-          "filename": "VMware-workstation-4.5.3-19414.exe",
-          "url": "https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.5.3-19414.exe",
-          "size": "34.83 MB",
-          "size_bytes": 36519320,
-          "md5": "02076c1d35059f3bdc0cf4262b4f8932",
-          "sha1": "49fdf7c3a51cd71a31301c257e3c2bb69b255785",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "4.5.3",
-      "build": "19414"
-    },
-    {
-      "downloads": {
-        "windows": {
           "filename": "VMware-workstation-5.0.0-13124.exe",
           "url": "https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.0.0-13124.exe",
           "size": "55.96 MB",
@@ -2085,6 +2068,23 @@
       "source": "archive.org",
       "version": "5.0.0",
       "build": "13124"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-4.5.3-19414.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.5.3-19414.exe",
+          "size": "34.83 MB",
+          "size_bytes": 36519320,
+          "md5": "02076c1d35059f3bdc0cf4262b4f8932",
+          "sha1": "49fdf7c3a51cd71a31301c257e3c2bb69b255785",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "4.5.3",
+      "build": "19414"
     },
     {
       "downloads": {
@@ -2482,23 +2482,6 @@
     {
       "downloads": {
         "macos": {
-          "filename": "VMware-Fusion-12.2.5-20904517_x86.dmg",
-          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.5-20904517_x86.dmg",
-          "size": "621.80 MB",
-          "size_bytes": 652000023,
-          "md5": "f0ce49aedde643e1148fc820d546e675",
-          "sha1": "1d3d84b77ade91b6ced95a9d885af8903c4575ed",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "12.2.5",
-      "build": "20904517"
-    },
-    {
-      "downloads": {
-        "macos": {
           "filename": "VMware-Fusion-13.0.0-20802013_universal.dmg",
           "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.0.0-20802013_universal.dmg",
           "size": "672.06 MB",
@@ -2512,6 +2495,23 @@
       "source": "archive.org",
       "version": "13.0.0",
       "build": "20802013"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-12.2.5-20904517_x86.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.5-20904517_x86.dmg",
+          "size": "621.80 MB",
+          "size_bytes": 652000023,
+          "md5": "f0ce49aedde643e1148fc820d546e675",
+          "sha1": "1d3d84b77ade91b6ced95a9d885af8903c4575ed",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "12.2.5",
+      "build": "20904517"
     },
     {
       "downloads": {
@@ -2618,23 +2618,6 @@
     {
       "downloads": {
         "macos": {
-          "filename": "VMware-Fusion-11.5.7-17130923.dmg",
-          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.7-17130923.dmg",
-          "size": "601.68 MB",
-          "size_bytes": 630905642,
-          "md5": "c61b15e7e3337767fc8b77368d610fb3",
-          "sha1": "b84149607f3da96d97613e23046b50bf9a820ab8",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "11.5.7",
-      "build": "17130923"
-    },
-    {
-      "downloads": {
-        "macos": {
           "filename": "VMware-Fusion-12.0.0-16880131.dmg",
           "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.0.0-16880131.dmg",
           "size": "611.94 MB",
@@ -2648,6 +2631,23 @@
       "source": "archive.org",
       "version": "12.0.0",
       "build": "16880131"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-11.5.7-17130923.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.7-17130923.dmg",
+          "size": "601.68 MB",
+          "size_bytes": 630905642,
+          "md5": "c61b15e7e3337767fc8b77368d610fb3",
+          "sha1": "b84149607f3da96d97613e23046b50bf9a820ab8",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "11.5.7",
+      "build": "17130923"
     },
     {
       "downloads": {
@@ -2890,23 +2890,6 @@
     {
       "downloads": {
         "macos": {
-          "filename": "VMware-Fusion-8.5.10-7527438.dmg",
-          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.10-7527438.dmg",
-          "size": "467.21 MB",
-          "size_bytes": 489908757,
-          "md5": "167b6f633dc17a55c95d92619e7726a9",
-          "sha1": "012e97a0f102fff03a9a79edf67098ce52e790fb",
-          "sha256": "",
-          "sha256_verified": false
-        }
-      },
-      "source": "archive.org",
-      "version": "8.5.10",
-      "build": "7527438"
-    },
-    {
-      "downloads": {
-        "macos": {
           "filename": "VMware-Fusion-10.1.1-7520154.dmg",
           "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.1.1-7520154.dmg",
           "size": "471.77 MB",
@@ -2971,6 +2954,23 @@
       "source": "archive.org",
       "version": "10.0.0",
       "build": "6665085"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-8.5.10-7527438.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.10-7527438.dmg",
+          "size": "467.21 MB",
+          "size_bytes": 489908757,
+          "md5": "167b6f633dc17a55c95d92619e7726a9",
+          "sha1": "012e97a0f102fff03a9a79edf67098ce52e790fb",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "8.5.10",
+      "build": "7527438"
     },
     {
       "downloads": {

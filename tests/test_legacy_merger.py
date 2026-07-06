@@ -158,25 +158,44 @@ def test_parse_archive_files_multiple_platforms_same_version():
 # =========================================================
 
 def test_sort_by_build_desc():
+    """按复合键(语义版本, build)降序 —— 26H1 视为最大主版"""
     versions = {
-        "17.0.0": {"build": "20800274"},
-        "26H1": {"build": "25388281"},
-        "17.5.1": {"build": "23298084"},
+        "17.0.0": {"version": "17.0.0", "build": "20800274"},
+        "26H1": {"version": "26H1", "build": "25388281"},
+        "17.5.1": {"version": "17.5.1", "build": "23298084"},
     }
     sorted_list = sort_by_build_desc(versions)
-    assert sorted_list[0]["build"] == "25388281"  # 26H1
-    assert sorted_list[1]["build"] == "23298084"  # 17.5.1
-    assert sorted_list[2]["build"] == "20800274"  # 17.0.0
+    assert sorted_list[0]["version"] == "26H1"
+    assert sorted_list[1]["version"] == "17.5.1"
+    assert sorted_list[2]["version"] == "17.0.0"
+
+
+def test_sort_by_build_desc_fixes_v14_v15_interleaving():
+    """回归：老版本 build 号交错不再影响排序
+
+    真实案例：14.1.8 (build 14921873) > 15.5.0 (build 14665864)
+    修复前会导致 15.5.0 排在 14.1.8 之后 → v14 插在两个 v15 之间
+    """
+    versions = {
+        "15.5.1": {"version": "15.5.1", "build": "15018445"},
+        "14.1.8": {"version": "14.1.8", "build": "14921873"},  # build 大
+        "15.5.0": {"version": "15.5.0", "build": "14665864"},  # build 小但 v15
+    }
+    sorted_list = sort_by_build_desc(versions)
+    # 期望：v15 全部在 v14 之前（不再交错）
+    assert sorted_list[0]["version"] == "15.5.1"
+    assert sorted_list[1]["version"] == "15.5.0"
+    assert sorted_list[2]["version"] == "14.1.8"
 
 
 def test_sort_handles_non_numeric_build_safely():
     versions = {
-        "a": {"build": "unknown"},
-        "b": {"build": "100"},
+        "a": {"version": "1.0.0", "build": "unknown"},
+        "b": {"version": "2.0.0", "build": "100"},
     }
     r = sort_by_build_desc(versions)
-    # 数字 build 排前，非数字回退到 0
-    assert r[0]["build"] == "100"
+    # v2 > v1（版本键优先）
+    assert r[0]["version"] == "2.0.0"
 
 
 # =========================================================

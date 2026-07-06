@@ -23,6 +23,7 @@ from vmware_lib.archive_common import (
     ARCHIVE_DL_BASE,
     ARCHIVE_META_URL,
     build_sort_key,
+    version_sort_key,
     detect_platform,
     human_size,
     is_installer,
@@ -92,16 +93,24 @@ def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
     return dict(ws), dict(fu)
 
 
-def sort_by_build_desc(versions: dict) -> list[dict]:
-    """按 build 号降序（最新在前），转成 list
+def _composite_sort_key(v: dict) -> tuple:
+    """复合排序键：(语义版本, build 号) —— 降序时先按版本降,同版内按 build 降
 
-    使用 archive_common.build_sort_key 统一处理 int/str/非数字 混杂情况
+    修复 v14 补丁 build 号大于 v15 早期版导致的交错混排问题
+    """
+    return (version_sort_key(v.get("version", "")), build_sort_key(v.get("build", "")))
+
+
+def sort_by_build_desc(versions: dict) -> list[dict]:
+    """按版本号降序（复合键：先语义版本，同版内按 build 号）
+
+    v1.1 起：修复老版本 build 号交错混排 —— 用 (version, build) 复合键
     """
     return [
         info
         for _, info in sorted(
             versions.items(),
-            key=lambda item: build_sort_key(item[1].get("build", "")),
+            key=lambda item: _composite_sort_key(item[1]),
             reverse=True,
         )
     ]
@@ -117,7 +126,7 @@ def merge_with_broadcom(
     规则（review 修复后）：
     1. **Broadcom 版本全量保留**（有 SHA256 权威）
     2. archive.org 独有的版本（按 build 号去重）追加，直到达到 top_n
-    3. 版本按 build 号降序排列（最新在前）
+    3. 版本按 **(语义版本, build)** 复合键降序排列（最新在前）
     4. 若 Broadcom 版本数已 >= top_n，archive 一条也不追加，但 Broadcom 仍完整保留
     5. **top_n=None 表示无上限**：Broadcom 全保留 + archive 全并入
     """
@@ -131,20 +140,18 @@ def merge_with_broadcom(
     else:
         archive_slots = max(0, top_n - len(broadcom_list))
 
-    # 过滤 archive_list：去重 + 排序（build 降序），取前 archive_slots 个
+    # 过滤 archive_list：去重 + 排序（复合键降序），取前 archive_slots 个
     unique_archive = [
         v
         for v in archive_list
         if v.get("build") is not None and str(v["build"]) not in known_builds
     ]
-    unique_archive.sort(
-        key=lambda v: build_sort_key(v.get("build", "")), reverse=True
-    )
+    unique_archive.sort(key=_composite_sort_key, reverse=True)
     archive_picks = unique_archive[:archive_slots]
 
-    # 合并：Broadcom 全量 + archive 追加，最后统一 build 降序
+    # 合并：Broadcom 全量 + archive 追加，最后统一按 (version, build) 降序
     merged = list(broadcom_list) + archive_picks
-    merged.sort(key=lambda v: build_sort_key(v.get("build", "")), reverse=True)
+    merged.sort(key=_composite_sort_key, reverse=True)
     return merged
 
 
