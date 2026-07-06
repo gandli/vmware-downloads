@@ -5,7 +5,7 @@
 > **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  
 > 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新
 
-<sub>_Last sync: 2026-07-06 01:53 UTC_</sub>
+<sub>_Last sync: 2026-07-06 01:25 UTC_</sub>
 
 ---
 

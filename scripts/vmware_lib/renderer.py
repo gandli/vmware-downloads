@@ -60,12 +60,29 @@ def _now_utc_str() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
 
-def _render_badges(ws_count: int, fusion_count: int) -> list[str]:
+def _data_time(data: dict) -> datetime:
+    """从 data.collected_at 提取时间戳，保证渲染幂等。
+
+    review 采纳：数据未变化时不应产生 git diff（避免月度 workflow 空提交）
+    """
+    collected_at = data.get("collected_at")
+    if collected_at:
+        try:
+            # ISO 8601 格式（含 +00:00 时区）
+            return datetime.fromisoformat(collected_at)
+        except (ValueError, TypeError):
+            pass
+    return datetime.now(timezone.utc)
+
+
+def _render_badges(ws_count: int, fusion_count: int, dt: datetime) -> list[str]:
     """顶部徽章：精简到 4 个核心 —— 版本数（合并 WS+Fusion）+ 更新 + License + 自动化
 
     视觉审美建议：删除重复的 SHA256/auto-update 徽章（正文已述）
     """
-    last_updated = datetime.now(timezone.utc).strftime("%Y--%m--%d")
+    # 注意：shields.io 徽章语法用双连字符 -- 表示字面 - 字符
+    # 单连字符会被识别为 label/value 分隔符，导致 404 badge not found
+    last_updated = dt.strftime("%Y--%m--%d")
     return [
         (
             f"![Workstation](https://img.shields.io/badge/Workstation%20Pro-{ws_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
@@ -77,13 +94,14 @@ def _render_badges(ws_count: int, fusion_count: int) -> list[str]:
     ]
 
 
-def _render_intro() -> list[str]:
+def _render_intro(dt: datetime) -> list[str]:
     """开场白 — 合并成一个引用块，时间戳用 <sub> 弱化"""
+    ts = dt.strftime("%Y-%m-%d %H:%M UTC")
     return [
         "> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  ",
         "> 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新",
         "",
-        f"<sub>_Last sync: {_now_utc_str()}_</sub>",
+        f"<sub>_Last sync: {ts}_</sub>",
         "",
     ]
 
@@ -191,8 +209,9 @@ def render_readme(data: dict) -> str:
         "# 🎯 VMware Workstation & Fusion 下载中心",
         "",
     ]
-    lines += _render_badges(len(ws_list), len(fusion_list))
-    lines += _render_intro()
+    dt = _data_time(data)
+    lines += _render_badges(len(ws_list), len(fusion_list), dt)
+    lines += _render_intro(dt)
 
     lines += [
         "---",
