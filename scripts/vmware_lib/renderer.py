@@ -78,11 +78,12 @@ def _render_badges(ws_count: int, fusion_count: int) -> list[str]:
 
 
 def _render_intro() -> list[str]:
-    """开场白 — 合并成一个引用块，去除三层缩进"""
+    """开场白 — 合并成一个引用块，时间戳用 <sub> 弱化"""
     return [
         "> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  ",
-        "> 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新  ",
-        f"> _Last sync: {_now_utc_str()}_",
+        "> 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新",
+        "",
+        f"<sub>_Last sync: {_now_utc_str()}_</sub>",
         "",
     ]
 
