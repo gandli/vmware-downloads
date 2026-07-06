@@ -139,7 +139,17 @@ def main() -> int:
 
         # 默认全量（archive.org 全部历史）；LEGACY_TOP_N 可限制上限
         top_n_env = os.environ.get("LEGACY_TOP_N", "").strip()
-        top_n = int(top_n_env) if top_n_env else None
+        if top_n_env:
+            try:
+                top_n = int(top_n_env)
+            except ValueError:
+                print(
+                    f"⚠️  LEGACY_TOP_N={top_n_env!r} 不是合法整数，回退到全量模式",
+                    flush=True,
+                )
+                top_n = None
+        else:
+            top_n = None
         before_ws = len(result["workstation_pro"])
         before_fu = len(result["fusion_pro"])
 
