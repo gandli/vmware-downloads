@@ -1,73 +1,36 @@
 """探测 archive.org 上 VMware Workstation / Fusion 的完整历史版本清单
 
-用于：
-1. 决定要从 archive.org 补哪些历史版本（补齐到 15 版）
-2. 生成 legacy_versions.json 数据（archive.org md5/sha1 + 无 SHA256）
+用于调研目的：查看 archive.org 上有哪些历史版本可以补齐。
+生产合并逻辑在 vmware_lib/legacy_merger.py，与本脚本共享 archive_common 辅助函数。
 """
 
 from __future__ import annotations
 
 import json
-import re
+import sys
 import urllib.request
 from collections import defaultdict
+from pathlib import Path
 
+# 添加 scripts/ 到 sys.path 以便直接运行
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-ARCHIVE_META_URL = "https://archive.org/metadata/vmwareworkstationarchive"
-ARCHIVE_DL_BASE = "https://archive.org/download/vmwareworkstationarchive/"
+from vmware_lib.archive_common import (
+    ARCHIVE_DL_BASE,
+    ARCHIVE_META_URL,
+    build_sort_key,
+    detect_platform,
+    human_size,
+    is_installer,
+    parse_fusion_version,
+    parse_ws_version,
+    safe_size_int,
+)
 
 
 def fetch_archive_metadata() -> dict:
     with urllib.request.urlopen(ARCHIVE_META_URL, timeout=30) as resp:
         return json.loads(resp.read().decode("utf-8"))
-
-
-def is_installer(name: str) -> bool:
-    """判断是否是安装包（排除 tools/ossp 等附件）"""
-    lower = name.lower()
-    if not (lower.endswith(".exe") or lower.endswith(".bundle") or lower.endswith(".dmg")):
-        return False
-    if any(x in lower for x in ["tools", "ossp", "source", "guest"]):
-        return False
-    return True
-
-
-def parse_ws_version(name: str) -> tuple[str, str] | None:
-    """从 Workstation 文件名提取 (version, build)"""
-    if "fusion" in name.lower():
-        return None
-    # 匹配 17.6.4 或 25H2u1 或 26H1 等
-    m = re.search(r"[Ww]orkstation.*?(\d+\.\d+\.\d+|\d+[Hh]\d+(?:u\d+)?)-(\d+)", name)
-    return (m.group(1), m.group(2)) if m else None
-
-
-def parse_fusion_version(name: str) -> tuple[str, str] | None:
-    m = re.search(r"Fusion-(\d+\.\d+\.\d+|\d+[Hh]\d+(?:u\d+)?)-(\d+)", name)
-    return (m.group(1), m.group(2)) if m else None
-
-
-def detect_platform(name: str) -> str:
-    if name.endswith(".exe"):
-        return "windows"
-    if name.endswith(".bundle"):
-        return "linux"
-    if name.endswith(".dmg"):
-        return "macos"
-    return "unknown"
-
-
-def _human_size(n) -> str:
-    try:
-        n = int(n)
-    except (TypeError, ValueError):
-        return ""
-    if n >= 1024 ** 3:
-        return f"{n / 1024 ** 3:.2f} GB"
-    if n >= 1024 ** 2:
-        return f"{n / 1024 ** 2:.2f} MB"
-    if n >= 1024:
-        return f"{n / 1024:.2f} KB"
-    return f"{n} B"
 
 
 def collect_all_versions(files: list[dict]) -> tuple[dict, dict]:
@@ -83,11 +46,11 @@ def collect_all_versions(files: list[dict]) -> tuple[dict, dict]:
         if not is_installer(name):
             continue
 
-        size_bytes = int(f.get("size", 0)) if f.get("size") else 0
+        size_bytes = safe_size_int(f.get("size"))
         entry_data = {
             "filename": name.rsplit("/", 1)[-1],
             "url": ARCHIVE_DL_BASE + name,
-            "size": _human_size(size_bytes),
+            "size": human_size(size_bytes) if size_bytes else "",
             "size_bytes": size_bytes,
             "md5": f.get("md5", ""),
             "sha1": f.get("sha1", ""),
@@ -95,6 +58,9 @@ def collect_all_versions(files: list[dict]) -> tuple[dict, dict]:
             "sha256_verified": False,
         }
         platform = detect_platform(name)
+        # unknown 平台跳过（防止未预期的 dict 键）
+        if platform == "unknown":
+            continue
 
         r = parse_ws_version(name)
         if r:
@@ -115,11 +81,12 @@ def collect_all_versions(files: list[dict]) -> tuple[dict, dict]:
 
 
 def sort_by_build_desc(versions: dict) -> list[tuple[str, dict]]:
-    """按 build 号降序（最新在前）"""
-    def key(item):
-        b = item[1]["build"]
-        return int(b) if b.isdigit() else 0
-    return sorted(versions.items(), key=key, reverse=True)
+    """按 build 号降序（最新在前），使用统一的 build_sort_key 处理各种类型"""
+    return sorted(
+        versions.items(),
+        key=lambda item: build_sort_key(item[1].get("build", "")),
+        reverse=True,
+    )
 
 
 def main():

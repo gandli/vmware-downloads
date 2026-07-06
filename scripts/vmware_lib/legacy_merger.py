@@ -1,72 +1,35 @@
 """archive.org 历史版本合并器
 
 从 archive.org 抓取历史 VMware 安装包元数据，与 Broadcom 官方数据合并，
-生成 legacy_versions.json（保留在 data/ 用于渲染）。
+生成扩展后的 vmware_downloads.json（含更多历史版本）。
 
 设计原则：
 - Broadcom 官方版本优先（有 SHA256 + GA 日期）
 - archive.org 补齐 Broadcom 未覆盖的老版本
 - 老版本只有 MD5/SHA1，明确标记 sha256_verified=False
 - 支持按目标版本数（TOP_N）截断
+
+公共辅助函数在 vmware_lib.archive_common 中，与 probe_archive_org.py 共享。
 """
 
 from __future__ import annotations
 
 import json
-import re
 import urllib.request
 from collections import defaultdict
 from typing import Any
 
-
-ARCHIVE_META_URL = "https://archive.org/metadata/vmwareworkstationarchive"
-ARCHIVE_DL_BASE = "https://archive.org/download/vmwareworkstationarchive/"
-
-
-def is_installer(name: str) -> bool:
-    """判断是否为 VMware 主安装包（排除 tools/ossp 等附件）"""
-    lower = name.lower()
-    if not (lower.endswith(".exe") or lower.endswith(".bundle") or lower.endswith(".dmg")):
-        return False
-    return not any(x in lower for x in ["tools", "ossp", "source", "guest"])
-
-
-def parse_ws_version(name: str) -> tuple[str, str] | None:
-    if "fusion" in name.lower():
-        return None
-    m = re.search(
-        r"[Ww]orkstation.*?(\d+\.\d+\.\d+|\d+[Hh]\d+(?:u\d+)?)-(\d+)", name
-    )
-    return (m.group(1), m.group(2)) if m else None
-
-
-def parse_fusion_version(name: str) -> tuple[str, str] | None:
-    m = re.search(r"Fusion-(\d+\.\d+\.\d+|\d+[Hh]\d+(?:u\d+)?)-(\d+)", name)
-    return (m.group(1), m.group(2)) if m else None
-
-
-def detect_platform(name: str) -> str:
-    if name.endswith(".exe"):
-        return "windows"
-    if name.endswith(".bundle"):
-        return "linux"
-    if name.endswith(".dmg"):
-        return "macos"
-    return "unknown"
-
-
-def human_size(n) -> str:
-    try:
-        n = int(n)
-    except (TypeError, ValueError):
-        return ""
-    if n >= 1024 ** 3:
-        return f"{n / 1024 ** 3:.2f} GB"
-    if n >= 1024 ** 2:
-        return f"{n / 1024 ** 2:.2f} MB"
-    if n >= 1024:
-        return f"{n / 1024:.2f} KB"
-    return f"{n} B"
+from vmware_lib.archive_common import (
+    ARCHIVE_DL_BASE,
+    ARCHIVE_META_URL,
+    build_sort_key,
+    detect_platform,
+    human_size,
+    is_installer,
+    parse_fusion_version,
+    parse_ws_version,
+    safe_size_int,
+)
 
 
 def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
@@ -76,10 +39,12 @@ def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
       {
         "version": "17.5.1",
         "build": "23298084",
-        "downloads": {"windows": {...}, "linux": {...}},
+        "downloads": {"windows": {..., "sha256_verified": False}, ...},
         "source": "archive.org",
-        "sha256_verified": False,
       }
+
+    注意：sha256_verified 位于每个平台的 downloads.* 条目内部，
+    不在顶层版本对象上。
     """
     ws: dict[str, dict] = defaultdict(
         lambda: {"downloads": {}, "source": "archive.org"}
@@ -93,11 +58,11 @@ def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
         if not is_installer(name):
             continue
 
-        size_bytes = int(f.get("size") or 0)
+        size_bytes = safe_size_int(f.get("size"))
         entry = {
             "filename": name.rsplit("/", 1)[-1],
             "url": ARCHIVE_DL_BASE + name,
-            "size": human_size(size_bytes),
+            "size": human_size(size_bytes) if size_bytes else "",
             "size_bytes": size_bytes,
             "md5": f.get("md5", ""),
             "sha1": f.get("sha1", ""),
@@ -105,6 +70,9 @@ def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
             "sha256_verified": False,
         }
         platform = detect_platform(name)
+        # 跳过 unknown 平台（防止未预期的 dict 键）
+        if platform == "unknown":
+            continue
 
         parsed_ws = parse_ws_version(name)
         if parsed_ws:
@@ -125,12 +93,18 @@ def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
 
 
 def sort_by_build_desc(versions: dict) -> list[dict]:
-    """按 build 号降序，转成 list"""
-    def key(item: tuple[str, dict]):
-        b = item[1].get("build", "")
-        return int(b) if b.isdigit() else 0
+    """按 build 号降序（最新在前），转成 list
 
-    return [info for _, info in sorted(versions.items(), key=key, reverse=True)]
+    使用 archive_common.build_sort_key 统一处理 int/str/非数字 混杂情况
+    """
+    return [
+        info
+        for _, info in sorted(
+            versions.items(),
+            key=lambda item: build_sort_key(item[1].get("build", "")),
+            reverse=True,
+        )
+    ]
 
 
 def merge_with_broadcom(
@@ -145,20 +119,20 @@ def merge_with_broadcom(
     2. archive.org 独有的版本（按 build 号判定）追加到列表末尾
     3. 结果按 build 号降序排列
     4. 截断到 top_n
+
+    去重时统一将 build 转为字符串比较，防止 int/str 类型不匹配导致重复。
     """
-    known_builds = {v.get("build", "") for v in broadcom_list if v.get("build")}
+    # 统一转字符串比较，防止 int 和 str build 号混杂时去重失败
+    known_builds = {str(v["build"]) for v in broadcom_list if v.get("build")}
 
     merged = list(broadcom_list)  # 复制 Broadcom
     for arc_ver in archive_list:
-        if arc_ver.get("build", "") not in known_builds:
+        b = arc_ver.get("build")
+        if b is not None and str(b) not in known_builds:
             merged.append(arc_ver)
 
-    # 按 build 降序（新在前）
-    def sort_key(v):
-        b = v.get("build", "")
-        return int(b) if b.isdigit() else 0
-
-    merged.sort(key=sort_key, reverse=True)
+    # 按 build 降序（新在前），健壮处理各种 build 类型
+    merged.sort(key=lambda v: build_sort_key(v.get("build", "")), reverse=True)
     return merged[:top_n]
 
 

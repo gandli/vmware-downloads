@@ -1,4 +1,9 @@
-"""测试 legacy_merger 模块"""
+"""测试 legacy_merger 模块
+
+注：is_installer / detect_platform / human_size / parse_ws_version /
+parse_fusion_version 等公共辅助函数的测试见 test_archive_common.py。
+这里只测 legacy_merger 自身的解析和合并逻辑。
+"""
 
 from __future__ import annotations
 
@@ -7,15 +12,18 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from vmware_lib.legacy_merger import (
+# 从 archive_common 导入公共辅助（用于本文件里少量的兼容性测试）
+from vmware_lib.archive_common import (
     detect_platform,
-    fetch_and_merge,
     human_size,
     is_installer,
-    merge_with_broadcom,
-    parse_archive_files,
     parse_fusion_version,
     parse_ws_version,
+)
+from vmware_lib.legacy_merger import (
+    fetch_and_merge,
+    merge_with_broadcom,
+    parse_archive_files,
     sort_by_build_desc,
 )
 
