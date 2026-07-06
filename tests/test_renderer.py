@@ -54,7 +54,11 @@ SAMPLE_DATA = {
 class TestRenderReadme:
     def test_contains_title(self):
         md = render_readme(SAMPLE_DATA)
-        assert "# VMware 下载链接" in md
+        # 标题包含 "VMware" 和 "下载"（v2 优化后：🎯 VMware Workstation & Fusion 下载中心）
+        first_line = md.split("\n")[0]
+        assert first_line.startswith("# ")
+        assert "VMware" in first_line
+        assert "下载" in first_line
 
     def test_platform_display_is_pretty(self):
         """回归 bug: macos.title() = 'Macos' 是错的，应该是 macOS"""
@@ -85,6 +89,22 @@ class TestRenderReadme:
         """确保输出中的时间戳是 aware 的（+00:00 或 UTC 显示）"""
         md = render_readme(SAMPLE_DATA)
         assert "UTC" in md or "+00:00" in md
+
+    def test_render_is_idempotent_with_collected_at(self):
+        """回归 review: 数据 collected_at 相同时, render_readme 应完全幂等（不含 now()）
+
+        月度 workflow 若在数据未变时也产生 diff, 会造成噪音 PR.
+        """
+        data = {
+            **SAMPLE_DATA,
+            "collected_at": "2026-06-15T10:30:00+00:00",
+        }
+        md1 = render_readme(data)
+        md2 = render_readme(data)
+        assert md1 == md2
+        # 时间戳应来自 collected_at, 而不是 now()
+        assert "2026-06-15" in md1
+        assert "2026--06--15" in md1  # shields.io 双连字符
 
 
 class TestRenderChecksums:
