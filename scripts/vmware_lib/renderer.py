@@ -105,8 +105,10 @@ def render_readme(data: dict) -> str:
             "",
             "### VMware Workstation Pro",
             "",
-            "| 版本 | Build | 发布日期 | Windows | Linux | SHA256 |",
-            "|------|-------|------|---------|-------|--------|",
+            "> ✅ = Broadcom 官方数据（SHA256 权威）· 📼 = archive.org 历史存档（仅 MD5/SHA1，无 SHA256）",
+            "",
+            "| 版本 | Build | 发布日期 | Windows | Linux | SHA256 | 来源 |",
+            "|------|-------|------|---------|-------|--------|:---:|",
         ]
         for v in ws_list:
             win = v["downloads"].get("windows")
@@ -118,9 +120,10 @@ def render_readme(data: dict) -> str:
                 sha_parts.append(f"Win: `{win['sha256']}`")
             if linux and linux.get("sha256"):
                 sha_parts.append(f"Linux: `{linux['sha256']}`")
-            sha_str = "<br>".join(sha_parts) or "详见 checksums.txt"
+            sha_str = "<br>".join(sha_parts) or ("MD5 only" if v.get("source") == "archive.org" else "详见 checksums.txt")
+            src_flag = "📼" if v.get("source") == "archive.org" else "✅"
             lines.append(
-                f"| {v['version']} | {v['build']} | {v.get('date', '—')} | {win_str} | {linux_str} | {sha_str} |"
+                f"| {v['version']} | {v['build']} | {v.get('date', '—')} | {win_str} | {linux_str} | {sha_str} | {src_flag} |"
             )
         lines.append("")
 
@@ -128,16 +131,19 @@ def render_readme(data: dict) -> str:
         lines += [
             "### VMware Fusion Pro",
             "",
-            "| 版本 | Build | 发布日期 | macOS | SHA256 |",
-            "|------|-------|------|-------|--------|",
+            "> ✅ = Broadcom 官方数据（SHA256 权威）· 📼 = archive.org 历史存档（仅 MD5/SHA1，无 SHA256）",
+            "",
+            "| 版本 | Build | 发布日期 | macOS | SHA256 | 来源 |",
+            "|------|-------|------|-------|--------|:---:|",
         ]
         for v in fusion_list:
             macos = v["downloads"].get("macos")
             macos_str = _download_cell(macos)
             sha256 = macos.get("sha256", "") if macos else ""
-            sha_str = f"`{sha256}`" if sha256 else "详见 checksums.txt"
+            sha_str = f"`{sha256}`" if sha256 else ("MD5 only" if v.get("source") == "archive.org" else "详见 checksums.txt")
+            src_flag = "📼" if v.get("source") == "archive.org" else "✅"
             lines.append(
-                f"| {v['version']} | {v['build']} | {v.get('date', '—')} | {macos_str} | {sha_str} |"
+                f"| {v['version']} | {v['build']} | {v.get('date', '—')} | {macos_str} | {sha_str} | {src_flag} |"
             )
         lines.append("")
 
