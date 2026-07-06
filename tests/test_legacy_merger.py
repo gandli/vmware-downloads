@@ -213,6 +213,18 @@ def test_merge_appends_new_archive_versions():
     assert builds == ["25388281", "23298084", "22583795"]
 
 
+def test_merge_top_n_none_means_unlimited():
+    """top_n=None 表示无上限：Broadcom 全保留 + archive 全并入"""
+    broadcom = [{"version": f"v{i}", "build": str(30000 + i), "downloads": {}} for i in range(3)]
+    archive = [{"version": f"a{i}", "build": str(20000 + i), "downloads": {}} for i in range(50)]
+    result = merge_with_broadcom(broadcom, archive, top_n=None)
+    # 应包含全部 3 + 50 = 53 个
+    assert len(result) == 53
+    # Broadcom 3 个全在
+    for b in broadcom:
+        assert any(r["version"] == b["version"] for r in result)
+
+
 def test_merge_respects_top_n_cap():
     """top_n=3 时，最多返回 3 版"""
     broadcom = [{"version": f"v{i}", "build": str(30000 + i), "downloads": {}} for i in range(2)]

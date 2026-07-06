@@ -110,23 +110,26 @@ def sort_by_build_desc(versions: dict) -> list[dict]:
 def merge_with_broadcom(
     broadcom_list: list[dict],
     archive_list: list[dict],
-    top_n: int = 15,
+    top_n: int | None = 15,
 ) -> list[dict]:
     """把 Broadcom 官方版本与 archive.org 历史版本合并
 
     规则（review 修复后）：
-    1. **Broadcom 版本全量保留**：官方 SHA256 权威数据不可截断
+    1. **Broadcom 版本全量保留**（有 SHA256 权威）
     2. archive.org 独有的版本（按 build 号去重）追加，直到达到 top_n
-    3. 结果按 build 号降序排列
+    3. 版本按 build 号降序排列（最新在前）
     4. 若 Broadcom 版本数已 >= top_n，archive 一条也不追加，但 Broadcom 仍完整保留
-
-    去重时统一将 build 转为字符串比较，防止 int/str 类型不匹配导致重复。
+    5. **top_n=None 表示无上限**：Broadcom 全保留 + archive 全并入
     """
+    # 用 build 号去重 —— 已存在于 Broadcom 的版本不重复添加
     # 统一转字符串比较，防止 int 和 str build 号混杂时去重失败
     known_builds = {str(v["build"]) for v in broadcom_list if v.get("build")}
 
-    # 计算 archive 追加名额：至少 0，剩余名额 = top_n - Broadcom 数量
-    archive_slots = max(0, top_n - len(broadcom_list))
+    # 计算 archive 追加名额
+    if top_n is None:
+        archive_slots = len(archive_list)  # 全量
+    else:
+        archive_slots = max(0, top_n - len(broadcom_list))
 
     # 过滤 archive_list：去重 + 排序（build 降序），取前 archive_slots 个
     unique_archive = [
@@ -147,7 +150,7 @@ def merge_with_broadcom(
 
 def fetch_and_merge(
     broadcom_data: dict,
-    top_n: int = 15,
+    top_n: int | None = 15,
     archive_meta: dict | None = None,
 ) -> dict:
     """把 archive.org 历史版本合并到 Broadcom 数据结构里
