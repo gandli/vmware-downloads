@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -130,6 +131,31 @@ def main() -> int:
         "workstation_pro": merged.get("workstation", []),
         "fusion_pro": merged.get("fusion", []),
     }
+
+    # 4.5 追加 archive.org 独有的历史老版本（补齐到 TOP_N 版）
+    print("\n[3.5/4] 追加 archive.org 历史版本（Broadcom Portal 已下架）")
+    try:
+        from vmware_lib.legacy_merger import fetch_and_merge as legacy_fetch_and_merge
+
+        top_n = int(os.environ.get("LEGACY_TOP_N", "15"))
+        before_ws = len(result["workstation_pro"])
+        before_fu = len(result["fusion_pro"])
+
+        # 复用已加载的 archive_metadata（不发起第二次网络请求）
+        result = legacy_fetch_and_merge(
+            result, top_n=top_n, archive_meta=archive_metadata
+        )
+        after_ws = len(result["workstation_pro"])
+        after_fu = len(result["fusion_pro"])
+        print(
+            f"  ✓ Workstation: +{after_ws - before_ws} 历史版 (共 {after_ws}), "
+            f"Fusion: +{after_fu - before_fu} 历史版 (共 {after_fu})"
+        )
+    except Exception as e:
+        print(f"  ⚠️  跳过历史版本追加: {type(e).__name__}: {e}")
+
+    ws_count = len(result["workstation_pro"])
+    fusion_count = len(result["fusion_pro"])
 
     data_dir.mkdir(parents=True, exist_ok=True)
     print(f"\n[4/4] 写文件到 {output_dir}")

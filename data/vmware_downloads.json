@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-05T17:47:54.199558+00:00",
+  "collected_at": "2026-07-06T01:15:20.930183+00:00",
   "source": {
     "primary": {
       "broadcom": "https://support.broadcom.com/group/ecx/productdownloads",
@@ -249,6 +249,108 @@
           "source": "broadcom+archive"
         }
       }
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-17.5.1-23298084.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.1-23298084.exe",
+          "size": "594.29 MB",
+          "size_bytes": 623158248,
+          "md5": "5151f645be318233e20e2b52c329b529",
+          "sha1": "1118f68f6316a0ec573c55e77f5bf1e355db1e6a",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "17.5.1",
+      "build": "23298084"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-17.5.0-22583795.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.0-22583795.exe",
+          "size": "571.76 MB",
+          "size_bytes": 599532520,
+          "md5": "b091d9183034eba8415d9ae3ca9bd0e3",
+          "sha1": "d1b44046f0ba37ffd0556d6912af8d038bf9ec81",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "17.5.0",
+      "build": "22583795"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-17.0.2-21581411.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.0.2-21581411.exe",
+          "size": "607.70 MB",
+          "size_bytes": 637215584,
+          "md5": "190113ff4da78a2ff9cb3272d5509b05",
+          "sha1": "9c9e229a5a804ced52efff3ba618c3297dfe81ca",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "17.0.2",
+      "build": "21581411"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-17.0.1-21139696.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.0.1-21139696.exe",
+          "size": "607.72 MB",
+          "size_bytes": 637236064,
+          "md5": "20d238602b91237aea12a534cd148a4a",
+          "sha1": "183306b1491f4316eaf3d00cf2a4e724070e8883",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "17.0.1",
+      "build": "21139696"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-16.2.5-20904516.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.5-20904516.exe",
+          "size": "615.58 MB",
+          "size_bytes": 645480472,
+          "md5": "b72276af0d1f093c146c6623c463218f",
+          "sha1": "01ddbeb179444bb6bf9ee41e070de362c6134ce9",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "16.2.5",
+      "build": "20904516"
+    },
+    {
+      "downloads": {
+        "windows": {
+          "filename": "VMware-workstation-full-17.0.0-20800274.exe",
+          "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.0.0-20800274.exe",
+          "size": "607.88 MB",
+          "size_bytes": 637409472,
+          "md5": "cb7adf6d87af6575f35da9974a3b46b9",
+          "sha1": "d244b21b197943b706a2c2b4ae5b82109d55fbf1",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "17.0.0",
+      "build": "20800274"
     }
   ],
   "fusion_pro": [
@@ -404,6 +506,108 @@
           "source": "broadcom+archive"
         }
       }
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-13.5.1-23298085_universal.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.5.1-23298085_universal.dmg",
+          "size": "692.34 MB",
+          "size_bytes": 725975073,
+          "md5": "fafb7fc993bcbdb0e857ef049a3c8d6e",
+          "sha1": "20754d36f41da36149ce58060835b02623b3d125",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "13.5.1",
+      "build": "23298085"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-13.5.0-22583790_universal.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.5.0-22583790_universal.dmg",
+          "size": "689.40 MB",
+          "size_bytes": 722888747,
+          "md5": "ead1eaa6379d01a52f16740507c619f6",
+          "sha1": "d1047ac8950197bece7ef594fc597dd31081b5ac",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "13.5.0",
+      "build": "22583790"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-13.0.1-21139760_universal.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.0.1-21139760_universal.dmg",
+          "size": "672.09 MB",
+          "size_bytes": 704733079,
+          "md5": "e14a500701464ec1a34f5a0ad54d5256",
+          "sha1": "82beae585c9fe3bd709a93bfbe6139ad2159a9a4",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "13.0.1",
+      "build": "21139760"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-12.2.5-20904517_x86.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.5-20904517_x86.dmg",
+          "size": "621.80 MB",
+          "size_bytes": 652000023,
+          "md5": "f0ce49aedde643e1148fc820d546e675",
+          "sha1": "1d3d84b77ade91b6ced95a9d885af8903c4575ed",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "12.2.5",
+      "build": "20904517"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-13.0.0-20802013_universal.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.0.0-20802013_universal.dmg",
+          "size": "672.06 MB",
+          "size_bytes": 704710318,
+          "md5": "09da5b60e48490bc2262951041fa7121",
+          "sha1": "40eb0a974eaaf1ee5b9e80e09d5a364a06d6a50f",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "13.0.0",
+      "build": "20802013"
+    },
+    {
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-12.2.3-19436697_x86.dmg",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.3-19436697_x86.dmg",
+          "size": "621.00 MB",
+          "size_bytes": 651169574,
+          "md5": "801f66de09a015cd9ee431bd345a2318",
+          "sha1": "6631cab9d347e3e991dc98359afd4cb0b3c89a81",
+          "sha256": "",
+          "sha256_verified": false
+        }
+      },
+      "source": "archive.org",
+      "version": "12.2.3",
+      "build": "19436697"
     }
   ]
 }
