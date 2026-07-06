@@ -192,6 +192,16 @@ def test_version_sort_key_semver():
     assert version_sort_key("3.0.0") == (3, 0, 0, 0)
 
 
+def test_version_sort_key_semver_with_suffix():
+    """预发布/构建元数据后缀应被容忍（Gemini review 建议）
+
+    17.6.4-RC1、17.6.4+build123 等常见 SemVer 扩展
+    """
+    assert version_sort_key("17.6.4-RC1") == (17, 6, 4, 0)
+    assert version_sort_key("17.6.4+build123") == (17, 6, 4, 0)
+    assert version_sort_key("17.6-beta") == (17, 6, 0, 0)
+
+
 def test_version_sort_key_two_segments():
     """两段语义版本（Broadcom 官方偶尔用）：17.6 → (17, 6, 0, 0)"""
     assert version_sort_key("17.6") == (17, 6, 0, 0)
@@ -208,6 +218,17 @@ def test_version_sort_key_year_naming():
     assert version_sort_key("25H2u1") == (125, 2, 0, 1)
     # 大小写兼容
     assert version_sort_key("26h1") == (126, 1, 0, 0)
+
+
+def test_version_sort_key_year_naming_4digit():
+    """4 位数年份未来兼容（Gemini review 建议）
+
+    如果 Broadcom 未来改用 2026H1 而非 26H1，也能正确排序
+    """
+    assert version_sort_key("2026H1") == (2026, 1, 0, 0)
+    assert version_sort_key("2025H2u3") == (2025, 2, 0, 3)
+    # 4 位年份应大于 2 位年份归一化后的值
+    assert version_sort_key("2026H1") > version_sort_key("26H1")
 
 
 def test_version_sort_key_unknown_format():
