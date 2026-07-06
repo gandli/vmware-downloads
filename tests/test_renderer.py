@@ -54,7 +54,11 @@ SAMPLE_DATA = {
 class TestRenderReadme:
     def test_contains_title(self):
         md = render_readme(SAMPLE_DATA)
-        assert "# VMware 下载链接" in md
+        # 标题包含 "VMware" 和 "下载"（v2 优化后：🎯 VMware Workstation & Fusion 下载中心）
+        first_line = md.split("\n")[0]
+        assert first_line.startswith("# ")
+        assert "VMware" in first_line
+        assert "下载" in first_line
 
     def test_platform_display_is_pretty(self):
         """回归 bug: macos.title() = 'Macos' 是错的，应该是 macOS"""
