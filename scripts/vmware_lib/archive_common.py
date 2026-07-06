@@ -115,6 +115,49 @@ def build_sort_key(build: object) -> int:
     return int(b_str) if b_str.isdigit() else 0
 
 
+# 版本号排序 —— 年份命名（26H1、25H2）视为 100+ 大版号
+# Broadcom 从 2025 年起启用年份命名代替语义版本
+# 例：26H1 = 主版 126（100 + 26），25H2 = 主版 125，25H2u1 = 125.2 后缀 1
+_YEAR_VERSION_RE = re.compile(r"^(\d{2})H([12])(?:u(\d+))?$", re.IGNORECASE)
+_SEMVER_RE = re.compile(r"^(\d+)(?:\.(\d+))?(?:\.(\d+))?$")
+
+
+def version_sort_key(version: object) -> tuple[int, int, int, int]:
+    """把版本号规范化为 (major, minor, patch, sub) 元组用于降序排序
+
+    支持格式：
+    - 语义版本：``17.6.4`` → (17, 6, 4, 0)
+    - 两段语义：``17.6``   → (17, 6, 0, 0)
+    - 年份命名：``26H1``   → (126, 1, 0, 0)  ← 100+ 保证比 v99 都大
+    - 年份 + 更新：``25H2u1`` → (125, 2, 0, 1)
+    - 未知格式 → (0, 0, 0, 0)
+
+    降序排序时会得到：
+      26H1 > 25H2u1 > 25H2 > 17.6.4 > 17.6.0 > 17.5.2 > ... > 3.0.0
+    """
+    if version is None:
+        return (0, 0, 0, 0)
+    v = str(version).strip()
+
+    # 优先匹配年份命名
+    m = _YEAR_VERSION_RE.match(v)
+    if m:
+        year = int(m.group(1))
+        half = int(m.group(2))
+        sub = int(m.group(3)) if m.group(3) else 0
+        return (100 + year, half, 0, sub)
+
+    # 语义版本
+    m = _SEMVER_RE.match(v)
+    if m:
+        major = int(m.group(1))
+        minor = int(m.group(2)) if m.group(2) else 0
+        patch = int(m.group(3)) if m.group(3) else 0
+        return (major, minor, patch, 0)
+
+    return (0, 0, 0, 0)
+
+
 def safe_size_int(v) -> int:
     """安全把 size 转 int（archive.org 偶尔返回 "" 或非数字）"""
     if v is None or v == "":

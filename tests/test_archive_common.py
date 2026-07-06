@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from vmware_lib.archive_common import (
     build_sort_key,
+    version_sort_key,
     detect_platform,
     human_size,
     is_installer,
@@ -176,3 +177,73 @@ def test_safe_size_int_edge_cases():
     assert safe_size_int("") == 0
     assert safe_size_int("not-a-number") == 0
     assert safe_size_int({}) == 0
+
+
+# ==============================================================
+# version_sort_key — 修复 v14/v15/v12 交错混排（本 PR 新增）
+# ==============================================================
+
+
+def test_version_sort_key_semver():
+    """基础语义版本：17.6.4 > 17.6.0 > 17.5.2 > 15.5.7"""
+    assert version_sort_key("17.6.4") == (17, 6, 4, 0)
+    assert version_sort_key("17.6.0") == (17, 6, 0, 0)
+    assert version_sort_key("15.5.7") == (15, 5, 7, 0)
+    assert version_sort_key("3.0.0") == (3, 0, 0, 0)
+
+
+def test_version_sort_key_two_segments():
+    """两段语义版本（Broadcom 官方偶尔用）：17.6 → (17, 6, 0, 0)"""
+    assert version_sort_key("17.6") == (17, 6, 0, 0)
+    assert version_sort_key("13.6") == (13, 6, 0, 0)
+
+
+def test_version_sort_key_year_naming():
+    """年份命名（Broadcom 2025+ 新规则）：26H1 / 25H2u1 / 25H2
+
+    年份视为 100+ 主版号 → 保证比任何 v17/v18/... 都新
+    """
+    assert version_sort_key("26H1") == (126, 1, 0, 0)
+    assert version_sort_key("25H2") == (125, 2, 0, 0)
+    assert version_sort_key("25H2u1") == (125, 2, 0, 1)
+    # 大小写兼容
+    assert version_sort_key("26h1") == (126, 1, 0, 0)
+
+
+def test_version_sort_key_unknown_format():
+    """未知格式 → (0,0,0,0),排到最后不 crash"""
+    assert version_sort_key("weird-string") == (0, 0, 0, 0)
+    assert version_sort_key("") == (0, 0, 0, 0)
+    assert version_sort_key(None) == (0, 0, 0, 0)
+
+
+def test_version_sort_key_desc_ordering():
+    """整体降序排序：年份版 > v17 > v16 > ... > v3
+
+    关键 bug 复现：老版本 build 号混乱不再影响顺序
+    """
+    versions = [
+        "3.0.0",
+        "14.1.8",  # build 号大于 15.5.0
+        "15.0.0",
+        "15.5.0",
+        "15.5.7",
+        "16.0.0",
+        "16.1.0",
+        "17.6.4",
+        "25H2",
+        "26H1",
+    ]
+    sorted_desc = sorted(versions, key=version_sort_key, reverse=True)
+    assert sorted_desc == [
+        "26H1",
+        "25H2",
+        "17.6.4",
+        "16.1.0",
+        "16.0.0",
+        "15.5.7",
+        "15.5.0",
+        "15.0.0",
+        "14.1.8",
+        "3.0.0",
+    ]
