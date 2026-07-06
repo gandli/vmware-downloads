@@ -1,23 +1,22 @@
 # 🎯 VMware Workstation & Fusion 下载中心
 
-![Workstation](https://img.shields.io/badge/Workstation-15%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion-15%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--07--06-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square) ![Auto Update](https://img.shields.io/badge/auto--update-monthly-blue?style=flat-square&logo=githubactions) ![SHA256](https://img.shields.io/badge/checksums-Broadcom%20official-success?style=flat-square)
+![Workstation](https://img.shields.io/badge/Workstation%20Pro-15%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-15%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--07--06-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
 
-> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**
-> 
-> 📥 下载链接来自 [archive.org 免费镜像](https://archive.org/details/vmwareworkstationarchive)  ·  🔐 SHA256 与发布日期来自 [Broadcom Support Portal 官方元数据](https://support.broadcom.com/group/ecx/productdownloads)  ·  🤖 [每月自动更新](.github/workflows/monthly-update.yml)（首日 06:00 UTC）
-
-> _最后更新: **2026-07-06 01:47 UTC**_
+> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  
+> 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新  
+> _Last sync: 2026-07-06 01:52 UTC_
 
 ---
 
-## 📚 目录
+## 目录
 
-- [🚀 快速下载（最新版）](#-快速下载最新版)
-- [🔐 校验完整性](#-校验完整性)
-- [📦 所有历史版本](#-所有历史版本)
-- [💡 免费使用政策](#-免费使用政策)
-- [🖥️ 老系统兼容性](#️-老系统兼容性)
-- [📖 数据来源与说明](#-数据来源与说明)
+- [快速下载（最新版）](#-快速下载最新版)
+- [校验完整性](#-校验完整性)
+- [所有历史版本](#-所有历史版本)
+- [免费使用政策](#-免费使用政策)
+- [老系统兼容性](#️-老系统兼容性)
+- [数据来源与说明](#-数据来源与说明)
+- [贡献与反馈](#贡献与反馈)
 
 ## 🚀 快速下载（最新版）
 
@@ -171,7 +170,7 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 - 🧪 TDD 保护：143 个单测覆盖抓取 / 合并 / 渲染全链路
 - 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**
 
-### 贡献 & 反馈
+## 贡献与反馈
 
 发现某版本下载失效？欢迎 [开 Issue](https://github.com/gandli/vmware-downloads/issues/new) 或 [提 PR](https://github.com/gandli/vmware-downloads/compare) 🙏
 

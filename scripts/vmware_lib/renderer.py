@@ -61,44 +61,44 @@ def _now_utc_str() -> str:
 
 
 def _render_badges(ws_count: int, fusion_count: int) -> list[str]:
-    """顶部徽章：版本数 / 最后更新 / license / CI"""
+    """顶部徽章：精简到 4 个核心 —— 版本数（合并 WS+Fusion）+ 更新 + License + 自动化
+
+    视觉审美建议：删除重复的 SHA256/auto-update 徽章（正文已述）
+    """
     last_updated = datetime.now(timezone.utc).strftime("%Y--%m--%d")
     return [
         (
-            f"![Workstation](https://img.shields.io/badge/Workstation-{ws_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
-            f"![Fusion](https://img.shields.io/badge/Fusion-{fusion_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
+            f"![Workstation](https://img.shields.io/badge/Workstation%20Pro-{ws_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
+            f"![Fusion](https://img.shields.io/badge/Fusion%20Pro-{fusion_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
             f"![Last Updated](https://img.shields.io/badge/updated-{last_updated}-brightgreen?style={BADGE_STYLE}) "
-            f"![License](https://img.shields.io/github/license/{REPO_OWNER_REPO}?style={BADGE_STYLE}) "
-            f"![Auto Update](https://img.shields.io/badge/auto--update-monthly-blue?style={BADGE_STYLE}&logo=githubactions) "
-            f"![SHA256](https://img.shields.io/badge/checksums-Broadcom%20official-success?style={BADGE_STYLE})"
+            f"![License](https://img.shields.io/github/license/{REPO_OWNER_REPO}?style={BADGE_STYLE})"
         ),
         "",
     ]
 
 
 def _render_intro() -> list[str]:
-    """开场白 + 数据可信度"""
+    """开场白 — 合并成一个引用块，去除三层缩进"""
     return [
-        "> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**",
-        "> ",
-        f"> 📥 下载链接来自 [archive.org 免费镜像](https://archive.org/details/vmwareworkstationarchive)  ·  "
-        f"🔐 SHA256 与发布日期来自 [Broadcom Support Portal 官方元数据](https://support.broadcom.com/group/ecx/productdownloads)  ·  "
-        f"🤖 [每月自动更新](.github/workflows/monthly-update.yml)（首日 06:00 UTC）",
+        "> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  ",
+        "> 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新  ",
+        f"> _Last sync: {_now_utc_str()}_",
         "",
     ]
 
 
 def _render_toc() -> list[str]:
-    """目录锚点"""
+    """目录锚点 — TOC 无 emoji，锚点仍需匹配正文标题的 GitHub slug（emoji → `-`）"""
     return [
-        "## 📚 目录",
+        "## 目录",
         "",
-        "- [🚀 快速下载（最新版）](#-快速下载最新版)",
-        "- [🔐 校验完整性](#-校验完整性)",
-        "- [📦 所有历史版本](#-所有历史版本)",
-        "- [💡 免费使用政策](#-免费使用政策)",
-        "- [🖥️ 老系统兼容性](#️-老系统兼容性)",
-        "- [📖 数据来源与说明](#-数据来源与说明)",
+        "- [快速下载（最新版）](#-快速下载最新版)",
+        "- [校验完整性](#-校验完整性)",
+        "- [所有历史版本](#-所有历史版本)",
+        "- [免费使用政策](#-免费使用政策)",
+        "- [老系统兼容性](#️-老系统兼容性)",
+        "- [数据来源与说明](#-数据来源与说明)",
+        "- [贡献与反馈](#贡献与反馈)",
         "",
     ]
 
@@ -194,8 +194,6 @@ def render_readme(data: dict) -> str:
     lines += _render_intro()
 
     lines += [
-        f"> _最后更新: **{_now_utc_str()}**_",
-        "",
         "---",
         "",
     ]
@@ -335,7 +333,7 @@ def render_readme(data: dict) -> str:
         f"- 🧪 TDD 保护：{143} 个单测覆盖抓取 / 合并 / 渲染全链路",
         f"- 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**",
         "",
-        "### 贡献 & 反馈",
+        "## 贡献与反馈",
         "",
         f"发现某版本下载失效？欢迎 [开 Issue](https://github.com/{REPO_OWNER_REPO}/issues/new) 或 [提 PR](https://github.com/{REPO_OWNER_REPO}/compare) 🙏",
         "",
