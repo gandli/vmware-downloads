@@ -137,7 +137,9 @@ def main() -> int:
     try:
         from vmware_lib.legacy_merger import fetch_and_merge as legacy_fetch_and_merge
 
-        top_n = int(os.environ.get("LEGACY_TOP_N", "15"))
+        # 默认全量（archive.org 全部历史）；LEGACY_TOP_N 可限制上限
+        top_n_env = os.environ.get("LEGACY_TOP_N", "").strip()
+        top_n = int(top_n_env) if top_n_env else None
         before_ws = len(result["workstation_pro"])
         before_fu = len(result["fusion_pro"])
 

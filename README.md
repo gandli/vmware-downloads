@@ -1,11 +1,11 @@
 # 🎯 VMware Workstation & Fusion 下载中心
 
-![Workstation](https://img.shields.io/badge/Workstation%20Pro-15%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-15%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--07--06-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
+![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--07--06-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
 
 > **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  
 > 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新
 
-<sub>_Last sync: 2026-07-06 01:25 UTC_</sub>
+<sub>_Last sync: 2026-07-06 03:10 UTC_</sub>
 
 ---
 
@@ -89,7 +89,7 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 > **图例**：✅ Broadcom 官方数据（SHA256 权威）· 📼 archive.org 历史存档（仅 MD5/SHA1）
 
 <details>
-<summary><b>🪟 VMware Workstation Pro（15 版）</b></summary>
+<summary><b>🪟 VMware Workstation Pro（128 版）</b></summary>
 
 | 版本 | Build | 发布日期 | Windows | Linux | SHA256 | 来源 |
 |:-----|:------|:---------|:--------|:------|:-------|:---:|
@@ -108,11 +108,124 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 | 17.0.1 | `21139696` | — | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.0.1-21139696.exe) (607.72 MB) | — | MD5 only | 📼 |
 | 16.2.5 | `20904516` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.5-20904516.exe) (615.58 MB) | — | MD5 only | 📼 |
 | 17.0.0 | `20800274` | — | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.0.0-20800274.exe) (607.88 MB) | — | MD5 only | 📼 |
+| 16.2.4 | `20089737` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.4-20089737.exe) (615.58 MB) | — | MD5 only | 📼 |
+| 16.2.3 | `19376536` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.3-19376536.exe) (615.43 MB) | — | MD5 only | 📼 |
+| 16.2.2 | `19200509` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.2-19200509.exe) (615.42 MB) | — | MD5 only | 📼 |
+| 16.2.1 | `18811642` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.1-18811642.exe) (615.54 MB) | — | MD5 only | 📼 |
+| 16.2.0 | `18760230` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.2.0-18760230.exe) (615.50 MB) | — | MD5 only | 📼 |
+| 16.1.2 | `17966106` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.1.2-17966106.exe) (621.29 MB) | — | MD5 only | 📼 |
+| 16.1.1 | `17801498` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.1.1-17801498.exe) (621.48 MB) | — | MD5 only | 📼 |
+| 16.1.0 | `17198959` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.1.0-17198959.exe) (621.55 MB) | — | MD5 only | 📼 |
+| 15.5.7 | `17171714` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.7-17171714.exe) (552.28 MB) | — | MD5 only | 📼 |
+| 16.0.0 | `16894299` | — | [下载](https://archive.org/download/vmwareworkstationarchive/16.x/VMware-workstation-full-16.0.0-16894299.exe) (619.26 MB) | — | MD5 only | 📼 |
+| 15.5.6 | `16341506` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.6-16341506.exe) (552.35 MB) | — | MD5 only | 📼 |
+| 15.5.5 | `16285975` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.5-16285975.exe) (552.38 MB) | — | MD5 only | 📼 |
+| 15.5.2 | `15785246` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.2-15785246.exe) (541.97 MB) | — | MD5 only | 📼 |
+| 15.5.1 | `15018445` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.1-15018445.exe) (541.16 MB) | — | MD5 only | 📼 |
+| 14.1.8 | `14921873` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.8-14921873.exe) (487.14 MB) | — | MD5 only | 📼 |
+| 15.5.0 | `14665864` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.5.0-14665864.exe) (541.05 MB) | — | MD5 only | 📼 |
+| 15.1.0 | `13591040` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.1.0-13591040.exe) (513.26 MB) | — | MD5 only | 📼 |
+| 15.0.4 | `12990004` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.4-12990004.exe) (511.30 MB) | — | MD5 only | 📼 |
+| 14.1.7 | `12989993` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.7-12989993.exe) (487.15 MB) | — | MD5 only | 📼 |
+| 15.0.3 | `12422535` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.3-12422535.exe) (511.35 MB) | — | MD5 only | 📼 |
+| 14.1.6 | `12368378` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.6-12368378.exe) (487.14 MB) | — | MD5 only | 📼 |
+| 15.0.2 | `10952284` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.2-10952284.exe) (511.84 MB) | — | MD5 only | 📼 |
+| 14.1.5 | `10950780` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.5-10950780.exe) (487.13 MB) | — | MD5 only | 📼 |
+| 15.0.1 | `10737736` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.1-10737736.exe) (511.87 MB) | — | MD5 only | 📼 |
+| 14.1.4 | `10722678` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.4-10722678.exe) (487.12 MB) | — | MD5 only | 📼 |
+| 15.0.0 | `10134415` | — | [下载](https://archive.org/download/vmwareworkstationarchive/15.x/VMware-workstation-full-15.0.0-10134415.exe) (511.75 MB) | — | MD5 only | 📼 |
+| 14.1.3 | `9474260` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.3-9474260.exe) (487.09 MB) | — | MD5 only | 📼 |
+| 14.1.2 | `8497320` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.2-8497320.exe) (487.08 MB) | — | MD5 only | 📼 |
+| 12.5.9 | `7535481` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.9-7535481.exe) (400.86 MB) | — | MD5 only | 📼 |
+| 14.1.1 | `7528167` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.1-7528167.exe) (465.21 MB) | — | MD5 only | 📼 |
+| 14.1.0 | `7370693` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.1.0-7370693.exe) (465.23 MB) | — | MD5 only | 📼 |
+| 12.5.8 | `7098237` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.8-7098237.exe) (400.83 MB) | — | MD5 only | 📼 |
+| 14.0.0 | `6661328` | — | [下载](https://archive.org/download/vmwareworkstationarchive/14.x/VMware-workstation-full-14.0.0-6661328.exe) (462.92 MB) | — | MD5 only | 📼 |
+| 12.5.7 | `5813279` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.7-5813279.exe) (404.92 MB) | — | MD5 only | 📼 |
+| 12.5.6 | `5528349` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.6-5528349.exe) (404.92 MB) | — | MD5 only | 📼 |
+| 12.5.5 | `5234757` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.5-5234757.exe) (400.53 MB) | — | MD5 only | 📼 |
+| 12.5.4 | `5192485` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.4-5192485.exe) (400.47 MB) | — | MD5 only | 📼 |
+| 12.5.3 | `5115892` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.3-5115892.exe) (400.51 MB) | — | MD5 only | 📼 |
+| 12.5.2 | `4638234` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.2-4638234.exe) (303.68 MB) | — | MD5 only | 📼 |
+| 12.5.1 | `4542065` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.1-4542065.exe) (303.67 MB) | — | MD5 only | 📼 |
+| 12.5.0 | `4352439` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.5.0-4352439.exe) (303.64 MB) | — | MD5 only | 📼 |
+| 11.1.4 | `3848939` | — | [下载](https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.4-3848939.exe) (303.11 MB) | — | MD5 only | 📼 |
+| 12.1.1 | `3770994` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.1.1-3770994.exe) (293.67 MB) | — | MD5 only | 📼 |
+| 12.1.0 | `3272444` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.1.0-3272444.exe) (293.26 MB) | — | MD5 only | 📼 |
+| 11.1.3 | `3206955` | — | [下载](https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.3-3206955.exe) (302.90 MB) | — | MD5 only | 📼 |
+| 12.0.1 | `3160714` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.0.1-3160714.exe) (292.41 MB) | — | MD5 only | 📼 |
+| 12.0.0 | `2985596` | — | [下载](https://archive.org/download/vmwareworkstationarchive/12.x/VMware-workstation-full-12.0.0-2985596.exe) (292.11 MB) | — | MD5 only | 📼 |
+| 10.0.7 | `2844087` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.7-2844087.exe) (495.52 MB) | — | MD5 only | 📼 |
+| 11.1.2 | `2780323` | — | [下载](https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.2-2780323.exe) (302.93 MB) | — | MD5 only | 📼 |
+| 11.1.1 | `2771112` | — | [下载](https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.1-2771112.exe) (303.07 MB) | — | MD5 only | 📼 |
+| 10.0.6 | `2700073` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.6-2700073.exe) (495.79 MB) | — | MD5 only | 📼 |
+| 11.1.0 | `2496824` | — | [下载](https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.1.0-2496824.exe) (301.58 MB) | — | MD5 only | 📼 |
+| 10.0.5 | `2443746` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.5-2443746.exe) (491.12 MB) | — | MD5 only | 📼 |
+| 11.0.0 | `2305329` | — | [下载](https://archive.org/download/vmwareworkstationarchive/11.x/VMware-workstation-full-11.0.0-2305329.exe) (307.36 MB) | — | MD5 only | 📼 |
+| 10.0.4 | `2249910` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.4-2249910.exe) (491.13 MB) | — | MD5 only | 📼 |
+| 9.0.4 | `1945795` | — | [下载](https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.4-1945795.exe) (476.16 MB) | — | MD5 only | 📼 |
+| 10.0.3 | `1895310` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.3-1895310.exe) (491.27 MB) | — | MD5 only | 📼 |
+| 10.0.2 | `1744117` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.2-1744117.exe) (490.76 MB) | — | MD5 only | 📼 |
+| 9.0.3 | `1410761` | — | [下载](https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.3-1410761.exe) (431.10 MB) | — | MD5 only | 📼 |
+| 10.0.1 | `1379776` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.1-1379776.exe) (490.28 MB) | — | MD5 only | 📼 |
+| 10.0.0 | `1295980` | — | [下载](https://archive.org/download/vmwareworkstationarchive/10.x/VMware-workstation-full-10.0.0-1295980.exe) (489.97 MB) | — | MD5 only | 📼 |
+| 8.0.6 | `1035888` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.6-1035888.exe) (465.41 MB) | — | MD5 only | 📼 |
+| 9.0.2 | `1031769` | — | [下载](https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.2-1031769.exe) (429.91 MB) | — | MD5 only | 📼 |
+| 9.0.1 | `894247` | — | [下载](https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.1-894247.exe) (425.15 MB) | — | MD5 only | 📼 |
+| 8.0.5 | `893925` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.5-893925.exe) (465.69 MB) | — | MD5 only | 📼 |
+| 9.0.0 | `812388` | — | [下载](https://archive.org/download/vmwareworkstationarchive/9.x/VMware-workstation-full-9.0.0-812388.exe) (425.99 MB) | — | MD5 only | 📼 |
+| 7.1.6 | `744570` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.6-744570.exe) (572.21 MB) | — | MD5 only | 📼 |
+| 8.0.4 | `744019` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.4-744019.exe) (471.16 MB) | — | MD5 only | 📼 |
+| 8.0.3 | `703057` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.3-703057.exe) (468.48 MB) | — | MD5 only | 📼 |
+| 8.0.2 | `591240` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.2-591240.exe) (468.48 MB) | — | MD5 only | 📼 |
+| 8.0.1 | `528992` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.1-528992.exe) (474.02 MB) | — | MD5 only | 📼 |
+| 7.1.5 | `491717` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.5-491717.exe) (571.00 MB) | — | MD5 only | 📼 |
+| 8.0.0 | `471780` | — | [下载](https://archive.org/download/vmwareworkstationarchive/8.x/VMware-workstation-full-8.0.0-471780.exe) (473.17 MB) | — | MD5 only | 📼 |
+| 7.1.4 | `385536` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.4-385536.exe) (571.80 MB) | — | MD5 only | 📼 |
+| 6.5.5 | `328052` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.5-328052.exe) (507.13 MB) | — | MD5 only | 📼 |
+| 7.1.3 | `324285` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.3-324285.exe) (570.10 MB) | — | MD5 only | 📼 |
+| 7.1.2 | `301548` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.2-301548.exe) (568.79 MB) | — | MD5 only | 📼 |
+| 7.1.1 | `282343` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.1-282343.exe) (567.14 MB) | — | MD5 only | 📼 |
+| 7.1.0 | `261024` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.1.0-261024.exe) (567.27 MB) | — | MD5 only | 📼 |
+| 6.5.4 | `246459` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.4-246459.exe) (507.22 MB) | — | MD5 only | 📼 |
+| 7.0.1 | `227600` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.0.1-227600.exe) (514.64 MB) | — | MD5 only | 📼 |
+| 7.0.0 | `203739` | — | [下载](https://archive.org/download/vmwareworkstationarchive/7.x/VMware-workstation-full-7.0.0-203739.exe) (512.47 MB) | — | MD5 only | 📼 |
+| 6.5.3 | `185404` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.3-185404.exe) (507.42 MB) | — | MD5 only | 📼 |
+| 6.5.2 | `156735` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.2-156735.exe) (462.54 MB) | — | MD5 only | 📼 |
+| 6.5.1 | `126130` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.1-126130.exe) (499.77 MB) | — | MD5 only | 📼 |
+| 5.5.9 | `126128` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.9-126128.exe) (92.66 MB) | — | MD5 only | 📼 |
+| 6.5.0 | `118166` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.5.0-118166.exe) (555.34 MB) | — | MD5 only | 📼 |
+| 6.0.5 | `109488` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.5-109488.exe) (319.08 MB) | — | MD5 only | 📼 |
+| 5.5.8 | `108000` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.8-108000.exe) (92.67 MB) | — | MD5 only | 📼 |
+| 6.0.4 | `93057` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.4-93057.exe) (318.99 MB) | — | MD5 only | 📼 |
+| 5.5.7 | `91707` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.7-91707.exe) (92.64 MB) | — | MD5 only | 📼 |
+| 5.5.6 | `80404` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.6-80404.exe) (92.64 MB) | — | MD5 only | 📼 |
+| 6.0.3 | `80004` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.3-80004.exe) (322.56 MB) | — | MD5 only | 📼 |
+| 6.0.2 | `59824` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.2-59824.exe) (314.46 MB) | — | MD5 only | 📼 |
+| 5.5.5 | `56455` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.5-56455.exe) (92.52 MB) | — | MD5 only | 📼 |
+| 6.0.1 | `55017` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.1-55017.exe) (314.41 MB) | — | MD5 only | 📼 |
+| 6.0.0 | `45731` | — | [下载](https://archive.org/download/vmwareworkstationarchive/6.x/VMware-workstation-6.0.0-45731.exe) (275.82 MB) | — | MD5 only | 📼 |
+| 5.5.4 | `44386` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.4-44386.exe) (92.48 MB) | — | MD5 only | 📼 |
+| 5.5.3 | `34685` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.3-34685.exe) (92.46 MB) | — | MD5 only | 📼 |
+| 5.5.2 | `29772` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.5.2-29772.exe) (91.13 MB) | — | MD5 only | 📼 |
+| 4.5.3 | `19414` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.5.3-19414.exe) (34.83 MB) | — | MD5 only | 📼 |
+| 5.0.0 | `13124` | — | [下载](https://archive.org/download/vmwareworkstationarchive/5.x/VMware-workstation-5.0.0-13124.exe) (55.96 MB) | — | MD5 only | 📼 |
+| 4.5.2 | `8848` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.5.2-8848.exe) (36.25 MB) | — | MD5 only | 📼 |
+| 4.5.1 | `7568` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.5.1-7568.exe) (33.32 MB) | — | MD5 only | 📼 |
+| 4.0.5 | `6030` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.0.5-6030.exe) (21.25 MB) | — | MD5 only | 📼 |
+| 4.0.2 | `5592` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-Workstation-4.0.2-5592.exe) (21.24 MB) | — | MD5 only | 📼 |
+| 4.0.1 | `5289` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.0.1-5289.exe) (21.26 MB) | — | MD5 only | 📼 |
+| 4.0.0 | `4460` | — | [下载](https://archive.org/download/vmwareworkstationarchive/4.x/VMware-workstation-4.0.0-4460.exe) (19.25 MB) | — | MD5 only | 📼 |
+| 3.2.1 | `2237` | — | [下载](https://archive.org/download/vmwareworkstationarchive/3.x/VMware-workstation-3.2.1-2237.exe) (17.74 MB) | — | MD5 only | 📼 |
+| 3.2.0 | `2230` | — | [下载](https://archive.org/download/vmwareworkstationarchive/3.x/VMware-workstation-3.2.0-2230.exe) (17.74 MB) | — | MD5 only | 📼 |
+| 3.1.1 | `1790` | — | [下载](https://archive.org/download/vmwareworkstationarchive/3.x/VMware-workstation-3.1.1-1790.exe) (17.82 MB) | — | MD5 only | 📼 |
+| 3.1.0 | `1769` | — | [下载](https://archive.org/download/vmwareworkstationarchive/3.x/VMware-workstation-3.1.0-1769.exe) (17.90 MB) | — | MD5 only | 📼 |
+| 3.0.0 | `1455` | — | [下载](https://archive.org/download/vmwareworkstationarchive/3.x/VMwareWorkstation-3.0.0-1455.exe) (12.06 MB) | — | MD5 only | 📼 |
 
 </details>
 
 <details>
-<summary><b>🍎 VMware Fusion Pro（15 版）</b></summary>
+<summary><b>🍎 VMware Fusion Pro（54 版）</b></summary>
 
 | 版本 | Build | 发布日期 | macOS | SHA256 | 来源 |
 |:-----|:------|:---------|:------|:-------|:---:|
@@ -131,6 +244,45 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 | 12.2.5 | `20904517` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.5-20904517_x86.dmg) (621.80 MB) | MD5 only | 📼 |
 | 13.0.0 | `20802013` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/13.x/VMware-Fusion-13.0.0-20802013_universal.dmg) (672.06 MB) | MD5 only | 📼 |
 | 12.2.3 | `19436697` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.3-19436697_x86.dmg) (621.00 MB) | MD5 only | 📼 |
+| 12.2.1 | `18811640` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.1-18811640_x86.dmg) (621.00 MB) | MD5 only | 📼 |
+| 12.2.0 | `18760249` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.2.0-18760249_x86.dmg) (621.00 MB) | MD5 only | 📼 |
+| 12.1.2 | `17964953` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.1.2-17964953.dmg) (622.22 MB) | MD5 only | 📼 |
+| 12.1.1 | `17801503` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.1.1-17801503.dmg) (623.36 MB) | MD5 only | 📼 |
+| 12.1.0 | `17195230` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.1.0-17195230.dmg) (623.36 MB) | MD5 only | 📼 |
+| 11.5.7 | `17130923` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.7-17130923.dmg) (601.68 MB) | MD5 only | 📼 |
+| 12.0.0 | `16880131` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/12.x/VMware-Fusion-12.0.0-16880131.dmg) (611.94 MB) | MD5 only | 📼 |
+| 11.5.6 | `16696540` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.6-16696540.dmg) (602.04 MB) | MD5 only | 📼 |
+| 11.5.5 | `16269456` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.5-16269456.dmg) (602.00 MB) | MD5 only | 📼 |
+| 11.5.3 | `15870345` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.3-15870345.dmg) (518.79 MB) | MD5 only | 📼 |
+| 11.5.2 | `15794494` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.2-15794494.dmg) (518.80 MB) | MD5 only | 📼 |
+| 11.5.1 | `15018442` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.1-15018442.dmg) (518.43 MB) | MD5 only | 📼 |
+| 11.5.0 | `14634996` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.5.0-14634996.dmg) (518.24 MB) | MD5 only | 📼 |
+| 11.1.1 | `14328561` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.1.1-14328561.dmg) (495.21 MB) | MD5 only | 📼 |
+| 11.1.0 | `13668589` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.1.0-13668589.dmg) (495.21 MB) | MD5 only | 📼 |
+| 11.0.3 | `12992109` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.0.3-12992109.dmg) (495.51 MB) | MD5 only | 📼 |
+| 11.0.2 | `10952296` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.0.2-10952296.dmg) (495.41 MB) | MD5 only | 📼 |
+| 11.0.1 | `10738065` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.0.1-10738065.dmg) (495.40 MB) | MD5 only | 📼 |
+| 11.0.0 | `10120384` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/11.x/VMware-Fusion-11.0.0-10120384.dmg) (495.48 MB) | MD5 only | 📼 |
+| 10.1.3 | `9472307` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.1.3-9472307.dmg) (444.07 MB) | MD5 only | 📼 |
+| 10.1.2 | `8502123` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.1.2-8502123.dmg) (444.08 MB) | MD5 only | 📼 |
+| 8.5.10 | `7527438` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.10-7527438.dmg) (467.21 MB) | MD5 only | 📼 |
+| 10.1.1 | `7520154` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.1.1-7520154.dmg) (471.77 MB) | MD5 only | 📼 |
+| 10.1.0 | `7370838` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.1.0-7370838.dmg) (471.74 MB) | MD5 only | 📼 |
+| 10.0.1 | `6754183` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.0.1-6754183.dmg) (469.71 MB) | MD5 only | 📼 |
+| 10.0.0 | `6665085` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/10.x/VMware-Fusion-10.0.0-6665085.dmg) (469.74 MB) | MD5 only | 📼 |
+| 8.5.8 | `5824040` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.8-5824040.dmg) (467.19 MB) | MD5 only | 📼 |
+| 8.5.7 | `5528452` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.7-5528452.dmg) (467.17 MB) | MD5 only | 📼 |
+| 8.5.6 | `5234762` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.6-5234762.dmg) (467.15 MB) | MD5 only | 📼 |
+| 8.5.5 | `5192483` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.5-5192483.dmg) (467.11 MB) | MD5 only | 📼 |
+| 8.5.4 | `5115894` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.4-5115894.dmg) (467.06 MB) | MD5 only | 📼 |
+| 8.5.3 | `4696910` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.3-4696910.dmg) (368.04 MB) | MD5 only | 📼 |
+| 8.5.2 | `4635224` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.2-4635224.dmg) (367.95 MB) | MD5 only | 📼 |
+| 8.5.1 | `4543325` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.1-4543325.dmg) (367.95 MB) | MD5 only | 📼 |
+| 8.5.0 | `4352717` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.5.0-4352717.dmg) (368.20 MB) | MD5 only | 📼 |
+| 8.1.1 | `3771013` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.1.1-3771013.dmg) (363.39 MB) | MD5 only | 📼 |
+| 8.1.0 | `3272237` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.1.0-3272237.dmg) (363.00 MB) | MD5 only | 📼 |
+| 8.0.3 | `3164312` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.0.3-3164312.dmg) (362.02 MB) | MD5 only | 📼 |
+| 8.0.0 | `2985594` | — | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/8.x/VMware-Fusion-8.0.0-2985594.dmg) (361.69 MB) | MD5 only | 📼 |
 
 </details>
 
@@ -168,7 +320,7 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 ### 自动化
 
 - 🤖 每月首日 06:00 UTC 自动抓取最新版本并开 PR ([workflow](.github/workflows/monthly-update.yml))
-- 🧪 TDD 保护：143 个单测覆盖抓取 / 合并 / 渲染全链路
+- 🧪 TDD 保护：145+ 个单测覆盖抓取 / 合并 / 渲染全链路
 - 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**
 
 ## 贡献与反馈
