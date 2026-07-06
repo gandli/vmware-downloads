@@ -350,7 +350,7 @@ def render_readme(data: dict) -> str:
         "### 自动化",
         "",
         f"- 🤖 每月首日 06:00 UTC 自动抓取最新版本并开 PR ([workflow](.github/workflows/monthly-update.yml))",
-        "- 🧪 TDD 保护：145+ 个单测覆盖抓取 / 合并 / 渲染全链路",
+        "- 🧪 TDD 保护：145+ 个单测覆盖抓取 / 合并 / 渲染全链路",  # noqa: RUF001
         f"- 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**",
         "",
         "## 贡献与反馈",
