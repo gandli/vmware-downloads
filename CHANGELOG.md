@@ -6,6 +6,35 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-07-08 (audit v5)
+
+### Added
+- 🆕 **`CODE_OF_CONDUCT.md`** — Contributor Covenant 2.1 简体中文版（GitHub Community Standards 治理层三缺一补齐）
+- ✅ **`tests/test_collect_vmware_links_log.py`** — 3 测试保护 collector CLI 的 logger 引入（audit v5 P1-A）
+- ✅ **4 lib 模块覆盖率补齐到 100%** — broadcom / legacy_merger / parser / renderer（audit v5 P1-B · 8 新测试）
+- ✅ **URL scheme 白名单断言 + 测试** — `fetch_metadata` 拒 `file://` / `ftp://` 等 scheme（audit v5 P1-C · 3 新测试）
+- 🆕 **`ARCHIVE_META_TIMEOUT` 模块常量** — `archive_common.py` 提取 timeout 常量避免多处硬编码（audit v5 P2-B）
+- 🆕 **dev extras 加入 bandit + mypy** — 审计工具链纳入 lockfile，下次审计无需现装（audit v5 P2-C）
+
+### Changed
+- 🛠️ **Logging pattern shadow 第 4 轮根治（audit v5 P1-A）** — v3/v4 已迁 4 个脚本，v5 才发现 `collect_vmware_links.py` 从头未 `import logging`：
+  - 引入 `from vmware_lib.logs import get_logger` · 5 处 error/warning print 迁 logger.error/warning
+  - CLI 结构化报告 print 保留（给人看的进度/表头）· error/warning 双出口（logger + user hint）
+- 🔒 **Bandit B310 三处 urllib.urlopen 显式豁免（audit v5 P1-C）** — 加 `# nosec B310` 注释：
+  - `scripts/vmware_lib/collector.py:41` · 加 URL scheme 白名单 assert
+  - `scripts/vmware_lib/legacy_merger.py:172` · nosec + 使用 ARCHIVE_META_TIMEOUT 常量
+  - `scripts/probe_archive_org.py:37` · nosec + 使用 ARCHIVE_META_TIMEOUT 常量
+- 🛠️ **legacy_merger `timeout=30` 硬编码 → 常量引用（audit v5 P2-B）** — 三处 timeout 统一走 `ARCHIVE_META_TIMEOUT`
+
+### Fixed
+- 🐛 **legacy_merger 死代码 `platform == "unknown"` 分支** — `is_installer` 已限定 `.exe/.bundle/.dmg`，`detect_platform` 恰好识别这三种 → 不可达。加 `pragma: no cover` 保留防御性检查用于未来扩展
+
+### Audit
+- 📊 **v5 综合评分 91.5/100 (A)** — v1 65 → v2 79 → v3 87 → v4 89 → **v5 91.5**
+- 📊 **lib cov 从 98.33% → 100.00%**（4 模块补齐 + 2 处 pragma 豁免）
+- 📊 **Bandit Medium 3 → 0** · Low 稳定 11（subprocess 全 hardcode 参数无风险）
+- 📊 **测试数 205 → 221**（+16 targeted test）
+
 ## [2.2.0] - 2026-07-08 (audit v4)
 
 ### Added

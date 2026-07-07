@@ -312,3 +312,39 @@ def test_hashes_normalized_to_lowercase(tmp_path: Path) -> None:
     e = entries["workstation"][0]
     assert e["sha256"] == "abcdef" + "0" * 58  # 全小写
     assert e["md5"] == "aabbcc" + "0" * 26
+
+
+# audit v5 · P1-B · broadcom.py L77/L79-80 覆盖
+def test_parse_release_date_bad_parts_returns_empty() -> None:
+    """非 3 段（缺 day 或 year）→ 返回空串"""
+    from vmware_lib.broadcom import parse_release_date
+
+    assert parse_release_date("Jul 2025") == ""  # 2 段
+    assert parse_release_date("") == ""  # 0 段
+
+
+def test_parse_release_date_unknown_month_returns_empty() -> None:
+    """未知月份缩写（如 Juli / Julio）→ 返回空串"""
+    from vmware_lib.broadcom import parse_release_date
+
+    assert parse_release_date("Juli 15, 2025") == ""
+    assert parse_release_date("Xxx 1, 2025") == ""
+
+
+def test_parse_release_date_valid_all_months() -> None:
+    """全部 12 个月份正常解析（保护 L79-80 主分支）"""
+    from vmware_lib.broadcom import parse_release_date
+
+    assert parse_release_date("Jul 15, 2025") == "2025-07-15"
+    assert parse_release_date("Dec 1, 2024") == "2024-12-01"
+    assert parse_release_date("Jan 5, 2023") == "2023-01-05"
+
+
+def test_parse_release_date_non_numeric_triggers_valueerror() -> None:
+    """int('abc') 触发 ValueError → 走 except 分支返回空串 (L79-80)"""
+    from vmware_lib.broadcom import parse_release_date
+
+    # year 非数字 → int(year) 抛 ValueError
+    assert parse_release_date("Jul 15, abc") == ""
+    # day 非数字 → int(day) 抛 ValueError
+    assert parse_release_date("Jul xx, 2025") == ""

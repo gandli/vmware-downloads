@@ -15,6 +15,8 @@ import re
 
 ARCHIVE_META_URL = "https://archive.org/metadata/vmwareworkstationarchive"
 ARCHIVE_DL_BASE = "https://archive.org/download/vmwareworkstationarchive/"
+# audit v5 P2-B: 提取 timeout 常量避免多处硬编码不一致（collector/legacy_merger/probe_archive_org）
+ARCHIVE_META_TIMEOUT = 30
 
 
 # ==============================================================

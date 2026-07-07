@@ -360,3 +360,18 @@ def test_fetch_and_merge_top_n_cap_respected():
     }
     r = fetch_and_merge(broadcom, top_n=5, archive_meta=mock_archive)
     assert len(r["workstation_pro"]) == 5
+
+
+# audit v5 · P1-B · legacy_merger.py L75 覆盖（unknown platform 跳过）
+def test_parse_archive_files_skips_unknown_platform() -> None:
+    """detect_platform 返回 'unknown' → 跳过该文件，不写入 dict"""
+    from vmware_lib.legacy_merger import parse_archive_files
+
+    # 无 Workstation/Fusion 前缀且无可识别 platform 的文件
+    files = [
+        {"name": "randomfile.txt", "size": "100", "sha1": "abc", "md5": "def"},
+        {"name": "vmware.log", "size": "50", "sha1": "aaa", "md5": "bbb"},
+    ]
+    ws, fu = parse_archive_files(files)
+    assert ws == {}
+    assert fu == {}

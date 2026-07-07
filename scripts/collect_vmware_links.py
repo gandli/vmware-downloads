@@ -34,8 +34,11 @@ from vmware_lib.collector import (
     fetch_metadata,
     merge_broadcom_with_archive,
 )
+from vmware_lib.logs import get_logger
 from vmware_lib.renderer import render_checksums, render_readme
 from vmware_lib.schema import validate_downloads_json
+
+logger = get_logger(__name__)
 
 
 def main() -> int:
@@ -69,7 +72,7 @@ def main() -> int:
     # 1. 加载 Broadcom 官方元数据
     print(f"\n[1/4] 加载 Broadcom 元数据: {broadcom_path.name}")
     if not broadcom_path.exists():
-        print(f"  ❌ 未找到 {broadcom_path}")
+        logger.error("未找到 %s", broadcom_path)
         print("  请先运行 scripts/fetch_broadcom.py 生成元数据。")
         return 2
     versions = load_broadcom_metadata(broadcom_path)
@@ -98,7 +101,9 @@ def main() -> int:
             # 覆盖：urlopen OSError、JSON 解析、archive API 结构漂移、
             # http.client 家族异常（IncompleteRead / BadStatusLine / RemoteDisconnected）
             # audit v3 CodeRabbit review: 补 http.client.HTTPException 兜底
-            print(f"  ❌ 拉取 archive.org metadata 失败: {type(e).__name__}: {e}")
+            logger.error(
+                "拉取 archive.org metadata 失败: %s: %s", type(e).__name__, e
+            )
             print("     可尝试：--dry-run <本地 metadata.json> 使用离线缓存")
             return 1
     archive_index = build_archive_filename_index(archive_metadata)
@@ -123,6 +128,7 @@ def main() -> int:
     print(f"  ✓ 双源匹配:      {stats['broadcom+archive']}")
     print(f"  ⚠️  仅 Broadcom:  {stats['broadcom-only']}  (archive.org 未镜像)")
     if stats["md5_mismatch"]:
+        logger.warning("MD5 不匹配 %d 处（可能投毒！）", stats["md5_mismatch"])
         print(f"  🚨 MD5 不匹配:   {stats['md5_mismatch']}  (可能投毒！)")
 
     # 4. 构造 JSON + 写文件
@@ -154,9 +160,8 @@ def main() -> int:
             try:
                 top_n = int(top_n_env)
             except ValueError:
-                print(
-                    f"⚠️  LEGACY_TOP_N={top_n_env!r} 不是合法整数，回退到全量模式",
-                    flush=True,
+                logger.warning(
+                    "LEGACY_TOP_N=%r 不是合法整数，回退到全量模式", top_n_env
                 )
                 top_n = None
         else:
@@ -189,7 +194,7 @@ def main() -> int:
         # AttributeError / TypeError / KeyError: audit v3 CodeRabbit review：
         #   fetch_and_merge 对 archive_meta/files/name 结构漂移不做防御性检查，
         #   任何结构漂移都软失败，而不是崩掉整个脚本
-        print(f"  ⚠️  跳过历史版本追加: {type(e).__name__}: {e}")
+        logger.warning("跳过历史版本追加: %s: %s", type(e).__name__, e)
 
     ws_count = len(result["workstation_pro"])
     fusion_count = len(result["fusion_pro"])
@@ -199,8 +204,10 @@ def main() -> int:
     print("\n[4/4] Schema 校验 + 写文件")
     schema_errs = validate_downloads_json(result)
     if schema_errs:
+        logger.error("Schema 校验失败：%d 处违规", len(schema_errs))
         print(f"  ❌ Schema 校验失败：{len(schema_errs)} 处违规", flush=True)
         for err in schema_errs[:10]:
+            logger.error("  - %s", err)
             print(f"     - {err}", flush=True)
         if len(schema_errs) > 10:
             print(f"     ... 另有 {len(schema_errs) - 10} 处", flush=True)

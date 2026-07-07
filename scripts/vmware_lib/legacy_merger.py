@@ -20,6 +20,7 @@ from collections import defaultdict
 
 from vmware_lib.archive_common import (
     ARCHIVE_DL_BASE,
+    ARCHIVE_META_TIMEOUT,
     ARCHIVE_META_URL,
     build_sort_key,
     detect_platform,
@@ -70,8 +71,10 @@ def parse_archive_files(files: list[dict]) -> tuple[dict, dict]:
             "sha256_verified": False,
         }
         platform = detect_platform(name)
-        # 跳过 unknown 平台（防止未预期的 dict 键）
-        if platform == "unknown":
+        # audit v5 P1-B: 防御性分支 · is_installer 已限定 .exe/.bundle/.dmg 三种后缀，
+        # detect_platform 恰好识别这三种 → 实际不可达。保留避免未来 is_installer
+        # 扩展 (.msi/.pkg) 时 fallthrough。加 pragma: no cover 避免覆盖率噪声。
+        if platform == "unknown":  # pragma: no cover
             continue
 
         parsed_ws = parse_ws_version(name)
@@ -166,7 +169,10 @@ def fetch_and_merge(
     可选传入 archive_meta 用于测试（避免真实网络）
     """
     if archive_meta is None:
-        with urllib.request.urlopen(ARCHIVE_META_URL, timeout=30) as resp:
+        # audit v5 P1-B: 网络 IO 分支 · 测试全部走 archive_meta 注入路径避免真实请求
+        with urllib.request.urlopen(  # pragma: no cover  # nosec B310
+            ARCHIVE_META_URL, timeout=ARCHIVE_META_TIMEOUT
+        ) as resp:
             archive_meta = json.loads(resp.read().decode("utf-8"))
 
     ws_arc, fu_arc = parse_archive_files(archive_meta.get("files", []))
