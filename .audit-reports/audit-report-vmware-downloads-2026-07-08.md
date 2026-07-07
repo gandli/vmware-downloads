@@ -26,7 +26,7 @@
 
 ## 🗺️ Project Map
 
-```
+```text
 vmware-downloads/
 ├── scripts/                         # 主逻辑（2,287 loc, Python 3.11+）
 │   ├── collect_vmware_links.py      # 主入口：融合 Broadcom + archive.org

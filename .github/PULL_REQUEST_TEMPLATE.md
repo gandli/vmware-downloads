@@ -68,7 +68,7 @@ Refs: <上游讨论 / 相关 PR>
 
 - [ ] 关联场景已本地跑通
 - [ ] README 涉及改动时已本地重新渲染
-- [ ] Workflow 改动用 `act -j lint-and-test` 跑通
+- [ ] Workflow 改动按影响范围用 `act -j lint-and-test` / `act -j gitleaks` 跑通
 
 ## 👀 Reviewer Guidance / 给评审人的话
 
