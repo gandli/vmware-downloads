@@ -1,6 +1,6 @@
 """测试 detail_parser.parse_detail_table
 
-保证从 probe_broadcom_full.py 搬到 vmware_lib/ 后逻辑一致。
+保证从 fetch_broadcom.py 搬到 vmware_lib/ 后逻辑一致。
 用 mock HTML 覆盖典型 Broadcom 详情页结构。
 """
 

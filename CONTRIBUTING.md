@@ -89,8 +89,41 @@ open('data/checksums.txt', 'w').write(render_checksums(data))
 
 ```bash
 brew install act
-act -j test  # 使用 .actrc 里的 catthehacker/ubuntu:act-latest 镜像
+act -j lint-and-test    # 使用 .actrc 里的 catthehacker/ubuntu:act-latest 镜像
+act -j gitleaks         # 单独跑 secret scan
 ```
+
+`.actrc` 已配好 `--container-architecture linux/amd64` 与镜像，M 系列 Mac 也能跑。
+
+## PR 提交流程（强制）
+
+本仓库遵循 **GitHub Docs 官方 5 段 PR 描述结构** + **每个 PR 必先跑 `code-review-skill` 三维扫描**。
+
+### 1. 提 PR 前必做（3×3 扫描）
+
+用 Hermes Agent 加载 `code-review-skill` 对本次 diff 做扫描，输出下面这张表贴到 PR 描述：
+
+| 维度 | 🔴 blocking | 🟡 important | 🟢 nit |
+|:---|:---:|:---:|:---:|
+| 🔒 安全 | 0 | 0 | 0 |
+| ⚡ 性能 | 0 | 0 | 0 |
+| 🛠️ 可维护性 | 0 | 0 | 0 |
+
+**门禁**：🔴 blocking > 0 → 追加 commit 修完再开 PR；🟡 important > 0 → 本 PR 修或开跟随 issue。
+
+### 2. PR 描述结构（5 段）
+
+按 `.github/PULL_REQUEST_TEMPLATE.md` 已内嵌的 5 段填写：**Purpose / Overview / Context / Verification / Reviewer Guidance**。禁止：
+
+- ❌ 粘贴 Telegram / 微信 / 机器人对话原文
+- ❌ 大段 stack trace（贴 CI run 链接 + 1-2 行摘要）
+- ❌ >400 行 diff 不做拆分（须在 Context 段声明分片计划）
+
+### 3. 合并门禁
+
+- CI 全绿（Lint & Test / Secret scan）
+- Gitleaks / CodeRabbit / GitGuardian 等 bot **blocking = 0**
+- README 与 data JSON 同步（`Verify README is in sync` step 通过）
 
 ## 数据完整性红线
 

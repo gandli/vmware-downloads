@@ -4,7 +4,7 @@
 发布日期等）。纯正则解析，无网络/浏览器依赖，方便复用与单测。
 
 被 scripts/reparse_broadcom.py 使用（离线重新解析已缓存的 HTML）。
-之前在 scripts/probe_broadcom_full.py 里，探测阶段清理后搬进 vmware_lib/。
+之前在 scripts/fetch_broadcom.py 里，探测阶段清理后搬进 vmware_lib/。
 """
 
 from __future__ import annotations
