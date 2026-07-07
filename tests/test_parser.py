@@ -87,3 +87,13 @@ class TestIgnored:
 
     def test_torrent(self):
         assert parse_filename("vmwareworkstationarchive_archive.torrent") is None
+
+
+# audit v5 · P1-B · parser.py L55 覆盖（Fusion/ 前缀 → macos）
+def test_platform_from_path_fusion_prefix_is_macos() -> None:
+    """Fusion/ 前缀路径识别为 macos"""
+    from vmware_lib.parser import _platform_from_path
+
+    assert _platform_from_path("Fusion/12.0/vmware.dmg", "dmg") == "macos"
+    # 非 .dmg 后缀但 Fusion/ 前缀 → 仍 macos
+    assert _platform_from_path("Fusion/13.0/vmware.zip", "zip") == "macos"

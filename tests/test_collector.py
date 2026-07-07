@@ -285,3 +285,37 @@ def test_build_index_conflict_keeps_first_when_larger(caplog):
     assert index[key]["size_bytes"] == 999
     assert index[key]["sha1"] == "keep"
     assert any("忽略" in r.message for r in caplog.records)
+
+
+# audit v5 · P1-C · Bandit B310 白名单断言
+def test_fetch_metadata_rejects_file_scheme() -> None:
+    """file:// scheme 被 assert 拒绝（防未来 URL 变量化开门后门）"""
+    import pytest
+    from vmware_lib.collector import fetch_metadata
+
+    with pytest.raises(AssertionError, match="unexpected URL scheme"):
+        fetch_metadata(url="file:///etc/passwd")
+
+
+def test_fetch_metadata_rejects_ftp_scheme() -> None:
+    import pytest
+    from vmware_lib.collector import fetch_metadata
+
+    with pytest.raises(AssertionError, match="unexpected URL scheme"):
+        fetch_metadata(url="ftp://evil.com/x")
+
+
+def test_fetch_metadata_accepts_archive_https() -> None:
+    """https://archive.org/ 通过 assert（不实际发起网络）"""
+    from unittest.mock import patch
+
+    from vmware_lib.collector import fetch_metadata
+
+    with patch("urllib.request.urlopen") as mock_urlopen:
+        mock_urlopen.return_value.__enter__.return_value.read.return_value = b'{}'
+        mock_urlopen.return_value.__enter__.return_value.__iter__ = lambda s: iter([b'{}'])
+        # json.load 用 fp.read() 后 loads → 直接 patch
+        import json
+        with patch.object(json, "load", return_value={"ok": True}):
+            result = fetch_metadata(url="https://archive.org/metadata/x")
+            assert result == {"ok": True}

@@ -32,8 +32,13 @@ def build_download_url(path: str) -> str:
 
 def fetch_metadata(url: str = METADATA_URL, timeout: int = 30) -> dict:
     """从 archive.org 拉取 metadata JSON"""
+    # audit v5 P1-C: archive.org 域硬编码非用户输入 · path traversal 不适用
+    # 白名单断言防未来 URL 变量化时误开 file:// 等危险 scheme
+    assert url.startswith(("https://archive.org/", "http://archive.org/")), (
+        f"unexpected URL scheme: {url}"
+    )
     req = urllib.request.Request(url, headers={"User-Agent": "vmware-downloads/2.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
+    with urllib.request.urlopen(req, timeout=timeout) as r:  # nosec B310
         return json.load(r)
 
 

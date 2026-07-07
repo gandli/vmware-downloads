@@ -198,3 +198,49 @@ class TestBroadcomOnlyRendering:
         md = render_readme(self.BROADCOM_ONLY_DATA)
         # 快速下载区块或表格里，其中之一应包含 Broadcom 关键词
         assert "Broadcom" in md
+
+
+# audit v5 · P1-B · renderer.py L60/L74-75 覆盖
+def test_download_cell_broadcom_only_no_size() -> None:
+    """broadcom-only 且 size 为空 → 返回 '仅 Broadcom' 不带 size"""
+    from vmware_lib.renderer import _download_cell
+
+    # size 空，走 L56 else 分支
+    result = _download_cell({"filename": "x.exe", "url": "", "size": ""})
+    assert result == "仅 Broadcom"
+
+
+def test_data_time_missing_collected_at() -> None:
+    """collected_at 缺失 → 回落到当前时间（走 L74-75 return datetime.now）"""
+    from datetime import datetime, timezone
+
+    from vmware_lib.renderer import _data_time
+
+    result = _data_time({})  # 无 collected_at 键
+    assert isinstance(result, datetime)
+    # 允许 2 秒漂移
+    delta = abs((result - datetime.now(timezone.utc)).total_seconds())
+    assert delta < 2
+
+
+def test_data_time_invalid_iso_falls_back() -> None:
+    """collected_at 是非法 ISO 字符串 → 走 except 后回落到 now"""
+    from datetime import datetime, timezone
+
+    from vmware_lib.renderer import _data_time
+
+    result = _data_time({"collected_at": "not-an-iso-date"})
+    assert isinstance(result, datetime)
+    delta = abs((result - datetime.now(timezone.utc)).total_seconds())
+    assert delta < 2
+
+
+def test_now_utc_str_returns_valid_iso_format() -> None:
+    """_now_utc_str 覆盖 L60 · 直接调用验证返回格式"""
+    import re
+
+    from vmware_lib.renderer import _now_utc_str
+
+    result = _now_utc_str()
+    # 格式：YYYY-MM-DD HH:MM UTC
+    assert re.match(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC$", result)

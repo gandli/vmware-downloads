@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from vmware_lib.archive_common import (
     ARCHIVE_DL_BASE,
+    ARCHIVE_META_TIMEOUT,
     ARCHIVE_META_URL,
     build_sort_key,
     detect_platform,
@@ -33,7 +34,10 @@ from vmware_lib.archive_common import (
 
 
 def fetch_archive_metadata() -> dict:
-    with urllib.request.urlopen(ARCHIVE_META_URL, timeout=30) as resp:
+    # audit v5 P1-C: archive.org 域硬编码 · nosec 显式豁免 Bandit B310
+    with urllib.request.urlopen(  # nosec B310
+        ARCHIVE_META_URL, timeout=ARCHIVE_META_TIMEOUT
+    ) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 
