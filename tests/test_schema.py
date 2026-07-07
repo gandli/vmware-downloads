@@ -113,3 +113,15 @@ def test_broadcom_api_field_rename_would_be_caught():
     ]
     errs = validate_downloads_json(data)
     assert any("filename" in e or "缺失必需字段" in e for e in errs)
+
+
+def test_rejects_non_string_md5_types():
+    """CodeRabbit/Gemini review · v3: md5 = None/0/False 等非 str 值必须报错"""
+    data = _make_valid_data()
+    dl = data["workstation_pro"][0]["downloads"]["windows"]
+    for bad in (None, 0, False, 123, []):
+        dl["md5"] = bad
+        errs = validate_downloads_json(data)
+        assert any(".md5:" in e and "应为字符串" in e for e in errs), (
+            f"未拒绝 md5={bad!r}"
+        )

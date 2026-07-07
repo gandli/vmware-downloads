@@ -37,7 +37,12 @@ def _configure_root() -> None:
     handler = logging.StreamHandler(sys.stderr)
     handler.setFormatter(logging.Formatter(_LOG_FORMAT, datefmt=_LOG_DATEFMT))
     root.addHandler(handler)
-    root.setLevel(os.environ.get("LOG_LEVEL", "INFO").upper())
+    # audit v3 CodeRabbit/Gemini review: LOG_LEVEL 非法值不能让脚本崩，回退 INFO
+    log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
+    try:
+        root.setLevel(log_level)
+    except (ValueError, TypeError):
+        root.setLevel(logging.INFO)
     # propagate=True 保留：pytest caplog 抓 log 依赖 root logger 传播。
     # 生产环境 root logger 默认无 handler（logging.basicConfig 未调），不会重复输出。
     root.propagate = True

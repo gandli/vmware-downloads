@@ -75,11 +75,11 @@ def _check_download(prefix: str, dl: dict[str, Any]) -> list[str]:
             f"{prefix}.sha256: 应为 64 位 hex 或空串，实际 {sha[:16]}... (len={len(sha)})"
         )
 
-    # md5 (可选)
+    # md5 (可选) — 与 sha256 同 pattern：先校验类型，再校验非空 hex
     md5 = dl.get("md5", "")
-    if md5 and not isinstance(md5, str):
+    if not isinstance(md5, str):
         errs.append(f"{prefix}.md5: 应为字符串，实际 {type(md5).__name__}")
-    elif isinstance(md5, str) and md5 and not _RE_MD5.match(md5):
+    elif md5 and not _RE_MD5.match(md5):
         errs.append(f"{prefix}.md5: 应为 32 位 hex，实际 {md5[:16]}... (len={len(md5)})")
 
     # size
