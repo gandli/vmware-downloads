@@ -12,7 +12,6 @@ from vmware_lib.collector import (
     merge_broadcom_with_archive,
 )
 
-
 # archive.org fixture：两个 Workstation Windows 版本
 ARCHIVE_METADATA = {
     "files": [

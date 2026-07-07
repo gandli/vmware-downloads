@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov ruff
+
+      - name: Ruff lint
+        run: ruff check scripts/ tests/
+
+      - name: Pytest with coverage (library code)
+        run: |
+          pytest -q --cov --cov-report=term-missing --cov-fail-under=85
+
+      - name: Verify README is in sync
+        run: |
+          python3 -c "
+          import json, sys
+          sys.path.insert(0, 'scripts')
+          from vmware_lib.renderer import render_readme, render_checksums
+          data = json.load(open('data/vmware_downloads.json'))
+          expected_readme = render_readme(data)
+          expected_checksums = render_checksums(data)
+          import pathlib
+          current_readme = pathlib.Path('README.md').read_text()
+          current_checksums = pathlib.Path('data/checksums.txt').read_text()
+          drift = []
+          if current_readme != expected_readme:
+              drift.append('README.md 与 data/vmware_downloads.json 不同步')
+          if current_checksums != expected_checksums:
+              drift.append('data/checksums.txt 与 data/vmware_downloads.json 不同步')
+          if drift:
+              print('\n'.join(drift))
+              print()
+              print('请在本地跑：')
+              print('  python3 -c \"import json,sys; sys.path.insert(0,\\\"scripts\\\"); from vmware_lib.renderer import render_readme, render_checksums; d=json.load(open(\\\"data/vmware_downloads.json\\\")); open(\\\"README.md\\\",\\\"w\\\").write(render_readme(d)); open(\\\"data/checksums.txt\\\",\\\"w\\\").write(render_checksums(d))\"')
+              sys.exit(1)
+          print('✅ README 与数据同步')
+          "

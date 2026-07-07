@@ -7,8 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from summarize_changes import versions_map, format_changed
-
+from summarize_changes import format_changed, versions_map
 
 # ============================================================
 # versions_map: 现在返回 (build, sha256) tuple

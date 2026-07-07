@@ -61,8 +61,9 @@ def _now_utc_str() -> str:
 
 
 def _data_time(data: dict) -> datetime:
-    """从 data.collected_at 提取时间戳，保证渲染幂等。
+    """从 data.collected_at 提取时间戳，用于顶部"Last sync"注脚。
 
+    该字段仅反映抓取时刻，不代表数据变化 —— 徽章日期请勿使用此值。
     review 采纳：数据未变化时不应产生 git diff（避免月度 workflow 空提交）
     """
     collected_at = data.get("collected_at")
@@ -75,14 +76,35 @@ def _data_time(data: dict) -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _render_badges(ws_count: int, fusion_count: int, dt: datetime) -> list[str]:
+def _latest_release_date(data: dict) -> str:
+    """取所有产品线最新版本发布日期，用作徽章 "updated" 字段。
+
+    抓取时间戳每天变但内容未变 → 徽章会误导；改用发布日期能真实反映数据新旧。
+    找不到日期时回退到当前 UTC 日期。
+    """
+    candidates = []
+    for key in ("workstation_pro", "fusion_pro"):
+        items = data.get(key, [])
+        if items:
+            d = items[0].get("date", "")
+            if d:
+                candidates.append(d)
+    if candidates:
+        # 字符串比较 YYYY-MM-DD 即可
+        return max(candidates)
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def _render_badges(ws_count: int, fusion_count: int, release_date: str) -> list[str]:
     """顶部徽章：精简到 4 个核心 —— 版本数（合并 WS+Fusion）+ 更新 + License + 自动化
 
+    ``release_date`` 使用最新版本的发布日期（"YYYY-MM-DD"），而非抓取时间戳。
+    抓取时间戳每天都刷新但内容未变，会让徽章日期误导性地"每天变新"。
     视觉审美建议：删除重复的 SHA256/auto-update 徽章（正文已述）
     """
     # 注意：shields.io 徽章语法用双连字符 -- 表示字面 - 字符
     # 单连字符会被识别为 label/value 分隔符，导致 404 badge not found
-    last_updated = dt.strftime("%Y--%m--%d")
+    last_updated = release_date.replace("-", "--")
     return [
         (
             f"![Workstation](https://img.shields.io/badge/Workstation%20Pro-{ws_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
@@ -210,7 +232,8 @@ def render_readme(data: dict) -> str:
         "",
     ]
     dt = _data_time(data)
-    lines += _render_badges(len(ws_list), len(fusion_list), dt)
+    release_date = _latest_release_date(data)
+    lines += _render_badges(len(ws_list), len(fusion_list), release_date)
     lines += _render_intro(dt)
 
     lines += [
@@ -349,9 +372,9 @@ def render_readme(data: dict) -> str:
         "",
         "### 自动化",
         "",
-        f"- 🤖 每月首日 06:00 UTC 自动抓取最新版本并开 PR ([workflow](.github/workflows/monthly-update.yml))",
-        "- 🧪 TDD 保护：145+ 个单测覆盖抓取 / 合并 / 渲染全链路",  # noqa: RUF001
-        f"- 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**",
+        "- 🤖 每月首日 06:00 UTC 自动抓取最新版本并开 PR ([workflow](.github/workflows/monthly-update.yml))",
+        "- 🧪 TDD 保护：单元测试覆盖抓取 / 合并 / 渲染全链路",
+        "- 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**",
         "",
         "## 贡献与反馈",
         "",

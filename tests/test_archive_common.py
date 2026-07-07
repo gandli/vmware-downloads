@@ -9,15 +9,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from vmware_lib.archive_common import (
     build_sort_key,
-    version_sort_key,
     detect_platform,
     human_size,
     is_installer,
     parse_fusion_version,
     parse_ws_version,
     safe_size_int,
+    version_sort_key,
 )
-
 
 # ==============================================================
 # is_installer
