@@ -136,3 +136,85 @@ def test_readme_strip_regex_ignores_dates_without_time():
     stripped = ts_line.sub("", text)
     assert "2024-05-14" in stripped  # 保留
     assert "17:47 UTC" not in stripped  # 清除
+
+
+# ---------------------------------------------------------------
+# 异常路径：确保静默吞异常已改为具名捕获 + stderr 记录
+# ---------------------------------------------------------------
+
+
+def test_load_head_json_git_error_logs_warning(monkeypatch, capsys):
+    """git show 因 OSError 失败时，必须记录到 stderr 而非静默返回"""
+    import subprocess
+
+    from detect_data_changes import load_head_json
+
+    def fake_check_output(*_a, **_kw):
+        raise OSError("mock: git executable missing")
+
+    monkeypatch.setattr(subprocess, "check_output", fake_check_output)
+    result = load_head_json("data/whatever.json")
+    assert result == {}
+    err = capsys.readouterr().err
+    assert "load_head_json" in err
+    assert "mock: git executable missing" in err
+
+
+def test_load_head_json_missing_path_is_silent(monkeypatch, capsys):
+    """首次提交时 HEAD 无该文件 → CalledProcessError → 视为正常，不打警告"""
+    import subprocess
+
+    from detect_data_changes import load_head_json
+
+    def fake_check_output(*_a, **_kw):
+        raise subprocess.CalledProcessError(128, ["git"])
+
+    monkeypatch.setattr(subprocess, "check_output", fake_check_output)
+    result = load_head_json("data/whatever.json")
+    assert result == {}
+    assert capsys.readouterr().err == ""
+
+
+def test_load_work_json_bad_json_logs_warning(tmp_path, capsys):
+    """工作区 JSON 损坏 → JSONDecodeError → 记录 stderr 后返回 {}"""
+    from detect_data_changes import load_work_json
+
+    bad = tmp_path / "bad.json"
+    bad.write_text("{ this is not json", encoding="utf-8")
+    result = load_work_json(str(bad))
+    assert result == {}
+    err = capsys.readouterr().err
+    assert "load_work_json" in err
+
+
+def test_load_head_json_bad_json_logs_warning(monkeypatch, capsys):
+    """git show 成功但返回非法 JSON → ValueError → 记录 stderr 后返回 {}"""
+    import subprocess
+
+    from detect_data_changes import load_head_json
+
+    def fake_check_output(*_a, **_kw):
+        return b"{ not valid json"
+
+    monkeypatch.setattr(subprocess, "check_output", fake_check_output)
+    result = load_head_json("data/whatever.json")
+    assert result == {}
+    err = capsys.readouterr().err
+    assert "load_head_json" in err
+
+
+def test_has_readme_change_git_error_logs_warning(monkeypatch, capsys, tmp_path):
+    """git show HEAD:README.md 因 OSError 失败时，必须记录到 stderr"""
+    import subprocess
+
+    from detect_data_changes import has_readme_change
+
+    def fake_check_output(*_a, **_kw):
+        raise OSError("mock: git executable missing")
+
+    monkeypatch.setattr(subprocess, "check_output", fake_check_output)
+    # 切到 tmp_path 避免读到真实仓库的 README.md（尽量让 work 侧也是空）
+    monkeypatch.chdir(tmp_path)
+    has_readme_change()  # 不应抛异常
+    err = capsys.readouterr().err
+    assert "has_readme_change" in err

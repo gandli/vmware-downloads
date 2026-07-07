@@ -1,2 +1,9 @@
-# 无需外部依赖
-# 本脚本仅使用 Python 标准库
+# 生产运行时零外部依赖（fetch_broadcom.py 例外，见下）
+#
+# 依赖管理已迁移到 pyproject.toml：
+#   pip install -e ".[dev]"    # 装 pytest / pytest-cov / ruff / playwright
+#
+# fetch_broadcom.py 需要 playwright；其余 scripts/ 与 scripts/vmware_lib/
+# 仅使用 Python 标准库（urllib、json、pathlib、dataclasses、asyncio）。
+#
+# 本文件仅保留说明，实际安装请以 pyproject.toml 为准。

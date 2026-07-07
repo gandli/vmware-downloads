@@ -45,25 +45,42 @@ def strip_noise(obj):
 
 
 def load_head_json(path: str) -> dict:
-    """拿 HEAD 版的 JSON。文件不存在或 git 报错都返回空 dict"""
+    """拿 HEAD 版的 JSON。文件不存在（首次提交）→ 返回空 dict。
+
+    其他错误（权限/仓库损坏/JSON 损坏）**记录到 stderr 后返回空 dict** —— 静默吞
+    会让 has_real_json_change 恒 True，与本脚本"避免空 PR"的初衷相反。
+    """
     try:
         raw = subprocess.check_output(
             ["git", "show", f"HEAD:{path}"],
             stderr=subprocess.DEVNULL,
         )
+    except subprocess.CalledProcessError:
+        # 首次提交或该路径在 HEAD 不存在 —— 正常情况，不报警
+        return {}
+    except OSError as e:
+        print(f"⚠️  load_head_json({path}) 调用 git 失败: {e}", file=sys.stderr)
+        return {}
+
+    try:
         return json.loads(raw)
-    except Exception:
+    except ValueError as e:
+        # json.JSONDecodeError 与 UnicodeDecodeError 都继承 ValueError，
+        # 一网打尽（bytes 解码失败也算 JSON 解析失败）
+        print(f"⚠️  load_head_json({path}) JSON 解析失败: {e}", file=sys.stderr)
         return {}
 
 
 def load_work_json(path: str) -> dict:
-    """拿工作区当前 JSON"""
+    """拿工作区当前 JSON。文件不存在 → {}；解析错误 → 记录后 {}"""
     if not Path(path).exists():
         return {}
     try:
         with open(path, encoding="utf-8") as f:
             return json.load(f)
-    except Exception:
+    except (OSError, ValueError) as e:
+        # ValueError 覆盖 JSONDecodeError + UnicodeDecodeError（文件编码坏）
+        print(f"⚠️  load_work_json({path}) 失败: {e}", file=sys.stderr)
         return {}
 
 
@@ -81,7 +98,11 @@ def has_readme_change() -> bool:
             ["git", "show", "HEAD:README.md"],
             stderr=subprocess.DEVNULL,
         ).decode("utf-8", errors="ignore")
-    except Exception:
+    except subprocess.CalledProcessError:
+        # HEAD 里没有 README（首次提交）—— 视为"从无到有"，返回空对比即可
+        head = ""
+    except OSError as e:
+        print(f"⚠️  has_readme_change 调用 git 失败: {e}", file=sys.stderr)
         head = ""
 
     try:

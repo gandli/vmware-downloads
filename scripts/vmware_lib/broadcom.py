@@ -1,6 +1,6 @@
 """Broadcom Support Portal 官方元数据数据源
 
-从 probe_broadcom_full.py 抓到的 broadcom_metadata.json 加载数据，
+从 fetch_broadcom.py 抓到的 broadcom_metadata.json 加载数据，
 提供权威 SHA256/MD5/文件大小/发布日期，替代基于 archive.org 的推断。
 """
 
