@@ -6,6 +6,22 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- 🆕 **`data/checksums.sha1.txt`** — SHA1 兜底校验清单（191 条 · 100% 覆盖），弥补 archive.org 老版本无 SHA256 的空缺
+- 🆕 **`render_sha1_checksums()`** — 新渲染函数生成 `sha1sum -c` 兼容文件
+- 🆕 **`_hash_display()` 统一哈希展示** — 优先 SHA256，缺失时 fallback 到 SHA1（明示 algo 标签）
+- ✅ **+5 renderer 测试**（tests/test_renderer.py）
+
+### Changed
+- 🛠️ **README 表格所有 "MD5 only" 显示 → SHA1 兜底**（164 处老版本全部有可用校验值）
+- 🛠️ **README 校验章节文案** — 说明 SHA256 (Broadcom 主线) + SHA1 (archive.org 历史) 双清单及原因
+- 🛠️ **`collect_vmware_links.py` 主流程** — 增加 `checksums.sha1.txt` 出口
+
+### Rationale
+- **VMware 官网 SHA256 已无法回填**：Broadcom 2023 收购后下架老版本 support 页面，Customer Connect SPA 无 Wayback 缓存，old-VMware.com Release Notes 不含 sha256
+- **SHA1 密码学强度弱于 SHA256**，但用于**下载完整性校验（防传输损坏 + 官方镜像投毒）足够**
+- **archive.org 官方 metadata 提供 sha1（201/202 覆盖）**，直接使用无需下载算
+
 ## [2.3.0] - 2026-07-08 (audit v5)
 
 ### Added

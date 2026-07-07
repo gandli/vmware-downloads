@@ -244,3 +244,103 @@ def test_now_utc_str_returns_valid_iso_format() -> None:
     result = _now_utc_str()
     # 格式：YYYY-MM-DD HH:MM UTC
     assert re.match(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2} UTC$", result)
+
+
+# ============ SHA1 兜底显示 ============
+
+SAMPLE_DATA_ARCHIVE_ONLY = {
+    "collected_at": "2026-07-06T00:00:00+00:00",
+    "workstation_pro": [
+        {
+            "version": "17.5.1",
+            "build": "23298084",
+            "date": "2024-03-05",
+            "source": "archive.org",
+            "downloads": {
+                "windows": {
+                    "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.1-23298084.exe",
+                    "filename": "VMware-workstation-full-17.5.1-23298084.exe",
+                    "size": "594.29 MB",
+                    "md5": "5151f645be318233e20e2b52c329b529",
+                    "sha1": "1118f68f6316a0ec573c55e77f5bf1e355db1e6a",
+                    "sha256": "",  # archive.org 未镜像
+                    "sha256_verified": False,
+                }
+            },
+        }
+    ],
+    "fusion_pro": [
+        {
+            "version": "13.5.2",
+            "build": "23775688",
+            "date": "2024-02-27",
+            "source": "archive.org",
+            "downloads": {
+                "macos": {
+                    "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/VMware-Fusion-13.5.2-23775688_universal.dmg",
+                    "filename": "VMware-Fusion-13.5.2-23775688_universal.dmg",
+                    "size": "603.11 MB",
+                    "md5": "abc123",
+                    "sha1": "7bda2af8ec456c2f3f2e9e8fd12ffdad39e0f8ff",
+                    "sha256": "",
+                    "sha256_verified": False,
+                }
+            },
+        }
+    ],
+}
+
+
+def test_render_sha1_checksums_returns_sha1_format() -> None:
+    """新函数 render_sha1_checksums：sha1sum -c 兼容"""
+    from vmware_lib.renderer import render_sha1_checksums
+
+    txt = render_sha1_checksums(SAMPLE_DATA_ARCHIVE_ONLY)
+    # 每行「sha1  filename」格式
+    assert "1118f68f6316a0ec573c55e77f5bf1e355db1e6a  VMware-workstation-full-17.5.1-23298084.exe" in txt
+    assert "7bda2af8ec456c2f3f2e9e8fd12ffdad39e0f8ff  VMware-Fusion-13.5.2-23775688_universal.dmg" in txt
+
+
+def test_render_sha1_checksums_skips_empty_sha1() -> None:
+    """无 sha1 的条目不产出（比如 Broadcom 主线只有 sha256）"""
+    from vmware_lib.renderer import render_sha1_checksums
+
+    txt = render_sha1_checksums(SAMPLE_DATA)  # 上面 SAMPLE_DATA 全是 abc123/def456 短假 sha1
+    # SAMPLE_DATA 里 sha1 是 abc123 等（虽然假但非空），应产出
+    lines = [ln for ln in txt.strip().split("\n") if ln]
+    assert len(lines) == 3  # win + linux + macos
+    assert all("  " in ln for ln in lines)
+
+
+def test_render_sha1_checksums_skips_when_no_sha1_field() -> None:
+    """条目没有 sha1 字段时应跳过而非崩溃"""
+    from vmware_lib.renderer import render_sha1_checksums
+
+    data = {"workstation_pro": [{"version": "x", "build": "1", "downloads": {"windows": {"filename": "a.exe", "sha256": "x"}}}], "fusion_pro": []}
+    txt = render_sha1_checksums(data)
+    assert txt.strip() == ""  # 无 sha1 → 空文件
+
+
+def test_render_readme_shows_sha1_when_sha256_missing() -> None:
+    """archive.org 老版本 sha256 空时，表格应显示 sha1 兜底而非 'MD5 only'"""
+    from vmware_lib.renderer import render_readme
+
+    md = render_readme(SAMPLE_DATA_ARCHIVE_ONLY)
+    # sha1 应以短 hash 形式出现在表格
+    assert "1118f68f" in md
+    # 应标注 SHA1（明示弱哈希）
+    assert "SHA1" in md
+    # 不应回落到 "MD5 only" 提示（因为我们已升级到 sha1 兜底）
+    assert "MD5 only" not in md
+
+
+def test_render_readme_still_uses_sha256_when_present() -> None:
+    """当 sha256 存在时（Broadcom 主线），仍优先显示 sha256 而非 sha1"""
+    from vmware_lib.renderer import render_readme
+
+    md = render_readme(SAMPLE_DATA)  # 全部有 sha256
+    # sha256 短前缀应出现
+    assert "a0ef9087" in md
+    # sha1 假值不应出现（因为 sha256 优先）
+    assert "abc123" not in md
+    assert "def456" not in md

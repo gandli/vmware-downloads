@@ -31,6 +31,28 @@ def _short_sha256(h: str) -> str:
     return f"{h[:16]}…" if h else ""
 
 
+def _short_sha1(h: str) -> str:
+    """SHA1 40 hex → 前 12 位摘要（区别于 SHA256 的 16 位）"""
+    return f"{h[:12]}…" if h else ""
+
+
+def _hash_display(info: dict) -> tuple[str, str, str]:
+    """统一哈希展示：sha256 优先 → sha1 兜底 → 空。
+
+    返回 (algo_label, short_hash, full_hash)。
+    - sha256 存在 → ("SHA256", short16, full64)
+    - sha256 空但 sha1 存在 → ("SHA1", short12, full40)
+    - 都无 → ("", "", "")
+    """
+    sha256 = info.get("sha256", "").strip() if info else ""
+    if sha256:
+        return ("SHA256", _short_sha256(sha256), sha256)
+    sha1 = info.get("sha1", "").strip() if info else ""
+    if sha1:
+        return ("SHA1", _short_sha1(sha1), sha1)
+    return ("", "", "")
+
+
 def _filename_link(info: dict) -> str:
     """快速下载区块的文件名渲染。
 
@@ -153,8 +175,8 @@ def _render_latest_block(product_name: str, latest: dict, emoji: str) -> list[st
         "",
     ]
     for plat, info in latest["downloads"].items():
-        sha256 = info.get("sha256", "")
-        sha_str = f" · SHA256 `{_short_sha256(sha256)}`" if sha256 else ""
+        algo, short, _full = _hash_display(info)
+        sha_str = f" · {algo} `{short}`" if algo else ""
         lines.append(
             f"- **{_pretty_platform(plat)}** — {_filename_link(info)} "
             f"({info['size']}{sha_str})"
@@ -172,21 +194,23 @@ def _render_ws_rows(v_list: list[dict]) -> list[str]:
         win_str = _download_cell(win)
         linux_str = _download_cell(linux)
 
-        # SHA256 短显 + <details> 完整值（避免撑破表格）
+        # SHA256 优先 · SHA1 兜底（archive.org 老版本）
         sha_parts = []
-        if win and win.get("sha256"):
-            sha_parts.append(
-                f"Win `{_short_sha256(win['sha256'])}` "
-                f"<details><summary>full</summary><code>{win['sha256']}</code></details>"
-            )
-        if linux and linux.get("sha256"):
-            sha_parts.append(
-                f"Linux `{_short_sha256(linux['sha256'])}` "
-                f"<details><summary>full</summary><code>{linux['sha256']}</code></details>"
-            )
-        sha_str = "<br>".join(sha_parts) or (
-            "MD5 only" if v.get("source") == "archive.org" else "详见 checksums.txt"
-        )
+        if win:
+            algo, short, full = _hash_display(win)
+            if algo:
+                sha_parts.append(
+                    f"Win {algo} `{short}` "
+                    f"<details><summary>full</summary><code>{full}</code></details>"
+                )
+        if linux:
+            algo, short, full = _hash_display(linux)
+            if algo:
+                sha_parts.append(
+                    f"Linux {algo} `{short}` "
+                    f"<details><summary>full</summary><code>{full}</code></details>"
+                )
+        sha_str = "<br>".join(sha_parts) or "MD5 only"
         src_flag = "📼" if v.get("source") == "archive.org" else "✅"
 
         rows.append(
@@ -202,16 +226,14 @@ def _render_fusion_rows(v_list: list[dict]) -> list[str]:
     for v in v_list:
         macos = v["downloads"].get("macos")
         macos_str = _download_cell(macos)
-        sha256 = macos.get("sha256", "") if macos else ""
-        if sha256:
+        algo, short, full = _hash_display(macos) if macos else ("", "", "")
+        if algo:
             sha_str = (
-                f"`{_short_sha256(sha256)}` "
-                f"<details><summary>full</summary><code>{sha256}</code></details>"
+                f"{algo} `{short}` "
+                f"<details><summary>full</summary><code>{full}</code></details>"
             )
         else:
-            sha_str = (
-                "MD5 only" if v.get("source") == "archive.org" else "详见 checksums.txt"
-            )
+            sha_str = "MD5 only"
         src_flag = "📼" if v.get("source") == "archive.org" else "✅"
         rows.append(
             f"| {v['version']} | `{v['build']}` | {v.get('date', '—')} | "
@@ -259,10 +281,13 @@ def render_readme(data: dict) -> str:
     lines += [
         "## 🔐 校验完整性",
         "",
-        "所有 SHA256 由 **Broadcom Support Portal 官方元数据**导出，保存在：",
+        "所有哈希由 **Broadcom Support Portal（主线版）** + **archive.org 官方元数据（历史版）** 导出，保存在：",
         "",
-        "- 📄 [`data/checksums.txt`](data/checksums.txt) — 可直接喂给 `shasum -c` / `sha256sum -c`",
-        "- 📄 [`data/vmware_downloads.json`](data/vmware_downloads.json) — 完整元数据 (size / SHA256 / MD5 / build)",
+        "- 📄 [`data/checksums.txt`](data/checksums.txt) — **SHA256** 清单，喂给 `sha256sum -c` / `shasum -a 256 -c`",
+        "- 📄 [`data/checksums.sha1.txt`](data/checksums.sha1.txt) — **SHA1** 兜底清单（archive.org 历史版本无 sha256，喂给 `sha1sum -c` / `shasum -a 1 -c`）",
+        "- 📄 [`data/vmware_downloads.json`](data/vmware_downloads.json) — 完整元数据 (size / SHA256 / SHA1 / MD5 / build)",
+        "",
+        "> **为什么有 SHA1？** Broadcom 收购 VMware 后下架了老版本 support 页面，官网 SHA256 只保留当前主线版本。archive.org 镜像了历史包但其元数据只提供 SHA1/MD5。SHA1 密码学强度虽弱于 SHA256，但用于**校验下载完整性**（防传输损坏 & 官方镜像投毒）依然足够。",
         "",
         "把 `checksums.txt` 与下载的 `.exe`/`.bundle`/`.dmg` **放在同一目录**：",
         "",
@@ -398,3 +423,22 @@ def render_checksums(data: dict) -> str:
                 if sha256:
                     lines.append(f"{sha256}  {info['filename']}")
     return "\n".join(lines) + "\n"
+
+
+def render_sha1_checksums(data: dict) -> str:
+    """生成 sha1sum -c 兼容的 checksums.sha1.txt。
+
+    补 sha256 缺失的兜底：archive.org 老版本官方元数据只提供 sha1/md5，
+    这里产出 sha1 校验清单，让用户下载后仍能验证完整性。
+
+    格式：`<sha1_hex>  <filename>\\n`（与 sha256sum -c 一致）。
+    """
+    lines: list[str] = []
+    for product_key in ("workstation_pro", "fusion_pro"):
+        for v in data.get(product_key, []):
+            for _plat, info in v["downloads"].items():
+                sha1 = (info.get("sha1") or "").strip()
+                filename = (info.get("filename") or "").strip()
+                if sha1 and filename:
+                    lines.append(f"{sha1}  {filename}")
+    return ("\n".join(lines) + "\n") if lines else ""

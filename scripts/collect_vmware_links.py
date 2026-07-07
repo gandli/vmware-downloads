@@ -35,7 +35,7 @@ from vmware_lib.collector import (
     merge_broadcom_with_archive,
 )
 from vmware_lib.logs import get_logger
-from vmware_lib.renderer import render_checksums, render_readme
+from vmware_lib.renderer import render_checksums, render_readme, render_sha1_checksums
 from vmware_lib.schema import validate_downloads_json
 
 logger = get_logger(__name__)
@@ -226,6 +226,13 @@ def main() -> int:
     checksums_path = data_dir / "checksums.txt"
     checksums_path.write_text(render_checksums(result), encoding="utf-8")
     print(f"  ✓ {checksums_path.relative_to(output_dir)}")
+
+    # SHA1 兜底文件（archive.org 老版本无 sha256 时的完整性校验）
+    sha1_content = render_sha1_checksums(result)
+    if sha1_content.strip():
+        sha1_path = data_dir / "checksums.sha1.txt"
+        sha1_path.write_text(sha1_content, encoding="utf-8")
+        print(f"  ✓ {sha1_path.relative_to(output_dir)} (SHA1 兜底)")
 
     readme_path = output_dir / "README.md"
     readme_path.write_text(render_readme(result), encoding="utf-8")
