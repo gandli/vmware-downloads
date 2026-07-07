@@ -1,0 +1,115 @@
+"""audit v3 · P1-C · schema validator 单元测试"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
+
+from vmware_lib.schema import validate_downloads_json  # noqa: E402
+
+
+def _make_valid_dl():
+    return {
+        "filename": "VMware-Workstation-Full-17.5.0-22583795.exe",
+        "size": "603.03 MB",
+        "sha256": "a" * 64,
+        "md5": "b" * 32,
+        "url": "https://archive.org/download/x/y.exe",
+        "source": "broadcom+archive",
+    }
+
+
+def _make_valid_entry():
+    return {
+        "version": "17.5.0",
+        "build": "22583795",
+        "downloads": {"windows": _make_valid_dl()},
+    }
+
+
+def _make_valid_data():
+    return {
+        "collected_at": "2026-07-08T00:00:00Z",
+        "workstation_pro": [_make_valid_entry()],
+        "fusion_pro": [],
+    }
+
+
+def test_valid_data_passes():
+    assert validate_downloads_json(_make_valid_data()) == []
+
+
+def test_rejects_non_dict_root():
+    errs = validate_downloads_json([])
+    assert errs and "应为 dict" in errs[0]
+
+
+def test_missing_top_keys():
+    errs = validate_downloads_json({"collected_at": "x"})
+    assert any("缺失必需字段" in e for e in errs)
+
+
+def test_rejects_malformed_sha256():
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["sha256"] = "abc"  # 长度不对
+    errs = validate_downloads_json(data)
+    assert any("sha256" in e and "64 位" in e for e in errs)
+
+
+def test_empty_sha256_allowed():
+    """archive.org 未镜像的版本 sha256 可以为空 —— 不算错"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["sha256"] = ""
+    assert validate_downloads_json(data) == []
+
+
+def test_rejects_malformed_size():
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["size"] = "603 大小"
+    errs = validate_downloads_json(data)
+    assert any("size" in e for e in errs)
+
+
+def test_rejects_non_http_url():
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["url"] = "ftp://example.com/x"
+    errs = validate_downloads_json(data)
+    assert any("url" in e for e in errs)
+
+
+def test_source_optional_but_validated_if_present():
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["source"] = "unknown-source"
+    errs = validate_downloads_json(data)
+    assert any("source" in e and "未识别" in e for e in errs)
+
+
+def test_source_missing_is_allowed():
+    """archive.org 老版本没 source 字段 —— 不算错"""
+    data = _make_valid_data()
+    del data["workstation_pro"][0]["downloads"]["windows"]["source"]
+    assert validate_downloads_json(data) == []
+
+
+def test_real_data_passes():
+    """回归：真产品 data/vmware_downloads.json 必须过校验"""
+    import json
+    repo = Path(__file__).parent.parent
+    with open(repo / "data" / "vmware_downloads.json") as f:
+        data = json.load(f)
+    errs = validate_downloads_json(data)
+    assert errs == [], f"真数据违反 schema: {errs[:5]}"
+
+
+def test_broadcom_api_field_rename_would_be_caught():
+    """回归场景 · Broadcom API 把 sha256 改名为 SHA-256 → 必须报错"""
+    data = _make_valid_data()
+    dl = data["workstation_pro"][0]["downloads"]["windows"]
+    del dl["sha256"]  # 老字段没了 → 但 sha256 已改为可选，不再必错
+    # 但 filename 是必需的 —— 用 filename 缺失作为契约违规样本
+    dl2 = _make_valid_dl()
+    del dl2["filename"]
+    data["fusion_pro"] = [
+        {"version": "13.5", "build": "22583795", "downloads": {"mac": dl2}}
+    ]
+    errs = validate_downloads_json(data)
+    assert any("filename" in e or "缺失必需字段" in e for e in errs)

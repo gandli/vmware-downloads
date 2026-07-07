@@ -12,6 +12,9 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  # audit v3 · P2-B · SLSA build provenance
+  id-token: write        # 需要 OIDC token 才能发 attestation
+  attestations: write    # 写入 GitHub 的 attestation 存储
 
 jobs:
   fetch-and-render:
@@ -63,6 +66,15 @@ jobs:
       - name: 融合 archive.org + 渲染 README/checksums
         run: |
           python scripts/collect_vmware_links.py
+
+      - name: SLSA build provenance（供应链 chain-of-custody）
+        # audit v3 · P2-B：给 data/vmware_downloads.json 与 checksums.txt 签发
+        # SLSA level 3 attestation。用户可用 `gh attestation verify` 校验来源
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373  # v4.1.1
+        with:
+          subject-path: |
+            data/vmware_downloads.json
+            data/checksums.txt
 
       - name: 检查是否有真实数据变化（剔除时间戳噪声）
         id: check_diff

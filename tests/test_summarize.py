@@ -173,3 +173,40 @@ def test_format_changed_shows_both():
     )
     assert "24832109 → 24999999" in line
     assert "⚠️" in line
+
+
+def test_load_head_json_bad_json_logs_stderr(monkeypatch, caplog):
+    """audit v3 · load_head_json 遇到坏 JSON 必须记 log 而非静默返回 {}"""
+    import logging
+    import subprocess as _sp
+    import sys
+    sys.path.insert(0, "scripts")
+    from summarize_changes import load_head_data
+
+    monkeypatch.setattr(_sp, "check_output", lambda *a, **kw: b"{ not valid json")
+    with caplog.at_level(logging.WARNING, logger="vmware.summarize_changes"):
+        result = load_head_data()
+    assert result == {}
+    assert any(
+        "HEAD JSON" in rec.getMessage() for rec in caplog.records
+    ), f"没有捕获 HEAD JSON 相关警告，得到 {[r.getMessage() for r in caplog.records]}"
+
+
+def test_load_head_json_git_missing_logs_stderr(monkeypatch, caplog):
+    """audit v3 · git 可执行不存在时（OSError）也要记 log"""
+    import logging
+    import subprocess as _sp
+    import sys
+    sys.path.insert(0, "scripts")
+    from summarize_changes import load_head_data
+
+    def _raise(*a, **kw):
+        raise OSError("git executable missing")
+
+    monkeypatch.setattr(_sp, "check_output", _raise)
+    with caplog.at_level(logging.WARNING, logger="vmware.summarize_changes"):
+        result = load_head_data()
+    assert result == {}
+    assert any(
+        "git 调用失败" in rec.getMessage() for rec in caplog.records
+    ), f"没有捕获 git 调用失败警告，得到 {[r.getMessage() for r in caplog.records]}"

@@ -26,6 +26,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+# 让 detect_data_changes 可以 import vmware_lib.logs（作为 script 直接跑时）
+sys.path.insert(0, str(Path(__file__).parent))
+from vmware_lib.logs import get_logger  # noqa: E402
+
+log = get_logger(__name__)
+
 # 这些字段每次运行都变，但不代表数据本身变化，对比时剔除
 NOISE_FIELDS = {
     "collected_at",   # ISO 时间戳
@@ -59,7 +65,7 @@ def load_head_json(path: str) -> dict:
         # 首次提交或该路径在 HEAD 不存在 —— 正常情况，不报警
         return {}
     except OSError as e:
-        print(f"⚠️  load_head_json({path}) 调用 git 失败: {e}", file=sys.stderr)
+        log.warning("load_head_json(%s) 调用 git 失败: %s", path, e)
         return {}
 
     try:
@@ -67,7 +73,7 @@ def load_head_json(path: str) -> dict:
     except ValueError as e:
         # json.JSONDecodeError 与 UnicodeDecodeError 都继承 ValueError，
         # 一网打尽（bytes 解码失败也算 JSON 解析失败）
-        print(f"⚠️  load_head_json({path}) JSON 解析失败: {e}", file=sys.stderr)
+        log.warning("load_head_json(%s) JSON 解析失败: %s", path, e)
         return {}
 
 
@@ -80,7 +86,7 @@ def load_work_json(path: str) -> dict:
             return json.load(f)
     except (OSError, ValueError) as e:
         # ValueError 覆盖 JSONDecodeError + UnicodeDecodeError（文件编码坏）
-        print(f"⚠️  load_work_json({path}) 失败: {e}", file=sys.stderr)
+        log.warning("load_work_json(%s) 失败: %s", path, e)
         return {}
 
 
@@ -102,7 +108,7 @@ def has_readme_change() -> bool:
         # HEAD 里没有 README（首次提交）—— 视为"从无到有"，返回空对比即可
         head = ""
     except OSError as e:
-        print(f"⚠️  has_readme_change 调用 git 失败: {e}", file=sys.stderr)
+        log.warning("has_readme_change 调用 git 失败: %s", e)
         head = ""
 
     try:

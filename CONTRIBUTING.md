@@ -10,16 +10,34 @@
 
 ## 快速开始
 
+> ⚠️ **Python 版本要求**：本项目 `pyproject.toml` 声明 `requires-python = ">=3.11"`，CI 也跑 3.11。
+> macOS 系统自带 python 3.9.x 无法通过 `pytest` — 请先安装 3.11+：
+> ```bash
+> brew install python@3.11
+> python3.11 -m venv .venv        # 关键：显式用 3.11
+> ```
+
 ```bash
 git clone https://github.com/gandli/vmware-downloads.git
 cd vmware-downloads
-python3 -m venv .venv && source .venv/bin/activate
+python3.11 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"          # 安装 pytest + ruff + playwright
 python3 -m pytest -q             # 跑单测（应 100% 绿）
 ruff check scripts/ tests/       # 代码风格检查
 ```
 
 生产运行时**零外部依赖**，仅使用 Python 标准库；开发依赖仅用于测试和抓取。
+
+### 日志级别（audit v3 引入）
+
+所有脚本通过 `LOG_LEVEL` 环境变量控制日志级别：
+
+```bash
+LOG_LEVEL=DEBUG python -m scripts.detect_data_changes    # 详细模式（调试）
+LOG_LEVEL=WARNING python -m scripts.collect_vmware_links # 只看警告及以上
+```
+
+默认 `INFO`。日志走 **stderr**，`stdout` 保留给结构化输出（PR body / checksums.txt）。
 
 ## 开发工作流
 
