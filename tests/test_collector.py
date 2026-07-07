@@ -141,3 +141,147 @@ class TestMergeBroadcomWithArchive:
         }
         out = merge_broadcom_with_archive(bc, {})
         assert [v["version"] for v in out["workstation"]] == ["26H1", "17.5.2"]
+
+
+# ============================================================
+# audit v4 · P1-C · 补齐 collector.py 未覆盖分支
+# ============================================================
+
+
+def test_fetch_metadata_calls_urlopen(monkeypatch):
+    """L33-37: fetch_metadata 应发起 urllib 请求并解析 JSON"""
+    import io
+    import json as _json
+
+    from vmware_lib import collector
+
+    captured = {}
+
+    class FakeResponse:
+        def __init__(self, body):
+            self._body = body
+        def __enter__(self):
+            return io.BytesIO(self._body)
+        def __exit__(self, *args):
+            return False
+
+    def fake_urlopen(req, timeout=30):
+        captured["url"] = req.full_url
+        captured["ua"] = req.headers.get("User-agent")
+        captured["timeout"] = timeout
+        return FakeResponse(_json.dumps({"files": []}).encode())
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    result = collector.fetch_metadata()
+    assert result == {"files": []}
+    assert "archive.org" in captured["url"]
+    assert captured["ua"] and "vmware-downloads" in captured["ua"]
+    assert captured["timeout"] == 30
+
+
+def test_build_index_skips_empty_name():
+    """L48-50: file_info 无 name 字段应被 skip"""
+    from vmware_lib.collector import build_archive_filename_index
+
+    metadata = {
+        "files": [
+            {"name": "", "size": "100"},        # empty name → skip
+            {"size": "200"},                    # no name key → default "" → skip
+            {"name": "26H1/VMware-Workstation-Full-17.5.0-22583795.exe", "size": "603000000"},
+        ]
+    }
+    index = build_archive_filename_index(metadata)
+    # 只有第 3 个有效
+    assert len(index) == 1
+
+
+def test_build_index_handles_non_int_size():
+    """L55-58: size 是 str 非数字 (ValueError) → size_bytes=0 兜底"""
+    from vmware_lib.collector import build_archive_filename_index
+
+    metadata = {
+        "files": [
+            {
+                "name": "26H1/VMware-Workstation-Full-17.5.0-22583795.exe",
+                "size": "not-a-number",   # ← ValueError
+            },
+        ]
+    }
+    index = build_archive_filename_index(metadata)
+    assert len(index) == 1
+    entry = next(iter(index.values()))
+    assert entry["size_bytes"] == 0
+
+
+def test_build_index_handles_none_size():
+    """L55-58: size 是 None (TypeError) → size_bytes=0 兜底"""
+    from vmware_lib.collector import build_archive_filename_index
+
+    metadata = {
+        "files": [
+            {
+                "name": "26H1/VMware-Workstation-Full-17.5.0-22583795.exe",
+                "size": None,   # ← TypeError
+            },
+        ]
+    }
+    index = build_archive_filename_index(metadata)
+    assert next(iter(index.values()))["size_bytes"] == 0
+
+
+def test_build_index_conflict_keeps_larger(caplog):
+    """L69-78: 同名冲突时保留 size 更大的"""
+    import logging
+
+    from vmware_lib.collector import build_archive_filename_index
+
+    metadata = {
+        "files": [
+            {
+                "name": "old/VMware-Workstation-Full-17.5.0-22583795.exe",
+                "size": "100",
+                "sha1": "old",
+            },
+            {
+                "name": "new/VMware-Workstation-Full-17.5.0-22583795.exe",
+                "size": "200",
+                "sha1": "new",
+            },
+        ]
+    }
+    with caplog.at_level(logging.WARNING, logger="vmware_lib.collector"):
+        index = build_archive_filename_index(metadata)
+    # 保留 size=200 的
+    key = "vmware-workstation-full-17.5.0-22583795.exe"
+    assert index[key]["size_bytes"] == 200
+    assert index[key]["sha1"] == "new"
+    assert any("冲突" in r.message for r in caplog.records)
+
+
+def test_build_index_conflict_keeps_first_when_larger(caplog):
+    """L79-86: 已存在的更大，忽略新的"""
+    import logging
+
+    from vmware_lib.collector import build_archive_filename_index
+
+    metadata = {
+        "files": [
+            {
+                "name": "big/VMware-Workstation-Full-17.5.0-22583795.exe",
+                "size": "999",
+                "sha1": "keep",
+            },
+            {
+                "name": "small/VMware-Workstation-Full-17.5.0-22583795.exe",
+                "size": "100",
+                "sha1": "ignore",
+            },
+        ]
+    }
+    with caplog.at_level(logging.WARNING, logger="vmware_lib.collector"):
+        index = build_archive_filename_index(metadata)
+    key = "vmware-workstation-full-17.5.0-22583795.exe"
+    # 保留 size=999
+    assert index[key]["size_bytes"] == 999
+    assert index[key]["sha1"] == "keep"
+    assert any("忽略" in r.message for r in caplog.records)

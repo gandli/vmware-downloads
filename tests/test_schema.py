@@ -125,3 +125,128 @@ def test_rejects_non_string_md5_types():
         assert any(".md5:" in e and "应为字符串" in e for e in errs), (
             f"未拒绝 md5={bad!r}"
         )
+
+
+# ============================================================
+# audit v4 · P1-B · 补齐 schema.py 未覆盖分支
+# ============================================================
+
+
+def test_rejects_missing_required_dl_keys():
+    """L57-60: dl 缺 filename/size/url → 早退返回，不再检查后续字段"""
+    data = _make_valid_data()
+    del data["workstation_pro"][0]["downloads"]["windows"]["url"]
+    errs = validate_downloads_json(data)
+    assert any("缺失必需字段" in e and "url" in e for e in errs)
+
+
+def test_rejects_non_string_filename():
+    """L64: filename 是 None/int → 类型错"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["filename"] = None
+    errs = validate_downloads_json(data)
+    assert any("filename" in e and "应为非空字符串" in e for e in errs)
+
+
+def test_rejects_filename_with_illegal_chars():
+    """L66-67: filename 含 shell 特殊字符 (空格/;/&)"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["filename"] = "bad; rm -rf.exe"
+    errs = validate_downloads_json(data)
+    assert any("filename" in e and "非法字符" in e for e in errs)
+
+
+def test_rejects_non_string_sha256():
+    """L71-72: sha256 是 None（不是 str）"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["sha256"] = None
+    errs = validate_downloads_json(data)
+    assert any("sha256" in e and "应为字符串" in e for e in errs)
+
+
+def test_rejects_non_hex_sha256():
+    """L73-76: sha256 长度对但含非 hex 字符 → 潜在数据污染"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["sha256"] = "z" * 64
+    errs = validate_downloads_json(data)
+    assert any("sha256" in e and ("64 位 hex" in e or "hex" in e) for e in errs)
+
+
+def test_rejects_non_string_md5():
+    """L80-81: md5 非 str → 类型错"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["md5"] = 12345
+    errs = validate_downloads_json(data)
+    assert any("md5" in e and "应为字符串" in e for e in errs)
+
+
+def test_rejects_malformed_md5():
+    """L82-83: md5 长度不对（非 32 hex）"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["md5"] = "abc"
+    errs = validate_downloads_json(data)
+    assert any("md5" in e for e in errs)
+
+
+def test_rejects_non_string_size():
+    """L87-88: size 是 int（不是 str，如 Broadcom API 改字段类型）"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"]["windows"]["size"] = 274000000
+    errs = validate_downloads_json(data)
+    assert any("size" in e and "非空字符串" in e for e in errs)
+
+
+def test_rejects_missing_entry_keys():
+    """L112-114: entry 缺 version/build/downloads → 早退"""
+    data = _make_valid_data()
+    del data["workstation_pro"][0]["build"]
+    errs = validate_downloads_json(data)
+    assert any("缺失必需字段" in e and "build" in e for e in errs)
+
+
+def test_rejects_non_string_version():
+    """L117-118: version 非 str"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["version"] = 175
+    errs = validate_downloads_json(data)
+    assert any("version" in e for e in errs)
+
+
+def test_rejects_non_string_build():
+    """L121-122: build 非 str"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["build"] = 22583795
+    errs = validate_downloads_json(data)
+    assert any("build" in e for e in errs)
+
+
+def test_rejects_non_dict_downloads():
+    """L125-127: downloads 是 list（Broadcom 改结构）"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"] = ["a", "b"]
+    errs = validate_downloads_json(data)
+    assert any("downloads" in e and "dict" in e for e in errs)
+
+
+def test_rejects_non_dict_download_entry():
+    """L131-134: 单个 platform 下载 entry 是 str（不是 dict）"""
+    data = _make_valid_data()
+    data["workstation_pro"][0]["downloads"] = {"windows": "not-a-dict"}
+    errs = validate_downloads_json(data)
+    assert any("windows" in e and "dict" in e for e in errs)
+
+
+def test_rejects_non_list_products():
+    """L157-158: workstation_pro 不是 list（是 dict）"""
+    data = _make_valid_data()
+    data["workstation_pro"] = {"a": 1}
+    errs = validate_downloads_json(data)
+    assert any("workstation_pro" in e and "list" in e for e in errs)
+
+
+def test_rejects_non_dict_entry_in_list():
+    """L161-164: workstation_pro list 里的 entry 是 str（不是 dict）"""
+    data = _make_valid_data()
+    data["workstation_pro"] = ["not-a-dict"]
+    errs = validate_downloads_json(data)
+    assert any("workstation_pro[0]" in e and "dict" in e for e in errs)

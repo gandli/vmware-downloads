@@ -1,0 +1,30 @@
+# pre-commit hooks · 本地提交前门禁（audit v4 P2-B）
+#
+# 安装：
+#   pip install pre-commit
+#   pre-commit install
+#
+# 手动全跑：pre-commit run --all-files
+#
+# 与 CI 复用同一套 ruff · 保证本地 = CI
+---
+repos:
+  # ruff · pin SHA（与 GitHub Actions 一致）
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: c59bba8fb259db0fec2bbb77ad8ba51ea7341b56  # v0.15.20
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # 通用兜底 · 尾空白 / 大文件 / merge 冲突残留 / yaml 语法
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c  # v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: check-yaml
+      - id: check-toml
