@@ -143,8 +143,9 @@ def test_readme_strip_regex_ignores_dates_without_time():
 # ---------------------------------------------------------------
 
 
-def test_load_head_json_git_error_logs_warning(monkeypatch, capsys):
-    """git show 因 OSError 失败时，必须记录到 stderr 而非静默返回"""
+def test_load_head_json_git_error_logs_warning(monkeypatch, caplog):
+    """git show 因 OSError 失败时，必须记录 log 而非静默返回"""
+    import logging
     import subprocess
 
     from detect_data_changes import load_head_json
@@ -153,15 +154,17 @@ def test_load_head_json_git_error_logs_warning(monkeypatch, capsys):
         raise OSError("mock: git executable missing")
 
     monkeypatch.setattr(subprocess, "check_output", fake_check_output)
-    result = load_head_json("data/whatever.json")
+    with caplog.at_level(logging.WARNING, logger="vmware.detect_data_changes"):
+        result = load_head_json("data/whatever.json")
     assert result == {}
-    err = capsys.readouterr().err
-    assert "load_head_json" in err
-    assert "mock: git executable missing" in err
+    msgs = [r.getMessage() for r in caplog.records]
+    assert any("load_head_json" in m for m in msgs)
+    assert any("mock: git executable missing" in m for m in msgs)
 
 
-def test_load_head_json_missing_path_is_silent(monkeypatch, capsys):
+def test_load_head_json_missing_path_is_silent(monkeypatch, caplog):
     """首次提交时 HEAD 无该文件 → CalledProcessError → 视为正常，不打警告"""
+    import logging
     import subprocess
 
     from detect_data_changes import load_head_json
@@ -170,25 +173,29 @@ def test_load_head_json_missing_path_is_silent(monkeypatch, capsys):
         raise subprocess.CalledProcessError(128, ["git"])
 
     monkeypatch.setattr(subprocess, "check_output", fake_check_output)
-    result = load_head_json("data/whatever.json")
+    with caplog.at_level(logging.WARNING, logger="vmware.detect_data_changes"):
+        result = load_head_json("data/whatever.json")
     assert result == {}
-    assert capsys.readouterr().err == ""
+    assert caplog.records == []
 
 
-def test_load_work_json_bad_json_logs_warning(tmp_path, capsys):
-    """工作区 JSON 损坏 → JSONDecodeError → 记录 stderr 后返回 {}"""
+def test_load_work_json_bad_json_logs_warning(tmp_path, caplog):
+    """工作区 JSON 损坏 → JSONDecodeError → 记录 log 后返回 {}"""
+    import logging
+
     from detect_data_changes import load_work_json
 
     bad = tmp_path / "bad.json"
     bad.write_text("{ this is not json", encoding="utf-8")
-    result = load_work_json(str(bad))
+    with caplog.at_level(logging.WARNING, logger="vmware.detect_data_changes"):
+        result = load_work_json(str(bad))
     assert result == {}
-    err = capsys.readouterr().err
-    assert "load_work_json" in err
+    assert any("load_work_json" in r.getMessage() for r in caplog.records)
 
 
-def test_load_head_json_bad_json_logs_warning(monkeypatch, capsys):
-    """git show 成功但返回非法 JSON → ValueError → 记录 stderr 后返回 {}"""
+def test_load_head_json_bad_json_logs_warning(monkeypatch, caplog):
+    """git show 成功但返回非法 JSON → ValueError → 记录 log 后返回 {}"""
+    import logging
     import subprocess
 
     from detect_data_changes import load_head_json
@@ -197,14 +204,15 @@ def test_load_head_json_bad_json_logs_warning(monkeypatch, capsys):
         return b"{ not valid json"
 
     monkeypatch.setattr(subprocess, "check_output", fake_check_output)
-    result = load_head_json("data/whatever.json")
+    with caplog.at_level(logging.WARNING, logger="vmware.detect_data_changes"):
+        result = load_head_json("data/whatever.json")
     assert result == {}
-    err = capsys.readouterr().err
-    assert "load_head_json" in err
+    assert any("load_head_json" in r.getMessage() for r in caplog.records)
 
 
-def test_has_readme_change_git_error_logs_warning(monkeypatch, capsys, tmp_path):
-    """git show HEAD:README.md 因 OSError 失败时，必须记录到 stderr"""
+def test_has_readme_change_git_error_logs_warning(monkeypatch, caplog, tmp_path):
+    """git show HEAD:README.md 因 OSError 失败时，必须记录 log"""
+    import logging
     import subprocess
 
     from detect_data_changes import has_readme_change
@@ -215,6 +223,6 @@ def test_has_readme_change_git_error_logs_warning(monkeypatch, capsys, tmp_path)
     monkeypatch.setattr(subprocess, "check_output", fake_check_output)
     # 切到 tmp_path 避免读到真实仓库的 README.md（尽量让 work 侧也是空）
     monkeypatch.chdir(tmp_path)
-    has_readme_change()  # 不应抛异常
-    err = capsys.readouterr().err
-    assert "has_readme_change" in err
+    with caplog.at_level(logging.WARNING, logger="vmware.detect_data_changes"):
+        has_readme_change()  # 不应抛异常
+    assert any("has_readme_change" in r.getMessage() for r in caplog.records)

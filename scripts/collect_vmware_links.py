@@ -19,6 +19,7 @@ archive.org metadata 提供可下载镜像 URL（Broadcom 直链需登录，无�
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import sys
@@ -34,6 +35,7 @@ from vmware_lib.collector import (
     merge_broadcom_with_archive,
 )
 from vmware_lib.renderer import render_checksums, render_readme
+from vmware_lib.schema import validate_downloads_json
 
 
 def main() -> int:
@@ -86,7 +88,16 @@ def main() -> int:
         print("  拉取网络 metadata...")
         try:
             archive_metadata = fetch_metadata()
-        except Exception as e:
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            json.JSONDecodeError,
+            http.client.HTTPException,
+        ) as e:
+            # 覆盖：urlopen OSError、JSON 解析、archive API 结构漂移、
+            # http.client 家族异常（IncompleteRead / BadStatusLine / RemoteDisconnected）
+            # audit v3 CodeRabbit review: 补 http.client.HTTPException 兜底
             print(f"  ❌ 拉取 archive.org metadata 失败: {type(e).__name__}: {e}")
             print("     可尝试：--dry-run <本地 metadata.json> 使用离线缓存")
             return 1
@@ -163,14 +174,41 @@ def main() -> int:
             f"  ✓ Workstation: +{after_ws - before_ws} 历史版 (共 {after_ws}), "
             f"Fusion: +{after_fu - before_fu} 历史版 (共 {after_fu})"
         )
-    except Exception as e:
+    except (
+        ImportError,
+        OSError,
+        ValueError,
+        RuntimeError,
+        AttributeError,
+        TypeError,
+        KeyError,
+    ) as e:
+        # ImportError: legacy_merger 模块加载失败（不影响主输出）
+        # OSError: 网络问题
+        # ValueError / RuntimeError: legacy 数据解析异常
+        # AttributeError / TypeError / KeyError: audit v3 CodeRabbit review：
+        #   fetch_and_merge 对 archive_meta/files/name 结构漂移不做防御性检查，
+        #   任何结构漂移都软失败，而不是崩掉整个脚本
         print(f"  ⚠️  跳过历史版本追加: {type(e).__name__}: {e}")
 
     ws_count = len(result["workstation_pro"])
     fusion_count = len(result["fusion_pro"])
 
+    # audit v3 · P1-C · schema fail-fast：产品输出前做契约校验，
+    # 防止 Broadcom API 静默改字段/字段类型导致下游 checksums.txt 也被牵连坏掉
+    print("\n[4/4] Schema 校验 + 写文件")
+    schema_errs = validate_downloads_json(result)
+    if schema_errs:
+        print(f"  ❌ Schema 校验失败：{len(schema_errs)} 处违规", flush=True)
+        for err in schema_errs[:10]:
+            print(f"     - {err}", flush=True)
+        if len(schema_errs) > 10:
+            print(f"     ... 另有 {len(schema_errs) - 10} 处", flush=True)
+        return 2  # 非 0 阻止写坏数据
+    print("  ✓ Schema 校验通过")
+
     data_dir.mkdir(parents=True, exist_ok=True)
-    print(f"\n[4/4] 写文件到 {output_dir}")
+    print(f"  ✓ 写到 {output_dir}")
 
     json_path = data_dir / "vmware_downloads.json"
     json_path.write_text(

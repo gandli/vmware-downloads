@@ -19,6 +19,13 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
+
+# 让 summarize_changes 可以 import vmware_lib.logs（作为 script 直接跑时）
+sys.path.insert(0, str(Path(__file__).parent))
+from vmware_lib.logs import get_logger  # noqa: E402
+
+log = get_logger(__name__)
 
 
 def load_head_data() -> dict:
@@ -29,7 +36,20 @@ def load_head_data() -> dict:
             stderr=subprocess.DEVNULL,
         )
         return json.loads(raw)
-    except Exception:
+    except subprocess.CalledProcessError:
+        # git show 失败：文件在 HEAD 不存在（首次提交），空 dict 是合理默认
+        return {}
+    except OSError as e:
+        # git 不可用 / 权限问题：需要显式提示
+        log.warning(
+            "[summarize_changes] git 调用失败 (%s): %s", type(e).__name__, e
+        )
+        return {}
+    except ValueError as e:
+        # JSON 解析失败：HEAD 版本文件损坏，静默会让 PR body 说"零变化"
+        log.warning(
+            "[summarize_changes] HEAD JSON 解析失败 (%s): %s", type(e).__name__, e
+        )
         return {}
 
 

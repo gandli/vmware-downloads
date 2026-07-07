@@ -29,6 +29,7 @@ from playwright.async_api import (
     Page,
     async_playwright,
 )
+from playwright.async_api import Error as PWError
 from playwright.async_api import TimeoutError as PWTimeout
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -183,7 +184,9 @@ async def probe_one(
                 entry["files"] = []
                 entry["api_error"] = "timeout"
                 return entry
-            except Exception as e:
+            except (PWError, OSError, ValueError, json.JSONDecodeError) as e:
+                # 具名捕获：Playwright 运行时错误（PWError 覆盖 navigation/target/protocol）
+                # OSError: 网络 / SSL / DNS 问题；ValueError / JSONDecodeError: body 解析失败
                 log(f"[{idx}/{total}] ❌ {tag} {type(e).__name__}: {e}")
                 entry["files"] = []
                 entry["api_error"] = type(e).__name__
