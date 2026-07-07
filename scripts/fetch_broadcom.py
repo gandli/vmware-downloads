@@ -32,6 +32,10 @@ from playwright.async_api import (
 from playwright.async_api import Error as PWError
 from playwright.async_api import TimeoutError as PWTimeout
 
+# audit v4 P1-A · 从自制 log() 迁到 stdlib logging，
+# 让 fetch_broadcom 与 detect_data_changes / summarize_changes 一致
+from vmware_lib.logs import get_logger
+
 REPO_ROOT = Path(__file__).parent.parent
 DATA_DIR = REPO_ROOT / "data"
 DATA_DIR.mkdir(exist_ok=True)
@@ -54,8 +58,19 @@ API_TIMEOUT_MS = 30000
 NAV_TIMEOUT_MS = 45000
 
 
-def log(msg: str) -> None:
+def log(msg: str, level: str = "info") -> None:
+    """CLI + logging 双出口。
+
+    - 保留原 print 让 CI 进度条实时刷新（Playwright 抓取 30+ 分钟需要可视化）
+    - 同步走 stdlib logging，让日志有 timestamp/level/stderr 分流（排障用）
+
+    audit v4 P1-A · 从自制 log() 升级，与项目其他 script 一致（走 vmware.<name>）
+    """
     print(msg, flush=True)
+    getattr(_log, level)(msg)
+
+
+_log = get_logger(__name__)
 
 
 async def do_login(page: Page, username: str, password: str) -> tuple[bool, str]:
@@ -180,14 +195,14 @@ async def probe_one(
                 body = await resp.text()
                 payload = json.loads(body)
             except PWTimeout:
-                log(f"[{idx}/{total}] ❌ {tag} 超时")
+                log(f"[{idx}/{total}] ❌ {tag} 超时", level="error")
                 entry["files"] = []
                 entry["api_error"] = "timeout"
                 return entry
             except (PWError, OSError, ValueError, json.JSONDecodeError) as e:
                 # 具名捕获：Playwright 运行时错误（PWError 覆盖 navigation/target/protocol）
                 # OSError: 网络 / SSL / DNS 问题；ValueError / JSONDecodeError: body 解析失败
-                log(f"[{idx}/{total}] ❌ {tag} {type(e).__name__}: {e}")
+                log(f"[{idx}/{total}] ❌ {tag} {type(e).__name__}: {e}", level="error")
                 entry["files"] = []
                 entry["api_error"] = type(e).__name__
                 return entry

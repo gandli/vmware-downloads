@@ -2,6 +2,10 @@
 
 用于调研目的：查看 archive.org 上有哪些历史版本可以补齐。
 生产合并逻辑在 vmware_lib/legacy_merger.py，与本脚本共享 archive_common 辅助函数。
+
+**audit v4 P1-A 豁免说明**：本脚本是纯调研 CLI 报告（人交互查看），
+所有 print 均为格式化 report 输出（含表头、分隔线），不迁 stdlib logging。
+详见 audit v4 报告 P1-A。
 """
 
 from __future__ import annotations

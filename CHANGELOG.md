@@ -6,6 +6,34 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-07-08 (audit v4)
+
+### Added
+- 🆕 **`.pre-commit-config.yaml`** — 本地提交前门禁（ruff + trailing whitespace + yaml/toml lint）
+- 🆕 **`.github/CODEOWNERS`** — PR review 自动分配给 @gandli
+- 🆕 **`requirements-dev.lock`** — pip freeze 生成的精确版本 lockfile，CI 用它保证复现
+- ✅ **schema.py 单元测试补齐** — 14 个新测试覆盖顶层类型 / filename / sha256 / md5 / size / build / downloads / source 等所有 v3 加的兜底分支
+- ✅ **collector.py 单元测试补齐** — 6 个新测试覆盖 v3 P1-A 加的 http.client.HTTPException + `size` 类型兜底 + basename 冲突分支
+- ✅ **`tests/test_fetch_broadcom_log.py`** — 3 个测试保护 log() 双出口（stdout + stdlib logging）
+
+### Changed
+- 🛠️ **Logging pattern shadow 补齐（audit v4 P1-A）** — v3 迁 3 脚本走 stdlib logging，v4 补齐第 4 处：
+  - `scripts/fetch_broadcom.py:57` · 自制 `log()` 升级到 stdlib logging + 保留 print 双出口（Playwright 抓取进度实时刷新）
+  - `scripts/fetch_broadcom.py:198,205` · error 出口显式 `level="error"`（timestamp/level/stderr 分流）
+  - `scripts/probe_archive_org.py` · 加豁免注释（纯调研 CLI 报告不迁）
+- 🔒 **依赖版本上界锁定（audit v4 P2-A）** — `pyproject.toml`：pytest/pytest-cov/ruff/playwright 都加严格上界，避免上游 major 升级 breaking CI
+- 🧪 **CI 前向兼容矩阵（audit v4 P2-C）** — `.github/workflows/ci.yml`：Python 3.11 → **3.11 + 3.12 + 3.13 matrix**
+- 🧪 **CI 用 lockfile 安装** — `pip install -r requirements-dev.lock` 保证 CI 与本地版本一致
+- 🧪 **cov 门禁抬高** — `--cov-fail-under=85` → `--cov-fail-under=95`（新覆盖率 98.33%）
+
+### Fixed
+- 🛠️ **`.gitignore` 扩展** — 增加 `.coverage.*` + `coverage.xml`（pytest-cov 部分场景生成的变体）
+
+### Test Coverage
+- **v3**: 94.11% (schema 80% / collector 89% 拖累)
+- **v4**: **98.33%** ✅（schema 100% · collector 100%）
+- 单测数量：181 → **205**（+24 tests）
+
 ## [2.1.0] - 2026-07-08 (audit v3)
 
 ### Added

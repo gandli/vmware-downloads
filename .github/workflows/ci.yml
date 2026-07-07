@@ -16,30 +16,37 @@ permissions:
 
 jobs:
   lint-and-test:
-    name: Lint & Test
+    name: Lint & Test (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # audit v4 P2-C · 前向兼容矩阵（3.11 base + 3.12/3.13 前向）
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7
         with:
           persist-credentials: false  # 本 job 只跑 lint/pytest，无需 git auth
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: "pip"
+          cache-dependency-path: requirements-dev.lock
 
-      - name: Install dev dependencies
+      - name: Install dev dependencies (lockfile for repro)
+        # audit v4 P2-A · 用 lockfile 保证 CI 与本地版本一致
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov ruff
+          pip install -r requirements-dev.lock
 
       - name: Ruff lint
         run: ruff check scripts/ tests/
 
       - name: Pytest with coverage (library code)
         run: |
-          pytest -q --cov --cov-report=term-missing --cov-fail-under=85
+          pytest -q --cov --cov-report=term-missing --cov-fail-under=95
 
       - name: Verify README is in sync
         run: |
