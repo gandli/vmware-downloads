@@ -64,7 +64,9 @@ def load_head_json(path: str) -> dict:
 
     try:
         return json.loads(raw)
-    except json.JSONDecodeError as e:
+    except ValueError as e:
+        # json.JSONDecodeError 与 UnicodeDecodeError 都继承 ValueError，
+        # 一网打尽（bytes 解码失败也算 JSON 解析失败）
         print(f"⚠️  load_head_json({path}) JSON 解析失败: {e}", file=sys.stderr)
         return {}
 
@@ -76,7 +78,8 @@ def load_work_json(path: str) -> dict:
     try:
         with open(path, encoding="utf-8") as f:
             return json.load(f)
-    except (OSError, json.JSONDecodeError) as e:
+    except (OSError, ValueError) as e:
+        # ValueError 覆盖 JSONDecodeError + UnicodeDecodeError（文件编码坏）
         print(f"⚠️  load_work_json({path}) 失败: {e}", file=sys.stderr)
         return {}
 
