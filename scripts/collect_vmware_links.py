@@ -19,6 +19,7 @@ archive.org metadata 提供可下载镜像 URL（Broadcom 直链需登录，无�
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import sys
@@ -87,8 +88,16 @@ def main() -> int:
         print("  拉取网络 metadata...")
         try:
             archive_metadata = fetch_metadata()
-        except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as e:
-            # 覆盖：urlopen OSError（网络/DNS）、JSON 解析、archive API 契约违规
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            json.JSONDecodeError,
+            http.client.HTTPException,
+        ) as e:
+            # 覆盖：urlopen OSError、JSON 解析、archive API 结构漂移、
+            # http.client 家族异常（IncompleteRead / BadStatusLine / RemoteDisconnected）
+            # audit v3 CodeRabbit review: 补 http.client.HTTPException 兜底
             print(f"  ❌ 拉取 archive.org metadata 失败: {type(e).__name__}: {e}")
             print("     可尝试：--dry-run <本地 metadata.json> 使用离线缓存")
             return 1
@@ -165,10 +174,21 @@ def main() -> int:
             f"  ✓ Workstation: +{after_ws - before_ws} 历史版 (共 {after_ws}), "
             f"Fusion: +{after_fu - before_fu} 历史版 (共 {after_fu})"
         )
-    except (ImportError, OSError, ValueError, RuntimeError) as e:
+    except (
+        ImportError,
+        OSError,
+        ValueError,
+        RuntimeError,
+        AttributeError,
+        TypeError,
+        KeyError,
+    ) as e:
         # ImportError: legacy_merger 模块加载失败（不影响主输出）
         # OSError: 网络问题
         # ValueError / RuntimeError: legacy 数据解析异常
+        # AttributeError / TypeError / KeyError: audit v3 CodeRabbit review：
+        #   fetch_and_merge 对 archive_meta/files/name 结构漂移不做防御性检查，
+        #   任何结构漂移都软失败，而不是崩掉整个脚本
         print(f"  ⚠️  跳过历史版本追加: {type(e).__name__}: {e}")
 
     ws_count = len(result["workstation_pro"])
