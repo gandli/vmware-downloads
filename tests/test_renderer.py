@@ -102,9 +102,27 @@ class TestRenderReadme:
         md1 = render_readme(data)
         md2 = render_readme(data)
         assert md1 == md2
-        # 时间戳应来自 collected_at, 而不是 now()
+        # Last sync 注脚来自 collected_at（抓取时间）
         assert "2026-06-15" in md1
-        assert "2026--06--15" in md1  # shields.io 双连字符
+        # 徽章日期使用最新版本发布日期（不是抓取时间戳），避免每天误刷"新"
+        # SAMPLE_DATA 里最新版本 date = 2026-04-15
+        assert "2026--04--15" in md1  # shields.io 双连字符
+
+    def test_badge_date_uses_release_date_not_collected_at(self):
+        """审计发现：徽章日期应反映数据本身新旧（版本发布日期），而不是抓取时间。
+
+        抓取时间戳每天变，会让徽章看起来"总是最新的"，误导用户。
+        """
+        data = {
+            **SAMPLE_DATA,
+            # 抓取时间是"今天"，但最新版本 date 是 2026-04-15（几个月前）
+            "collected_at": "2026-11-30T00:00:00+00:00",
+        }
+        md = render_readme(data)
+        # 徽章仍应显示 2026-04-15（版本发布日期）
+        assert "2026--04--15" in md
+        # 抓取时间戳不该出现在徽章
+        assert "2026--11--30" not in md
 
 
 class TestRenderChecksums:

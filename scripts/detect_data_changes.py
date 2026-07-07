@@ -20,7 +20,6 @@
 
 from __future__ import annotations
 
-import copy
 import json
 import re
 import subprocess
@@ -31,6 +30,8 @@ from pathlib import Path
 NOISE_FIELDS = {
     "collected_at",   # ISO 时间戳
     "elapsed_sec",    # 抓取耗时
+    "worker_count",   # BROADCOM_WORKERS 环境变量决定，与数据本身无关
+    "duration_sec",   # fetch_broadcom 另一个耗时字段
 }
 
 

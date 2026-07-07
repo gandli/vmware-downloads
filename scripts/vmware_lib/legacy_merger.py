@@ -17,19 +17,18 @@ from __future__ import annotations
 import json
 import urllib.request
 from collections import defaultdict
-from typing import Any
 
 from vmware_lib.archive_common import (
     ARCHIVE_DL_BASE,
     ARCHIVE_META_URL,
     build_sort_key,
-    version_sort_key,
     detect_platform,
     human_size,
     is_installer,
     parse_fusion_version,
     parse_ws_version,
     safe_size_int,
+    version_sort_key,
 )
 
 
@@ -134,11 +133,10 @@ def merge_with_broadcom(
     # 统一转字符串比较，防止 int 和 str build 号混杂时去重失败
     known_builds = {str(v["build"]) for v in broadcom_list if v.get("build")}
 
-    # 计算 archive 追加名额
-    if top_n is None:
-        archive_slots = len(archive_list)  # 全量
-    else:
-        archive_slots = max(0, top_n - len(broadcom_list))
+    # 计算 archive 追加名额（None 表示不限，全量并入）
+    archive_slots = (
+        len(archive_list) if top_n is None else max(0, top_n - len(broadcom_list))
+    )
 
     # 过滤 archive_list：去重 + 排序（复合键降序），取前 archive_slots 个
     unique_archive = [

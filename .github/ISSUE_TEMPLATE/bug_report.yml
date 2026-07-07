@@ -1,0 +1,53 @@
+name: 🐛 Bug 报告
+description: 报告一个错误（版本缺失、显示错误、链接失效等）
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 感谢反馈
+
+        - 若是**供应链完整性问题**（SHA256 不匹配、安装包被替换等），请通过 [Security](https://github.com/gandli/vmware-downloads/security/advisories/new) 私下报告
+        - 若是**下载链接失效**，请附具体版本号和 URL
+
+  - type: input
+    id: version
+    attributes:
+      label: 涉及版本
+      description: 如 17.6.4 / 26H1 / 25H2u1
+      placeholder: 17.6.4
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 平台
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - 全部
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 遇到什么问题？
+      description: 一句话描述现象
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期表现
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 附加信息
+      description: 复现步骤、截图、错误日志等

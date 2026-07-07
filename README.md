@@ -1,6 +1,6 @@
 # 🎯 VMware Workstation & Fusion 下载中心
 
-![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--07--06-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
+![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--05--14-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
 
 > **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  
 > 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新
@@ -320,7 +320,7 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 ### 自动化
 
 - 🤖 每月首日 06:00 UTC 自动抓取最新版本并开 PR ([workflow](.github/workflows/monthly-update.yml))
-- 🧪 TDD 保护：145+ 个单测覆盖抓取 / 合并 / 渲染全链路
+- 🧪 TDD 保护：单元测试覆盖抓取 / 合并 / 渲染全链路
 - 📁 仓库不承载任何安装包，仅提供**整理好的元数据** + **archive.org 公开镜像链接**
 
 ## 贡献与反馈

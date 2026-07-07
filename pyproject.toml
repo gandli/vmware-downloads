@@ -10,12 +10,25 @@ dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",
     "ruff>=0.6",
+    "playwright>=1.40",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-v --tb=short"
+
+[tool.coverage.run]
+# 库代码强制覆盖，IO 入口脚本（Playwright 抓取、CLI 主入口、调研工具）豁免。
+# 因为它们依赖网络/浏览器/文件系统，mock 收益低于代价，改为 CI 手动冒烟。
+source = ["scripts/vmware_lib"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
 
 [tool.ruff]
 line-length = 100

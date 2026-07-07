@@ -1,0 +1,38 @@
+name: ✨ 功能建议
+description: 提出改进想法（新增数据源、UI 优化、CI 增强等）
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 想解决什么问题？
+      description: 请先说明"为什么"，而不是"怎么做"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 你希望如何解决
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 备选方案
+      description: 有没有考虑过其他做法？
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 影响范围
+      options:
+        - label: 数据（新版本 / 新产品线）
+        - label: 抓取（Broadcom / archive.org）
+        - label: 渲染（README / 徽章 / 表格）
+        - label: CI / 自动化
+        - label: 文档 / 治理

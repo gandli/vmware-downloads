@@ -13,7 +13,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from vmware_lib.detail_parser import parse_detail_table
 
-
 # ============================================================
 # 典型完整详情页片段
 # ============================================================
@@ -152,6 +151,7 @@ def test_only_one_date_leaves_last_updated_empty():
 def test_regex_patterns_precompiled_at_module_level():
     """所有正则常量应在模块导入时预编译（避免每次调用重复编译）"""
     import re
+
     from vmware_lib import detail_parser as dp
 
     for pat_name in ("_FILE_PAT", "_SIZE_PAT", "_BUILD_PAT",
