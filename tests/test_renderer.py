@@ -67,7 +67,25 @@ class TestRenderReadme:
         assert "macOS" in md
         assert "Macos" not in md
         assert "**Windows**" in md
-        assert "**Linux**" in md
+
+    def test_toc_anchors_match_github_slug(self):
+        """TOC 锚点必须匹配 GitHub 渲染 H2 的真实 slug，否则点击 404。
+
+        已知真实 id（来自 api.github.com readme 渲染）：
+          - 快速下载最新版 / -校验完整性 / -所有历史版本 / -免费使用政策
+          - --linux-安装-bundle  ← 🐧 前缀产生双杠（单杠会 404）
+          - ️-老系统兼容性 / -数据来源与说明 / 贡献与反馈 / -license
+        """
+        md = render_readme(SAMPLE_DATA)
+        toc = md.split("## 目录", 1)[1].split("## 🚀")[0]
+        # Linux 双杠修复（audit v6.2）
+        assert "](" in toc
+        assert "#--linux-安装-bundle" in toc, "Linux 锚点需双杠匹配 GitHub slug"
+        # 其余单杠锚点格式正确
+        for anchor in ["#-快速下载最新版", "#-校验完整性", "#-所有历史版本",
+                       "#-免费使用政策", "#-数据来源与说明", "#-license"]:
+            assert anchor in toc
+
 
     def test_link_text_is_filename_not_url(self):
         """回归 bug: 老版本用完整 URL 做链接文本"""
