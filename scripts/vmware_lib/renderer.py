@@ -132,7 +132,11 @@ def _render_badges(ws_count: int, fusion_count: int, release_date: str) -> list[
             f"![Workstation](https://img.shields.io/badge/Workstation%20Pro-{ws_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
             f"![Fusion](https://img.shields.io/badge/Fusion%20Pro-{fusion_count}%20versions-0071c5?style={BADGE_STYLE}&logo=vmware) "
             f"![Last Updated](https://img.shields.io/badge/updated-{last_updated}-brightgreen?style={BADGE_STYLE}) "
-            f"![License](https://img.shields.io/github/license/{REPO_OWNER_REPO}?style={BADGE_STYLE})"
+            # 双层授权：仓库代码 MIT（仅脚本/文档），VMware 二进制遵循 Broadcom EULA
+            # 显式标注「代码 MIT」避免误读为全仓库 MIT（与 README License 段分层一致）
+            # 做成可点击链接：code→./LICENSE，VMware→Broadcom EULA
+            f"[![code license](https://img.shields.io/badge/code-MIT-blue?style={BADGE_STYLE})](./LICENSE) "
+            f"[![VMware](https://img.shields.io/badge/VMware-Broadcom%20EULA-0071c5?style={BADGE_STYLE}&logo=vmware)](https://www.broadcom.com/company/legal/licensing)"
         ),
         "",
     ]
