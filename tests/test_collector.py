@@ -289,11 +289,14 @@ def test_build_index_conflict_keeps_first_when_larger(caplog):
 
 # audit v5 · P1-C · Bandit B310 白名单断言
 def test_fetch_metadata_rejects_file_scheme() -> None:
-    """file:// scheme 被 assert 拒绝（防未来 URL 变量化开门后门）"""
+    """file:// scheme 被拒绝（防未来 URL 变量化开门后门）
+
+    audit v6: assert 改为显式 if/raise ValueError（-O 模式下 assert 失效会绕过校验）
+    """
     import pytest
     from vmware_lib.collector import fetch_metadata
 
-    with pytest.raises(AssertionError, match="unexpected URL scheme"):
+    with pytest.raises(ValueError, match="unexpected URL scheme"):
         fetch_metadata(url="file:///etc/passwd")
 
 
@@ -301,7 +304,7 @@ def test_fetch_metadata_rejects_ftp_scheme() -> None:
     import pytest
     from vmware_lib.collector import fetch_metadata
 
-    with pytest.raises(AssertionError, match="unexpected URL scheme"):
+    with pytest.raises(ValueError, match="unexpected URL scheme"):
         fetch_metadata(url="ftp://evil.com/x")
 
 
