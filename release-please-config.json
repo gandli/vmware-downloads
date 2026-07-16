@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "include-component-in-tag": false,
+  "packages": [
+    {
+      "package-name": "vmware-downloads",
+      "path": ".",
+      "release-type": "python",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true
+    }
+  ],
+  "changelog-sections": [
+    { "type": "feat", "section": "✨ Features" },
+    { "type": "fix", "section": "🐛 Bug Fixes" },
+    { "type": "docs", "section": "📚 Documentation" },
+    { "type": "perf", "section": "⚡ Performance" },
+    { "type": "refactor", "section": "♻️ Code Refactoring" },
+    { "type": "test", "section": "✅ Tests" },
+    { "type": "chore", "section": "🔧 Miscellaneous" }
+  ]
+}
