@@ -1,14 +1,2 @@
-# CODEOWNERS · 自动 PR review 分配（audit v4 P2-B）
-#
-# 语法：<pattern> <owner>
-# https://docs.github.com/en/repositories/managing-your-repositories-settings-and-features/customizing-your-repository/about-code-owners
-
-# 默认 · 所有 PR 分配给 @gandli
-*                                @gandli
-
-# 关键路径 · 显式声明（增强可读性）
-/.github/workflows/              @gandli
-/scripts/vmware_lib/             @gandli
-/scripts/fetch_broadcom.py       @gandli
-/pyproject.toml                  @gandli
-/SECURITY.md                     @gandli
+# 默认所有路径的 reviewer
+* @gandli

@@ -44,6 +44,12 @@ jobs:
       - name: Ruff lint
         run: ruff check scripts/ tests/
 
+      - name: Type check (mypy)
+        run: mypy scripts/vmware_lib
+
+      - name: SAST (bandit)
+        run: bandit -r scripts/vmware_lib -c pyproject.toml
+
       - name: Pytest with coverage (library code)
         run: |
           pytest -q --cov --cov-report=term-missing --cov-fail-under=95
