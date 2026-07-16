@@ -402,7 +402,8 @@ def render_readme(data: dict) -> str:
     fusion_latest = fusion_list[0] if fusion_list else None
 
     lines: list[str] = [
-        "# 🎯 VMware Workstation & Fusion 下载中心",
+        '# <img src="./assets/readme/vmware-icon.svg" width="28" height="28" '
+        'align="middle" alt=""> VMware Workstation & Fusion 下载中心',
         "",
     ]
     dt = _data_time(data)
