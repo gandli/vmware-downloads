@@ -447,12 +447,6 @@ sudo vmware-installer -u vmware-workstation
 > - VMware Workstation Pro / Fusion Pro 自 2024-11-11 起对所有用户免费，安装时选「个人使用」即可，无需许可证密钥（详见上文[免费使用政策](#-免费使用政策)）
 > - 若你是版权持有方或权利人，需要撤下某版本，[开 Issue](https://github.com/gandli/vmware-downloads/issues/new) 说明即可
 
-<p align="center">
-  <a href="https://github.com/oil-oil/beautify-github-readme">
-    <img src="./assets/readme/made-with-beautify.svg" width="300" alt="README made with beautify-github-readme">
-  </a>
-</p>
-
 ---
 
 <sub>本仓库仅提供元数据整理服务。VMware / Workstation / Fusion 是 Broadcom Inc. 的注册商标。</sub>

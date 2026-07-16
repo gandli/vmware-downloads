@@ -150,19 +150,6 @@ def _render_hero() -> list[str]:
     ]
 
 
-def _render_made_with() -> list[str]:
-    """署名 SVG —— 链接到 beautify-github-readme (skill 推荐, 本仓库归属用户)"""
-    return [
-        '<p align="center">',
-        '  <a href="https://github.com/oil-oil/beautify-github-readme">',
-        '    <img src="./assets/readme/made-with-beautify.svg" width="300" '
-        'alt="README made with beautify-github-readme">',
-        '  </a>',
-        '</p>',
-        '',
-    ]
-
-
 def _render_intro(dt: datetime) -> list[str]:
     """开场白 — 一句话定位 + 数据新鲜度时间戳 (hero 已含核心卖点, 避免重复)"""
     ts = dt.strftime("%Y-%m-%d %H:%M UTC")
@@ -577,8 +564,6 @@ def render_readme(data: dict) -> str:
     ]
 
     lines += _render_license()
-
-    lines += _render_made_with()
 
     lines += [
         "---",
