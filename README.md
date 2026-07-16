@@ -1,6 +1,6 @@
 # <img src="./assets/readme/vmware-icon.svg" width="28" height="28" align="middle" alt=""> VMware Workstation & Fusion 下载中心
 
-![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--05--14-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
+![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--05--14-brightgreen?style=flat-square) [![code license](https://img.shields.io/badge/code-MIT-blue?style=flat-square)](./LICENSE) [![VMware](https://img.shields.io/badge/VMware-Broadcom%20EULA-0071c5?style=flat-square&logo=vmware)](https://www.broadcom.com/company/legal/licensing)
 
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%" alt="VMware Workstation &amp; Fusion 下载中心：128 个历史版本、54 个 Fusion 版本，Broadcom 官方 SHA256 校验 + archive.org 免费镜像，每月自动更新">
