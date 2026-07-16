@@ -92,6 +92,20 @@ class TestRenderReadme:
         md = render_readme(SAMPLE_DATA)
         # 应该用文件名做 anchor
         assert "[VMware-Workstation-Full-26H1-25388281.exe]" in md
+
+    def test_no_dead_links_in_rendered_readme(self):
+        """回归防护：README 不应包含已知失效的官方链接（Broadcom 收购后下线）。
+
+        - techdocs.broadcom.com/.../17-0/vmware-workstation-pro-installation.html → 404
+        - blogs.vmware.com/.../2024/05/14/vmware-desktop-hypervisor-... → 404
+        两者已被 docs.vmware.com 与 knowledge.broadcom.com KB 368667 替代。
+        """
+        md = render_readme(SAMPLE_DATA)
+        assert "techdocs.broadcom.com" not in md, "techdocs 安装文档链接已失效，需替换"
+        assert "blogs.vmware.com/cloud-foundation/2024/05/14" not in md, "2024-05 博客已下线，需替换"
+        # 新链接应存在
+        assert "knowledge.broadcom.com/external/article/368667" in md
+        assert "docs.vmware.com/en/VMware-Workstation-Pro/17.0" in md
         # 不应该出现 [https://...](https://...) 这种冗余
         assert "[https://archive.org" not in md
 
