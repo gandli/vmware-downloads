@@ -7,11 +7,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- 🆕 **release-please 自动化** — `release-please-config.json` + workflow，自动按 Conventional Commits bump 版本、打 git tag、生成 Release、搬移 CHANGELOG `[Unreleased]` → 发布段（根治手工标版本反模式）
+- 🆕 **CodeQL 安全分析** — `.github/workflows/codeql.yml`（Python `security-and-quality` 查询，push/PR/周一定时）
 - 🆕 **CI 硬化 (audit v6)**：`ci.yml` 新增 `mypy` 类型检查 + `bandit` SAST 步骤（零错误门禁）
 - 🆕 **`.github/CODEOWNERS`** — 补全治理三件套（SECURITY + CONTRIBUTING + CODEOWNERS）
 - 🆕 **`.github/ISSUE_TEMPLATE/bug_report.md`** + **`PULL_REQUEST_TEMPLATE.md`** — 贡献者入口标准化
 - 🆕 **`docs/ARCHITECTURE.md`** — 数据流架构文档（Broadcom + archive.org → 合并 → 渲染）
-
+- 🆕 **README 标题 emoji → 官方 VMware Workstation 图标**（`assets/readme/vmware-icon.svg`，公有领域）
 ### Changed
 - 🛠️ **`fetch_metadata` URL 白名单 `assert` → 显式 `if/raise ValueError`**（audit v6 安全修复：`-O` 优化模式下 assert 失效会绕过 scheme 校验）
 - 🛠️ **README 装修 (beautify-github-readme)**：SVG hero 首图 + Linux `.bundle` 安装指南 + License 分层说明（含 2024-11-11 全用户免费政策纠错）
@@ -137,7 +139,8 @@ All notable changes to this project will be documented in this file.
 ---
 
 [Unreleased]: https://github.com/gandli/vmware-downloads/compare/v2.3.0...HEAD
-[2.3.0]: https://github.com/gandli/vmware-downloads/compare/v2.1.0...v2.3.0
+[2.3.0]: https://github.com/gandli/vmware-downloads/compare/v2.2.0...v2.3.0
+[2.2.0]: https://github.com/gandli/vmware-downloads/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/gandli/vmware-downloads/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/gandli/vmware-downloads/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/gandli/vmware-downloads/releases/tag/v1.0.0
