@@ -6,10 +6,9 @@
   <img src="./assets/readme/hero.svg" width="100%" alt="VMware Workstation &amp; Fusion 下载中心：128 个历史版本、54 个 Fusion 版本，Broadcom 官方 SHA256 校验 + archive.org 免费镜像，每月自动更新">
 </p>
 
-> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  
-> 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新
+> **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**
 
-<sub>_Last sync: 2026-07-06 03:42 UTC_</sub>
+<sub>_数据抓取时间：2026-07-06 03:42 UTC_</sub>
 
 ---
 
@@ -447,6 +446,12 @@ sudo vmware-installer -u vmware-workstation
 > - 本仓库 MIT 授权**仅覆盖 gandli 亲自编写的脚本与文档**，不授予任何 VMware 软件本身的再分发权
 > - VMware Workstation Pro / Fusion Pro 自 2024-11-11 起对所有用户免费，安装时选「个人使用」即可，无需许可证密钥（详见上文[免费使用政策](#-免费使用政策)）
 > - 若你是版权持有方或权利人，需要撤下某版本，[开 Issue](https://github.com/gandli/vmware-downloads/issues/new) 说明即可
+
+<p align="center">
+  <a href="https://github.com/oil-oil/beautify-github-readme">
+    <img src="./assets/readme/made-with-beautify.svg" width="300" alt="README made with beautify-github-readme">
+  </a>
+</p>
 
 ---
 
