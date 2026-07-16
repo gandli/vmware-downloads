@@ -67,6 +67,6 @@ Python 3.11 / 3.12 / 3.13 矩阵，每次 PR 与 push 到 main：
 
 1. `ruff check scripts/ tests/`
 2. `mypy scripts/vmware_lib`（零错误）
-3. `bandit -r scripts/vmware_lib`（零 High/Medium/Low）
+3. `bandit -r scripts/vmware_lib`（当前 High/Medium/Low 均为 0；任何非零告警阻断合并，已知误报走 `# nosec <ID>` 显式豁免）
 4. `pytest --cov --cov-fail-under=95`（库代码 100% 覆盖）
 5. `Verify README is in sync`（README + checksums 与数据一致）
