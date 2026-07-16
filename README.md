@@ -13,11 +13,13 @@
 
 - [快速下载（最新版）](#-快速下载最新版)
 - [校验完整性](#-校验完整性)
+- [Linux 安装 `.bundle`](#-linux-安装-bundle)
 - [所有历史版本](#-所有历史版本)
 - [免费使用政策](#-免费使用政策)
 - [老系统兼容性](#️-老系统兼容性)
 - [数据来源与说明](#-数据来源与说明)
 - [贡献与反馈](#贡献与反馈)
+- [License](#-license)
 
 ## 🚀 快速下载（最新版）
 
@@ -86,6 +88,102 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 > ❌ 看到 `FAILED` / `WARNING` 一律**别装**，重新下载。
 
 > 💡 `--ignore-missing` 让工具只校验当前目录已有的文件，不必下齐全部。
+
+## 🐧 Linux 安装 `.bundle`
+
+VMware 官方 Linux 安装包是自解压 shell 脚本（`.bundle`），不是 rpm/deb。安装、卸载都用同一个二进制。
+
+### 前置：内核头文件
+
+VMware 会在安装过程中编译 `vmmon` / `vmnet` 两个内核模块。必须先装匹配当前内核的 header：
+
+<details open>
+<summary><b>Debian / Ubuntu</b></summary>
+
+```bash
+sudo apt update
+sudo apt install -y build-essential linux-headers-$(uname -r)
+```
+
+</details>
+
+<details>
+<summary><b>Fedora / RHEL / Rocky / AlmaLinux</b></summary>
+
+```bash
+sudo dnf install -y gcc make kernel-devel kernel-headers
+# kernel-devel 会拉取匹配运行内核的版本; 若内核刚升级过, 先 reboot 再装
+```
+
+</details>
+
+<details>
+<summary><b>Arch / Manjaro</b></summary>
+
+```bash
+sudo pacman -S --needed base-devel linux-headers
+# 若用 linux-lts 内核，装 linux-lts-headers
+```
+
+</details>
+
+<details>
+<summary><b>openSUSE / SLES</b></summary>
+
+```bash
+sudo zypper install -y kernel-syms gcc make
+# kernel-syms 自动匹配当前内核变体 (default / preempt / ...) 的开发包
+```
+
+</details>
+
+### 安装
+
+```bash
+# 1. 校验完整性 (先做, 见上一节)
+sha256sum -c checksums.txt --ignore-missing
+
+# 2. 加执行权限
+chmod +x VMware-Workstation-Full-*.x86_64.bundle
+
+# 3. 运行安装器 (需 root)
+sudo ./VMware-Workstation-Full-*.x86_64.bundle
+
+# 或静默安装 (不弹 GUI, 自动接受 EULA)
+sudo ./VMware-Workstation-Full-*.x86_64.bundle --console --required --eulas-agreed
+```
+
+首次启动 `vmware` 命令时会触发模块编译。如果编译失败（新内核常见），装社区维护的补丁：
+
+```bash
+git clone https://github.com/mkubecek/vmware-host-modules.git
+cd vmware-host-modules
+git checkout workstation-17.6.4  # 换成你装的版本 tag
+make
+sudo make install
+sudo systemctl restart vmware
+```
+
+### 卸载
+
+```bash
+# 列出已安装组件
+vmware-installer -l
+
+# 卸载 Workstation (组件名一般是 vmware-workstation)
+sudo vmware-installer -u vmware-workstation
+```
+
+### 常见坑
+
+| 现象 | 原因 | 处理 |
+|:-----|:-----|:-----|
+| `Unable to find kernel headers` | header 版本对不上当前 `uname -r` | 内核刚升级过没重启; 或装 `linux-headers-$(uname -r)` |
+| 首次启动卡在 `Compiling modules...` | 新内核 API 不兼容旧 VMware | 装 [mkubecek/vmware-host-modules](https://github.com/mkubecek/vmware-host-modules) 补丁 |
+| `SecureBoot` 报错模块签名 | 内核开了 lockdown | 关 SecureBoot, 或用 `mokutil` 给编出的模块签名 |
+| Wayland 下窗口异常 | VMware GUI 走 X11 | 命令行 `env GDK_BACKEND=x11 vmware` 启动 |
+
+> 官方安装文档：[Broadcom · Installing Workstation Pro on Linux](https://techdocs.broadcom.com/us/en/vmware-cis/desktop-hypervisors/workstation-pro/17-0/vmware-workstation-pro-installation.html)
 
 ## 📦 所有历史版本
 
@@ -329,6 +427,22 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 ## 贡献与反馈
 
 发现某版本下载失效？欢迎 [开 Issue](https://github.com/gandli/vmware-downloads/issues/new) 或 [提 PR](https://github.com/gandli/vmware-downloads/compare) 🙏
+
+## 📜 License
+
+本仓库分成两部分授权，请分清：
+
+| 内容 | 授权 |
+|:-----|:-----|
+| **仓库脚本 & 文档** — `scripts/`、`.github/`、README、CHANGELOG、data 目录里 gandli 汇编的 JSON/TXT 元数据 | [MIT License](./LICENSE) © 2024-2026 gandli |
+| **VMware Workstation / Fusion 安装包本体** | **Broadcom Inc.** 所有，遵循其 [EULA](https://www.broadcom.com/company/legal/licensing) 与商标条款；2024-11-11 起对所有用户（个人 / 教育 / 商业）免费 |
+| **archive.org 镜像内容** | 由 [Internet Archive](https://archive.org/about/terms.php) 托管，本仓库不重发不镜像，仅提供跳转链接 |
+
+> 🛡️ 使用规则：
+> - 商标 "VMware"、"Workstation"、"Fusion" 归 **Broadcom Inc.** 所有，本仓库不隶属于、也未获 Broadcom 官方背书
+> - 本仓库 MIT 授权**仅覆盖 gandli 亲自编写的脚本与文档**，不授予任何 VMware 软件本身的再分发权
+> - VMware Workstation Pro / Fusion Pro 自 2024-11-11 起对所有用户免费，安装时选「个人使用」即可，无需许可证密钥（详见上文[免费使用政策](#-免费使用政策)）
+> - 若你是版权持有方或权利人，需要撤下某版本，[开 Issue](https://github.com/gandli/vmware-downloads/issues/new) 说明即可
 
 ---
 
