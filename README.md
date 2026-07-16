@@ -186,7 +186,7 @@ sudo vmware-installer -u vmware-workstation
 | `SecureBoot` 报错模块签名 | 内核开了 lockdown | 关 SecureBoot, 或用 `mokutil` 给编出的模块签名 |
 | Wayland 下窗口异常 | VMware GUI 走 X11 | 命令行 `env GDK_BACKEND=x11 vmware` 启动 |
 
-> 官方安装文档：[Broadcom · Installing Workstation Pro on Linux](https://techdocs.broadcom.com/us/en/vmware-cis/desktop-hypervisors/workstation-pro/17-0/vmware-workstation-pro-installation.html)
+> 官方安装文档：[VMware · Installing Workstation Pro on Linux](https://docs.vmware.com/en/VMware-Workstation-Pro/17.0/com.vmware.ws.using.doc/GUID-832D3ABB-DE30-4BED-9A36-2E0154F0A2ED.html)
 
 ## 📦 所有历史版本
 
@@ -398,8 +398,8 @@ sudo vmware-installer -u vmware-workstation
 | **2024-11-11**（17.6.2 起） | Workstation & Fusion 免费供 **所有用户**（个人 / 教育 / 商业） |
 
 > 📖 官方公告：
-> - [Desktop Hypervisor Pro Apps Now Available for Personal Use](https://blogs.vmware.com/cloud-foundation/2024/05/14/vmware-desktop-hypervisor-pro-apps-now-available-for-personal-use/)
-> - [Fusion and Workstation Now Free for All Users](https://blogs.vmware.com/cloud-foundation/2024/11/11/vmware-fusion-and-workstation-are-now-free-for-all-users/)
+> - [VMware Desktop Hypervisor 免费政策（Broadcom 知识库）](https://knowledge.broadcom.com/external/article/368667) — 2024-05 起个人免费、2024-11-11 起全用户免费 + 下载/许可指引
+> - [Fusion and Workstation Now Free for All Users](https://blogs.vmware.com/cloud-foundation/2024/11/11/vmware-fusion-and-workstation-are-now-free-for-all-users/) — 2024-11-11 官方公告
 
 > ⚠️ 安装时选择「个人使用」即可，**无需许可证密钥**。
 
