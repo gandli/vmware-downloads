@@ -8,6 +8,9 @@
 - 🎯 **两源交叉校验**：Broadcom Support Portal（官方权威）+ archive.org（免费镜像）
 - 🎯 **自动化优先**：`.github/workflows/monthly-update.yml` 每月自动抓取
 
+> 📐 **数据流与模块职责**见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)——上手改代码前建议先读。
+
+
 ## 快速开始
 
 > ⚠️ **Python 版本要求**：本项目 `pyproject.toml` 声明 `requires-python = ">=3.11"`，CI 也跑 3.11。

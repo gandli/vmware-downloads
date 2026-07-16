@@ -7,24 +7,22 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- 🆕 **`data/checksums.sha1.txt`** — SHA1 兜底校验清单（191 条 · 100% 覆盖），弥补 archive.org 老版本无 SHA256 的空缺
-- 🆕 **`render_sha1_checksums()`** — 新渲染函数生成 `sha1sum -c` 兼容文件
-- 🆕 **`_hash_display()` 统一哈希展示** — 优先 SHA256，缺失时 fallback 到 SHA1（明示 algo 标签）
-- ✅ **+5 renderer 测试**（tests/test_renderer.py）
+- 🆕 **CI 硬化 (audit v6)**：`ci.yml` 新增 `mypy` 类型检查 + `bandit` SAST 步骤（零错误门禁）
+- 🆕 **`.github/CODEOWNERS`** — 补全治理三件套（SECURITY + CONTRIBUTING + CODEOWNERS）
+- 🆕 **`.github/ISSUE_TEMPLATE/bug_report.md`** + **`PULL_REQUEST_TEMPLATE.md`** — 贡献者入口标准化
+- 🆕 **`docs/ARCHITECTURE.md`** — 数据流架构文档（Broadcom + archive.org → 合并 → 渲染）
 
 ### Changed
-- 🛠️ **README 表格所有 "MD5 only" 显示 → SHA1 兜底**（164 处老版本全部有可用校验值）
-- 🛠️ **README 校验章节文案** — 说明 SHA256 (Broadcom 主线) + SHA1 (archive.org 历史) 双清单及原因
-- 🛠️ **`collect_vmware_links.py` 主流程** — 增加 `checksums.sha1.txt` 出口
-
-### Rationale
-- **VMware 官网 SHA256 已无法回填**：Broadcom 2023 收购后下架老版本 support 页面，Customer Connect SPA 无 Wayback 缓存，old-VMware.com Release Notes 不含 sha256
-- **SHA1 密码学强度弱于 SHA256**，但用于**下载完整性校验（防传输损坏 + 官方镜像投毒）足够**
-- **archive.org 官方 metadata 提供 sha1（201/202 覆盖）**，直接使用无需下载算
+- 🛠️ **`fetch_metadata` URL 白名单 `assert` → 显式 `if/raise ValueError`**（audit v6 安全修复：`-O` 优化模式下 assert 失效会绕过 scheme 校验）
+- 🛠️ **README 装修 (beautify-github-readme)**：SVG hero 首图 + Linux `.bundle` 安装指南 + License 分层说明（含 2024-11-11 全用户免费政策纠错）
 
 ## [2.3.0] - 2026-07-08 (audit v5)
 
 ### Added
+- 🆕 **`data/checksums.sha1.txt`** — SHA1 兜底校验清单（191 条 · 100% 覆盖），弥补 archive.org 老版本无 SHA256 的空缺
+- 🆕 **`render_sha1_checksums()`** — 新渲染函数生成 `sha1sum -c` 兼容文件
+- 🆕 **`_hash_display()` 统一哈希展示** — 优先 SHA256，缺失时 fallback 到 SHA1（明示 algo 标签）
+- ✅ **+5 renderer 测试**（tests/test_renderer.py）
 - 🆕 **`CODE_OF_CONDUCT.md`** — Contributor Covenant 2.1 简体中文版（GitHub Community Standards 治理层三缺一补齐）
 - ✅ **`tests/test_collect_vmware_links_log.py`** — 3 测试保护 collector CLI 的 logger 引入（audit v5 P1-A）
 - ✅ **4 lib 模块覆盖率补齐到 100%** — broadcom / legacy_merger / parser / renderer（audit v5 P1-B · 8 新测试）
@@ -33,6 +31,9 @@ All notable changes to this project will be documented in this file.
 - 🆕 **dev extras 加入 bandit + mypy** — 审计工具链纳入 lockfile，下次审计无需现装（audit v5 P2-C）
 
 ### Changed
+- 🛠️ **README 表格所有 "MD5 only" 显示 → SHA1 兜底**（164 处老版本全部有可用校验值）
+- 🛠️ **README 校验章节文案** — 说明 SHA256 (Broadcom 主线) + SHA1 (archive.org 历史) 双清单及原因
+- 🛠️ **`collect_vmware_links.py` 主流程** — 增加 `checksums.sha1.txt` 出口
 - 🛠️ **Logging pattern shadow 第 4 轮根治（audit v5 P1-A）** — v3/v4 已迁 4 个脚本，v5 才发现 `collect_vmware_links.py` 从头未 `import logging`：
   - 引入 `from vmware_lib.logs import get_logger` · 5 处 error/warning print 迁 logger.error/warning
   - CLI 结构化报告 print 保留（给人看的进度/表头）· error/warning 双出口（logger + user hint）
@@ -135,7 +136,8 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-[Unreleased]: https://github.com/gandli/vmware-downloads/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/gandli/vmware-downloads/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/gandli/vmware-downloads/compare/v2.1.0...v2.3.0
 [2.1.0]: https://github.com/gandli/vmware-downloads/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/gandli/vmware-downloads/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/gandli/vmware-downloads/releases/tag/v1.0.0
