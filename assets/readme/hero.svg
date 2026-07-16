@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="340" viewBox="0 0 1200 340"
+     role="img" aria-labelledby="title desc">
+  <title id="title">VMware Workstation &amp; Fusion 下载中心</title>
+  <desc id="desc">VMware Workstation Pro 与 Fusion Pro 免费下载导航：128 个历史版本、54 个 Fusion 版本，Broadcom 官方 SHA256 校验 + archive.org 免费镜像，每月自动更新。</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a1626"/>
+      <stop offset="1" stop-color="#0d1f38"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="320" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0071c5"/>
+      <stop offset="1" stop-color="#1a8cff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="340" rx="26" fill="url(#bg)"/>
+
+  <!-- 左侧：标题区 -->
+  <g transform="translate(56 0)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif">
+    <text x="0" y="74" font-size="13" letter-spacing="3" fill="#7fa8d6" font-family="ui-monospace, 'SFMono-Regular', Menlo, monospace">DOWNLOAD NAVIGATION</text>
+
+    <text x="0" y="128" font-size="42" font-weight="700" fill="#eaf1f8">VMware Workstation</text>
+    <text x="0" y="178" font-size="42" font-weight="700" fill="#eaf1f8">&amp; Fusion 下载中心</text>
+
+    <rect x="0" y="200" width="300" height="4" rx="2" fill="url(#accent)"/>
+
+    <text x="0" y="240" font-size="17" fill="#9fb6d0">128 个 Workstation 历史版本 · 54 个 Fusion 版本</text>
+    <text x="0" y="268" font-size="15" fill="#7e96b2">Broadcom 官方 SHA256 · archive.org 免费镜像</text>
+    <text x="0" y="292" font-size="15" fill="#7e96b2">每月首日自动抓取最新版本</text>
+  </g>
+
+  <!-- 右侧：校验终端卡片（核心 proof） -->
+  <g transform="translate(720 0)">
+    <rect x="0" y="52" width="424" height="236" rx="14" fill="#0c1c30" stroke="#1d3a5c"/>
+    <!-- 标题栏 -->
+    <circle cx="24" cy="76" r="6" fill="#ff5f57"/>
+    <circle cx="44" cy="76" r="6" fill="#febc2e"/>
+    <circle cx="64" cy="76" r="6" fill="#28c840"/>
+    <text x="212" y="81" text-anchor="middle" font-size="12" fill="#6b86a6" font-family="ui-monospace, 'SFMono-Regular', Menlo, monospace">checksums.txt</text>
+
+    <!-- 终端内容 -->
+    <g font-family="ui-monospace, 'SFMono-Regular', Menlo, monospace" font-size="12">
+      <text x="24" y="120" fill="#7fd1ff">$ sha256sum -c checksums.txt --ignore-missing</text>
+
+      <text x="24" y="152" fill="#c9d6e5">VMware-Workstation-Full-26H1-25388281.exe</text>
+      <text x="392" y="152" text-anchor="end" fill="#3fb950" font-weight="700">OK</text>
+
+      <text x="24" y="178" fill="#c9d6e5">VMware-Workstation-Full-26H1-25388281.bundle</text>
+      <text x="392" y="178" text-anchor="end" fill="#3fb950" font-weight="700">OK</text>
+
+      <text x="24" y="204" fill="#c9d6e5">VMware-Fusion-26H1-25388279_universal.dmg</text>
+      <text x="392" y="204" text-anchor="end" fill="#3fb950" font-weight="700">OK</text>
+
+      <line x1="24" y1="224" x2="400" y2="224" stroke="#1d3a5c"/>
+      <text x="24" y="250" fill="#8aa0b8">3 files verified · 0 failed</text>
+      <text x="24" y="272" fill="#5f7796" font-size="11">数据来源：Broadcom Support Portal + archive.org</text>
+    </g>
+  </g>
+</svg>

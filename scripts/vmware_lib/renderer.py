@@ -138,6 +138,18 @@ def _render_badges(ws_count: int, fusion_count: int, release_date: str) -> list[
     ]
 
 
+def _render_hero() -> list[str]:
+    """视觉 hero —— 项目名 + 校验终端卡片 proof (静态 SVG)"""
+    return [
+        '<p align="center">',
+        '  <img src="./assets/readme/hero.svg" width="100%" '
+        'alt="VMware Workstation &amp; Fusion 下载中心：128 个历史版本、54 个 Fusion 版本，'
+        'Broadcom 官方 SHA256 校验 + archive.org 免费镜像，每月自动更新">',
+        '</p>',
+        '',
+    ]
+
+
 def _render_intro(dt: datetime) -> list[str]:
     """开场白 — 合并成一个引用块，时间戳用 <sub> 弱化"""
     ts = dt.strftime("%Y-%m-%d %H:%M UTC")
@@ -397,6 +409,7 @@ def render_readme(data: dict) -> str:
     dt = _data_time(data)
     release_date = _latest_release_date(data)
     lines += _render_badges(len(ws_list), len(fusion_list), release_date)
+    lines += _render_hero()
     lines += _render_intro(dt)
 
     lines += [

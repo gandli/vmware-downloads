@@ -2,6 +2,10 @@
 
 ![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--05--14-brightgreen?style=flat-square) ![License](https://img.shields.io/github/license/gandli/vmware-downloads?style=flat-square)
 
+<p align="center">
+  <img src="./assets/readme/hero.svg" width="100%" alt="VMware Workstation &amp; Fusion 下载中心：128 个历史版本、54 个 Fusion 版本，Broadcom 官方 SHA256 校验 + archive.org 免费镜像，每月自动更新">
+</p>
+
 > **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**  
 > 📥 archive.org 免费镜像 · 🔐 Broadcom 官方 SHA256 · 🤖 每月自动更新
 
