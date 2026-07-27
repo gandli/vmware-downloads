@@ -173,6 +173,7 @@
 ## 🍎 VMware Fusion Pro（所有版本）
 
 > **图例**：✅ Broadcom 官方数据（SHA256 权威）· 📼 archive.org 历史存档（仅 MD5/SHA1）
+
 | 版本 | Build | 发布日期 | macOS | SHA256 | 来源 |
 |:-----|:------|:---------|:------|:-------|:---:|
 | 26H1 | `25388279` | 2026-05-14 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.71 MB) | SHA256 `c1d373aa21be2567…` <details><summary>full</summary><code>c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6</code></details> | ✅ |
