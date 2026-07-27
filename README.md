@@ -15,10 +15,10 @@
 ## 目录
 
 - [快速下载（最新版）](#-快速下载最新版)
-- [校验完整性](#-校验完整性)
-- [Linux 安装 `.bundle`](#-linux-安装-bundle)
 - [🪟 VMware Workstation Pro（所有版本）](#-vmware-workstation-pro所有版本)
 - [🍎 VMware Fusion Pro（所有版本）](#-vmware-fusion-pro所有版本)
+- [校验完整性](#-校验完整性)
+- [Linux 安装 `.bundle`](#-linux-安装-bundle)
 - [免费使用政策](#-免费使用政策)
 - [老系统兼容性](#️-老系统兼容性)
 - [数据来源与说明](#-数据来源与说明)
