@@ -54,10 +54,8 @@
 | 25H2u1 | `25219725` | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2u1-25219725.exe) (278.31 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2u1-25219725.x86_64.bundle) (296.22 MB) | Win SHA256 `b592c47756d47c93…` <details><summary>full</summary><code>b592c47756d47c932a3ce2c2b83ad3af1fa23ccc1dd1d3166a51bcc1d2bd58e0</code></details><br>Linux SHA256 `721aa93c4ebcaa51…` <details><summary>full</summary><code>721aa93c4ebcaa51ac6db75ed97c7a4db10aa88110446890db1e40bfafc7566a</code></details> | ✅ |
 | 25H2 | `24995812` | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe) (277.63 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle) (295.19 MB) | Win SHA256 `49ad7c2bbce854ed…` <details><summary>full</summary><code>49ad7c2bbce854ed30ed0702d1af9fc04269777dc981e087bfa7241045b0361</code></details><br>Linux SHA256 `9beced8a0653c938…` <details><summary>full</summary><code>9beced8a0653c9382e9aa9917168a54bf5635d5e66c8cb341589d72cf14093322</code></details> | ✅ |
 | 17.6.4 | `24832109` | 2025-07-15 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.4-24832109.exe) (405.72 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-workstation-full-17.6.4-24832109.x86_64.bundle) (339.46 MB) | Win SHA256 `10fe3a36f525d88a…` <details><summary>full</summary><code>10fe3a36f525d88aa133118ab3b5a16b18da88d4aa11b14d74e4164b3fb94ba9</code></details><br>Linux SHA256 `64fbfbaeacc48865…` <details><summary>full</summary><code>64fbfbaeacc48865468114362a2bbaade9110cc9e87bc3bd938396ba7f19a9bd</code></details> | ✅ |
-
 | 17.6.3 | `24583834` | 2025-03-04 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.3-24583834.exe) (401.43 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-workstation-full-17.6.3-24583834.x86_64.bundle) (335.21 MB) | Win SHA256 `d7c04b4dd1e6bf55…` <details><summary>full</summary><code>d7c04b4dd1e6bf551693897d4805e99c45198a830c6361d9af8267b40906857b</code></details><br>Linux SHA256 `79575917728ded4c…` <details><summary>full</summary><code>79575917728ded4c6d0b89f4ab6a81be9a773c00eeb68d1d12ac0db125478ee0</code></details> | ✅ |
 | 17.6.2 | `24409262` | 2024-12-17 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.2-24409262.exe) (447.93 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-workstation-full-17.6.2-24409262.x86_64.bundle) (372.49 MB) | Win SHA256 `5e556b7fc1bd2777…` <details><summary>full</summary><code>5e556b7fc1bd27775143eea930cac68760a1b5dc9b4c089d3fc664cd8439645b</code></details><br>Linux SHA256 `15536dfc5afbbcf4…` <details><summary>full</summary><code>15536dfc5afbbcf42daec10b1d9d1d6da3ca27da478938defc9c558064ff09f7</code></details> | ✅ |
-
 | 17.6.1 | `24319023` | 2024-10-10 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.1-24319023.exe) (447.93 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-workstation-full-17.6.1-24319023.x86_64.bundle) (372.46 MB) | Win SHA256 `f95429e395a583eb…` <details><summary>full</summary><code>f95429e395a583eb5ba91f09b040e2f8c53a5e7aa37c4c6bfcaf82115a8d3fa4</code></details><br>Linux SHA256 `7b539aafa8251e7a…` <details><summary>full</summary><code>7b539aafa8251e7a…</code></details> | ✅ |
 | 17.6 | `24238078` | 2024-09-03 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.6.0-24238078.exe) (447.97 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-workstation-full-17.6.0-24238078.x86_64.bundle) (372.46 MB) | Win SHA256 `e34461ffbcb38ca7…` <details><summary>full</summary><code>e34461ffbcb38ca7baa7928f7f37575ef31129961099eae96b43a64b06462778</code></details><br>Linux SHA256 `5e9e8e01278bef64…` <details><summary>full</summary><code>5e9e8e01278bef6408a360ff2f56218c2ee62854735be8d9cbe2dc61811ca0dc</code></details> | ✅ |
 | 17.5.2 | `23775571` | 2024-05-14 | [下载](https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.2-23775571.exe) (618.26 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-workstation-full-17.5.2-23775571.x86_64.bundle) (510.58 MB) | Win SHA256 `2c3a40993a450dc9…` <details><summary>full</summary><code>2c3a40993a450dc9a059563d07664fc0fb85ae398a57d22b1b4bf0e602417bf7</code></details><br>Linux SHA256 `a9da5e9b785ab98c…` <details><summary>full</summary><code>a9da5e9b785ab98c6f6d90f0ebd9cde6e6da3ca27da478938defc9c558064ff09f7</code></details> | ✅ |
@@ -175,7 +173,6 @@
 ## 🍎 VMware Fusion Pro（所有版本）
 
 > **图例**：✅ Broadcom 官方数据（SHA256 权威）· 📼 archive.org 历史存档（仅 MD5/SHA1）
-
 | 版本 | Build | 发布日期 | macOS | SHA256 | 来源 |
 |:-----|:------|:---------|:------|:-------|:---:|
 | 26H1 | `25388279` | 2026-05-14 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.71 MB) | SHA256 `c1d373aa21be2567…` <details><summary>full</summary><code>c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6</code></details> | ✅ |
@@ -235,7 +232,6 @@
 ---
 
 ## 💡 免费使用政策
-
 | 日期 | 里程碑 |
 |:-----|:-------|
 | **2024-05-14**（17.5.2 起） | Workstation Pro 免费供 **个人用户** |
@@ -248,7 +244,6 @@
 > ⚠️ 安装时选择「个人使用」即可，**无需许可证密钥**。
 
 ## 🖥️ 老系统兼容性
-
 | 操作系统 | 最终支持的 Workstation 版本 |
 |:---------|:---------------------------|
 | Windows 7 | 15.5.7 |
@@ -278,7 +273,6 @@
 ## 📜 License
 
 本仓库分成两部分授权，请分清：
-
 | 内容 | 授权 |
 |:-----|:-----|
 | **仓库脚本 & 文档** — `scripts/`、`.github/`、README、CHANGELOG、data 目录里 gandli 汇编的 JSON/TXT 元数据 | [MIT License](./LICENSE) © 2024-2026 gandli |
