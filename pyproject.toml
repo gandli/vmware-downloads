@@ -15,7 +15,7 @@ dev = [
     "playwright>=1.40,<2.0",
     # audit v5 P2-C: 审计工具链纳入 dev extras · 让每次 audit 无需现装
     "bandit>=1.7,<2.0",
-    "mypy>=1.11,<2.0",
+    "mypy>=1.11,<3.0",
 ]
 
 [tool.pytest.ini_options]
