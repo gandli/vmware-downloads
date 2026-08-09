@@ -49,7 +49,10 @@ sudo zypper install -y kernel-syms gcc make
 ## 安装
 
 ```bash
-# 1. 校验完整性 (先做)
+# 0. 拉校验清单到安装包同目录（一次性）
+curl -LO https://raw.githubusercontent.com/gandli/vmware-downloads/main/data/checksums.txt
+
+# 1. 校验完整性
 sha256sum -c checksums.txt --ignore-missing
 
 # 2. 加执行权限
