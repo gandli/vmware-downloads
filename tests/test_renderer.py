@@ -71,19 +71,13 @@ class TestRenderReadme:
     def test_toc_anchors_match_github_slug(self):
         """TOC 锚点必须匹配 GitHub 渲染 H2 的真实 slug，否则点击 404。
 
-        用 GitHub readme HTML API 提取真实 H2 id 核验（已修复方向错误）：
-          - 快速下载最新版 / -校验完整性 / -所有历史版本 / -免费使用政策
-          - -linux-安装-bundle  ← 🐧 前缀产生单杠（GitHub 实测真实 id）
-          - ️-老系统兼容性 / -数据来源与说明 / 贡献与反馈 / -license
+        精简后 README 只保留下载核心三节（其余搬到 docs/）：
+          - 快速下载最新版 / -校验完整性 / -所有历史版本
         """
         md = render_readme(SAMPLE_DATA)
         toc = md.split("## 目录", 1)[1].split("## 🚀")[0]
         assert "](" in toc
-        # Linux 单杠（GitHub 真实渲染 id 为 -linux-安装-bundle）
-        assert "#-linux-安装-bundle" in toc, "Linux 锚点需单杠匹配 GitHub slug"
-        # 其余单杠锚点格式正确
-        for anchor in ["#-快速下载最新版", "#-校验完整性", "#-所有历史版本",
-                       "#-免费使用政策", "#-数据来源与说明", "#-license"]:
+        for anchor in ["#-快速下载最新版", "#-校验完整性", "#-所有历史版本"]:
             assert anchor in toc
 
 
@@ -94,7 +88,7 @@ class TestRenderReadme:
         assert "[VMware-Workstation-Full-26H1-25388281.exe]" in md
 
     def test_no_dead_links_in_rendered_readme(self):
-        """回归防护：README 不应包含已知失效的官方链接（Broadcom 收购后下线）。
+        """回归防护：README + docs/ 不应包含已知失效的官方链接（Broadcom 收购后下线）。
 
         - techdocs.broadcom.com/.../17-0/vmware-workstation-pro-installation.html → 404
         - blogs.vmware.com/.../2024/05/14/vmware-desktop-hypervisor-... → 404
@@ -103,11 +97,15 @@ class TestRenderReadme:
         md = render_readme(SAMPLE_DATA)
         assert "techdocs.broadcom.com" not in md, "techdocs 安装文档链接已失效，需替换"
         assert "blogs.vmware.com/cloud-foundation/2024/05/14" not in md, "2024-05 博客已下线，需替换"
-        # 新链接应存在
-        assert "knowledge.broadcom.com/external/article/368667" in md
-        assert "docs.vmware.com/en/VMware-Workstation-Pro/17.0" in md
         # 不应该出现 [https://...](https://...) 这种冗余
         assert "[https://archive.org" not in md
+        # 有效新链接放在 docs/ 下（README 已精简，只保留下载链接）
+        from pathlib import Path
+        docs = Path(__file__).parent.parent / "docs"
+        policy = (docs / "policy.md").read_text(encoding="utf-8")
+        linux = (docs / "linux-install.md").read_text(encoding="utf-8")
+        assert "knowledge.broadcom.com/external/article/368667" in policy
+        assert "docs.vmware.com/en/VMware-Workstation-Pro/17.0" in linux
 
     def test_has_full_sha256_in_table(self):
         md = render_readme(SAMPLE_DATA)
