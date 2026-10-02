@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-06T03:42:03.837923+00:00",
+  "collected_at": "2026-10-02T16:07:22.655230+00:00",
   "source": {
     "primary": {
       "broadcom": "https://support.broadcom.com/group/ecx/productdownloads",
@@ -11,11 +11,37 @@
     }
   },
   "stats": {
-    "broadcom+archive": 27,
-    "broadcom-only": 0,
+    "broadcom+archive": 29,
+    "broadcom-only": 1,
     "md5_mismatch": 0
   },
   "workstation_pro": [
+    {
+      "version": "26H1u1",
+      "build": "25688693",
+      "date": "2026-09-03",
+      "last_updated": "2026-08-26",
+      "downloads": {
+        "windows": {
+          "filename": "VMware-Workstation-Full-26H1u1-25688693.exe",
+          "size": "267.61 MB",
+          "sha256": "3d775c3c2153600eef4642f95d519a514ba7e861400bda2598352bff792db473",
+          "md5": "9209838fcb622438e87422a25622bfa7",
+          "url": "https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1u1-25688693.exe",
+          "sha1": "64b03dcd8a1251184271113a00f08bb6b4d2a9e6",
+          "source": "broadcom+archive"
+        },
+        "linux": {
+          "filename": "VMware-Workstation-Full-26H1u1-25688693.x86_64.bundle",
+          "size": "349.83 MB",
+          "sha256": "da823c853cc7e57be7b9b070c8aed20fe9d75fd519ae6f175ab1dafc7283002e",
+          "md5": "acb1c4fe55a00a5406bba8c7a1f9a002",
+          "url": "",
+          "sha1": "",
+          "source": "broadcom-only"
+        }
+      }
+    },
     {
       "version": "26H1",
       "build": "25388281",
@@ -2275,6 +2301,23 @@
     }
   ],
   "fusion_pro": [
+    {
+      "version": "26H1u1",
+      "build": "25689522",
+      "date": "2026-09-03",
+      "last_updated": "2026-08-26",
+      "downloads": {
+        "macos": {
+          "filename": "VMware-Fusion-26H1u1-25689522_universal.dmg",
+          "size": "497.25 MB",
+          "sha256": "df1911f8de651818a43c20ca1054403da7e39534f15a2e0e0f9d41ffcf728ab8",
+          "md5": "72390276a1eaef54d57363e008b98c8d",
+          "url": "https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1u1-25689522_universal.dmg",
+          "sha1": "02d6c55dddc238c23357c2d2333ee263df3db156",
+          "source": "broadcom+archive"
+        }
+      }
+    },
     {
       "version": "26H1",
       "build": "25388279",
