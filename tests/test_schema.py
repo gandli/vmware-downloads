@@ -76,6 +76,18 @@ def test_rejects_non_http_url():
     assert any("url" in e for e in errs)
 
 
+def test_allows_empty_url_for_broadcom_only():
+    # 新版本 archive.org 还没镜像 → broadcom-only + url="" 是合法状态（见 renderer）
+    data = _make_valid_data()
+    dl = data["workstation_pro"][0]["downloads"]["windows"]
+    dl["url"] = ""
+    dl["source"] = "broadcom-only"
+    assert validate_downloads_json(data) == []
+
+    dl["source"] = "broadcom+archive"
+    assert any("url" in e for e in validate_downloads_json(data))
+
+
 def test_source_optional_but_validated_if_present():
     data = _make_valid_data()
     data["workstation_pro"][0]["downloads"]["windows"]["source"] = "unknown-source"

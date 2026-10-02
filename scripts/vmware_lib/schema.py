@@ -90,8 +90,15 @@ def _check_download(prefix: str, dl: dict[str, Any]) -> list[str]:
         errs.append(f"{prefix}.size: 单位格式非法（应含 KB/MB/GB/B），实际 {size!r}")
 
     # url
+    # broadcom-only（archive.org 还没镜像的新版本）合法地没有公开 URL，
+    # renderer 会退化成纯文件名 + 官方提示；其他来源缺 URL 仍是坏数据。
     url = dl.get("url", "")
-    if not isinstance(url, str) or not url.startswith(("http://", "https://")):
+    if not isinstance(url, str):
+        errs.append(f"{prefix}.url: 应为字符串，实际 {type(url).__name__}")
+    elif not url:
+        if dl.get("source") != "broadcom-only":
+            errs.append(f"{prefix}.url: 应为 http(s) URL，实际 ''")
+    elif not url.startswith(("http://", "https://")):
         errs.append(f"{prefix}.url: 应为 http(s) URL，实际 {url!r}")
 
     # source (可选，字段存在必须合法)
