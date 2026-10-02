@@ -1,6 +1,6 @@
 # <img src="./assets/readme/vmware-icon.svg" width="28" height="28" align="middle" alt=""> VMware Workstation & Fusion 下载中心
 
-![Workstation](https://img.shields.io/badge/Workstation%20Pro-128%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-54%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--05--14-brightgreen?style=flat-square) [![code license](https://img.shields.io/badge/code-MIT-blue?style=flat-square)](./LICENSE) [![VMware](https://img.shields.io/badge/VMware-Broadcom%20EULA-0071c5?style=flat-square&logo=vmware)](https://www.broadcom.com/company/legal/licensing)
+![Workstation](https://img.shields.io/badge/Workstation%20Pro-129%20versions-0071c5?style=flat-square&logo=vmware) ![Fusion](https://img.shields.io/badge/Fusion%20Pro-55%20versions-0071c5?style=flat-square&logo=vmware) ![Last Updated](https://img.shields.io/badge/updated-2026--09--03-brightgreen?style=flat-square) [![code license](https://img.shields.io/badge/code-MIT-blue?style=flat-square)](./LICENSE) [![VMware](https://img.shields.io/badge/VMware-Broadcom%20EULA-0071c5?style=flat-square&logo=vmware)](https://www.broadcom.com/company/legal/licensing)
 
 <p align="center">
   <img src="./assets/readme/hero.svg" width="100%" alt="VMware Workstation &amp; Fusion 下载中心：128 个历史版本、54 个 Fusion 版本，Broadcom 官方 SHA256 校验 + archive.org 免费镜像，每月自动更新">
@@ -8,7 +8,7 @@
 
 > **一站式 VMware Workstation Pro & Fusion Pro 免费下载导航**
 
-<sub>_数据抓取时间：2026-07-06 03:42 UTC_</sub>
+<sub>_数据抓取时间：2026-10-02 16:07 UTC_</sub>
 
 ---
 
@@ -24,16 +24,16 @@
 
 ### 🪟 VMware Workstation Pro
 
-**26H1** · Build `25388281` · 发布于 **2026-05-14**
+**26H1u1** · Build `25688693` · 发布于 **2026-09-03**
 
-- **Windows** — [VMware-Workstation-Full-26H1-25388281.exe](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) (274.34 MB · SHA256 `a0ef9087607d9cad…`)
-- **Linux** — [VMware-Workstation-Full-26H1-25388281.x86_64.bundle](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) (325.03 MB · SHA256 `3f6d2501e654dbc7…`)
+- **Windows** — [VMware-Workstation-Full-26H1u1-25688693.exe](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1u1-25688693.exe) (267.61 MB · SHA256 `3d775c3c2153600e…`)
+- **Linux** — `VMware-Workstation-Full-26H1u1-25688693.x86_64.bundle` · 需登录 Broadcom Support Portal 获取 (349.83 MB · SHA256 `da823c853cc7e57b…`)
 
 ### 🍎 VMware Fusion Pro
 
-**26H1** · Build `25388279` · 发布于 **2026-05-14**
+**26H1u1** · Build `25689522` · 发布于 **2026-09-03**
 
-- **macOS** — [VMware-Fusion-26H1-25388279_universal.dmg](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.71 MB · SHA256 `c1d373aa21be2567…`)
+- **macOS** — [VMware-Fusion-26H1u1-25689522_universal.dmg](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1u1-25689522_universal.dmg) (497.25 MB · SHA256 `df1911f8de651818…`)
 
 ## 🔐 校验完整性
 
@@ -91,10 +91,11 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 > **图例**：✅ Broadcom 官方数据（SHA256 权威）· 📼 archive.org 历史存档（仅 MD5/SHA1）
 
 <details>
-<summary><b>🪟 VMware Workstation Pro（128 版）</b></summary>
+<summary><b>🪟 VMware Workstation Pro（129 版）</b></summary>
 
 | 版本 | Build | 发布日期 | Windows | Linux | SHA256 | 来源 |
 |:-----|:------|:---------|:--------|:------|:-------|:---:|
+| 26H1u1 | `25688693` | 2026-09-03 | [下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1u1-25688693.exe) (267.61 MB) | 仅 Broadcom · 349.83 MB | Win SHA256 `3d775c3c2153600e…` <details><summary>full</summary><code>3d775c3c2153600eef4642f95d519a514ba7e861400bda2598352bff792db473</code></details><br>Linux SHA256 `da823c853cc7e57b…` <details><summary>full</summary><code>da823c853cc7e57be7b9b070c8aed20fe9d75fd519ae6f175ab1dafc7283002e</code></details> | ✅ |
 | 26H1 | `25388281` | 2026-05-14 | [下载](https://archive.org/download/vmwareworkstationarchive/26H1/VMware-Workstation-Full-26H1-25388281.exe) (274.34 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/26H1/VMware-Workstation-Full-26H1-25388281.x86_64.bundle) (325.03 MB) | Win SHA256 `a0ef9087607d9cad…` <details><summary>full</summary><code>a0ef9087607d9cad20b08139e73e41242e044ad5bd8cee141d3bad314586737f</code></details><br>Linux SHA256 `3f6d2501e654dbc7…` <details><summary>full</summary><code>3f6d2501e654dbc7701a8290ff6ffcfba6c5444cd5f35f4933cd08c9499f6d84</code></details> | ✅ |
 | 25H2u1 | `25219725` | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2u1-25219725.exe) (278.31 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2u1-25219725.x86_64.bundle) (296.22 MB) | Win SHA256 `b592c47756d47c93…` <details><summary>full</summary><code>b592c47756d47c932a3ce2c2b83ad3af1fa23ccc1dd1d3166a51bcc1d2bd58e0</code></details><br>Linux SHA256 `721aa93c4ebcaa51…` <details><summary>full</summary><code>721aa93c4ebcaa51ac6db75ed97c7a4db10aa88110446890db1e40bfafc7566a</code></details> | ✅ |
 | 25H2 | `24995812` | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/25H2/VMware-Workstation-Full-25H2-24995812.exe) (277.63 MB) | [下载](https://archive.org/download/vmwareworkstationarchive/Linux/25H2/VMware-Workstation-Full-25H2-24995812.x86_64.bundle) (295.19 MB) | Win SHA256 `49ad7c2bbce854ed…` <details><summary>full</summary><code>49ad7c2bbce854ed30ed0702d1af9fc042697777dc981e087bfa7241045b0361</code></details><br>Linux SHA256 `9beced8a0653c938…` <details><summary>full</summary><code>9beced8a0653c9382e9aa9917168a54bf5635e566c8cb341589d72cf14093322</code></details> | ✅ |
@@ -227,10 +228,11 @@ VMware-workstation-full-17.6.4-24832109.exe: OK
 </details>
 
 <details>
-<summary><b>🍎 VMware Fusion Pro（54 版）</b></summary>
+<summary><b>🍎 VMware Fusion Pro（55 版）</b></summary>
 
 | 版本 | Build | 发布日期 | macOS | SHA256 | 来源 |
 |:-----|:------|:---------|:------|:-------|:---:|
+| 26H1u1 | `25689522` | 2026-09-03 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1u1-25689522_universal.dmg) (497.25 MB) | SHA256 `df1911f8de651818…` <details><summary>full</summary><code>df1911f8de651818a43c20ca1054403da7e39534f15a2e0e0f9d41ffcf728ab8</code></details> | ✅ |
 | 26H1 | `25388279` | 2026-05-14 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/26H1/VMware-Fusion-26H1-25388279_universal.dmg) (480.71 MB) | SHA256 `c1d373aa21be2567…` <details><summary>full</summary><code>c1d373aa21be25674e3ecc518819e255785dea9d456d8747bcb0a2a59244bdf6</code></details> | ✅ |
 | 25H2u1 | `25219963` | 2026-02-26 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2u1-25219963_universal.dmg) (484.82 MB) | SHA256 `bfe88fe1653e50aa…` <details><summary>full</summary><code>bfe88fe1653e50aafcaf3fce5eacb4c491d40ae5d43a5199c991caebb04b98d0</code></details> | ✅ |
 | 25H2 | `24995814` | 2025-10-14 | [下载](https://archive.org/download/vmwareworkstationarchive/Fusion/25H2/VMware-Fusion-25H2-24995814_universal.dmg) (484.58 MB) | SHA256 `a995ebd6fded41b3…` <details><summary>full</summary><code>a995ebd6fded41b3f2da87efff6b8674d6689f4c997772810ea1a5c2ebe28c0e</code></details> | ✅ |

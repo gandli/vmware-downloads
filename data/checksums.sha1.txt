@@ -1,3 +1,4 @@
+64b03dcd8a1251184271113a00f08bb6b4d2a9e6  VMware-Workstation-Full-26H1u1-25688693.exe
 0c892b81cc3519b5159e186c6215b379e5a425ab  VMware-Workstation-Full-26H1-25388281.exe
 2945b324113c71fff0e3d229894b8579c471cd1a  VMware-Workstation-Full-26H1-25388281.x86_64.bundle
 40e5fbc1463c95c9afcecd7d1b5f48c51decd25b  VMware-Workstation-Full-25H2u1-25219725.exe
@@ -135,6 +136,7 @@ d14485c884c7c85c7a4f37451233a4c277fa6cb9  VMware-Workstation-4.0.2-5592.exe
 441ddaffd8298a3919d5d7eb514ea23721764565  VMware-workstation-3.1.1-1790.exe
 efc29cf4654e5df81f7509a0a1471f6f4eda8df4  VMware-workstation-3.1.0-1769.exe
 9af1f3f3191568e4635a2e3a1bc6a50058e8e2d0  VMwareWorkstation-3.0.0-1455.exe
+02d6c55dddc238c23357c2d2333ee263df3db156  VMware-Fusion-26H1u1-25689522_universal.dmg
 d7150a70574ee4dab2826307cdc60069b1d78252  VMware-Fusion-26H1-25388279_universal.dmg
 4c95cbb2a931137b2f5a57c82140746afa19534e  VMware-Fusion-25H2u1-25219963_universal.dmg
 0f83b7e0a2a5390473dede9864405db3c9467253  VMware-Fusion-25H2-24995814_universal.dmg
