@@ -11,7 +11,9 @@ permissions:
 
 jobs:
   release-please:
-    runs-on: ubuntu-latest
+    # 钉住 24.04：ubuntu-latest 于 2026-10-19 迁到 Ubuntu 26，
+    # Playwright/Chromium 兼容未知，且月度任务挂了没人盯着（见 issue #45）
+    runs-on: ubuntu-24.04
     steps:
       - uses: googleapis/release-please-action@v5
         with:
