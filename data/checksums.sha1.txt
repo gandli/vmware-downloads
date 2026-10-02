@@ -16,7 +16,6 @@ d2f66cd9922da09a37036aaa95c362b0accd24ff  VMware-Workstation-Full-17.6.1-2431902
 979681bb64496659bcf429268e788acae093e15b  VMware-workstation-full-17.6.0-24238078.exe
 4c4a0def4ee26e473f841e6bb8d16df84a3b2e44  VMware-Workstation-Full-17.6.0-24238078.x86_64.bundle
 f6c856cd1373424df200b3176b35bf3cdcc38277  VMware-workstation-full-17.5.2-23775571.exe
-23593d98a396c55f42c6e1967be47108d6767a03  VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle
 1118f68f6316a0ec573c55e77f5bf1e355db1e6a  VMware-workstation-full-17.5.1-23298084.exe
 d1b44046f0ba37ffd0556d6912af8d038bf9ec81  VMware-workstation-full-17.5.0-22583795.exe
 9c9e229a5a804ced52efff3ba618c3297dfe81ca  VMware-workstation-full-17.0.2-21581411.exe

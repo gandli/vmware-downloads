@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-02T16:07:22.655230+00:00",
+  "collected_at": "2026-10-02T16:21:16.331998+00:00",
   "source": {
     "primary": {
       "broadcom": "https://support.broadcom.com/group/ecx/productdownloads",
@@ -11,7 +11,7 @@
     }
   },
   "stats": {
-    "broadcom+archive": 29,
+    "broadcom+archive": 28,
     "broadcom-only": 1,
     "md5_mismatch": 0
   },
@@ -263,15 +263,6 @@
           "md5": "c0a0353c1dade2089b55ce04ca942964",
           "url": "https://archive.org/download/vmwareworkstationarchive/17.x/VMware-workstation-full-17.5.2-23775571.exe",
           "sha1": "f6c856cd1373424df200b3176b35bf3cdcc38277",
-          "source": "broadcom+archive"
-        },
-        "linux": {
-          "filename": "VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle",
-          "size": "510.58 MB",
-          "sha256": "a9da5e9b785ab98c6f49d1e769f6885028fd115c96e3cf0e6d22da3112b89a21",
-          "md5": "70adb9ba7305972eeb845eac5d69b32e",
-          "url": "https://archive.org/download/vmwareworkstationarchive/Linux/17.x/VMware-Workstation-Full-17.5.2-23775571.x86_64.bundle",
-          "sha1": "23593d98a396c55f42c6e1967be47108d6767a03",
           "source": "broadcom+archive"
         }
       }
