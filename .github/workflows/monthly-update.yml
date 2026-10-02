@@ -11,7 +11,7 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
+
   # audit v3 · P2-B · SLSA build provenance
   id-token: write        # 需要 OIDC token 才能发 attestation
   attestations: write    # 写入 GitHub 的 attestation 存储
@@ -87,23 +87,26 @@ jobs:
             echo "🔇 仅时间戳被刷新，静默跳过"
           fi
 
-      - name: 摘要变化条目（PR body 用）
+      - name: 摘要变化条目（commit message 用）
         if: steps.check_diff.outputs.changed == 'true'
-        run: python scripts/summarize_changes.py > /tmp/pr_body.md
+        run: |
+          python scripts/summarize_changes.py > /tmp/summary.md
+          {
+            echo 'chore(data): 月度自动更新 Broadcom 元数据'
+            echo
+            echo '由 monthly-update.yml 触发，Broadcom Support Portal API 拦截抓取。'
+            echo
+            cat /tmp/summary.md
+          } > /tmp/commit_msg.txt
 
-      - name: 提 PR（若有变化）
+      # ponytail: 直接推 main，不开 PR。bot 开的 PR 触发的 pull_request workflow
+      # 会被 GitHub 挂在 action_required 等人工 approve，auto-merge 也救不了
+      # （检查根本不启动）。CI 仍会在 push 上跑并校验 README/数据同步。
+      - name: 提交到 main（若有变化）
         if: steps.check_diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1  # v8
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: |
-            chore(data): 月度自动更新 Broadcom 元数据
-
-            由 monthly-update.yml 触发，Broadcom Support Portal API 拦截抓取
-          title: "🤖 Monthly VMware Update - run #${{ github.run_number }}"
-          body-path: /tmp/pr_body.md
-          branch: auto/monthly-update
-          delete-branch: true
-          labels: |
-            automated
-            data-update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/vmware_downloads.json data/checksums.txt data/checksums.sha1.txt README.md
+          git commit -F /tmp/commit_msg.txt
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
