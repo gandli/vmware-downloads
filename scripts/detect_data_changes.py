@@ -7,23 +7,32 @@
 - 本脚本剔除这些噪声字段后再对比，只在真实数据变化时返回退出码 0（有变化）。
 
 用法（GitHub Actions 环境）：
-    if python scripts/detect_data_changes.py; then
+    if python scripts/detect_data_changes.py --heartbeat-days 21; then
       echo "changed=true" >> $GITHUB_OUTPUT
     else
       echo "changed=false" >> $GITHUB_OUTPUT
     fi
 
+心跳（--heartbeat-days N）：无人值守的 schedule 会被 GitHub 在仓库连续 60 天
+无提交后自动停用。周频流水线在 Broadcom 不发版时可以连续两三个月只刷新时间戳
+而零提交，正好撞上这条规则。传入 --heartbeat-days N 后，若"只剩时间戳变化"
+且距最后一次提交已 ≥ N 天，就当成一次真实变化让流水线提交：
+README 的"数据抓取时间"保持诚实，schedule 也永不停摆。
+
 退出码：
-    0 - 有真实变化
+    0 - 有真实变化（含心跳到期）
     1 - 无变化（或只有噪声字段变化）
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 # 让 detect_data_changes 可以 import vmware_lib.logs（作为 script 直接跑时）
@@ -132,7 +141,42 @@ def has_readme_change() -> bool:
     return strip_ts(head) != strip_ts(work)
 
 
-def main() -> int:
+def has_checksums_change() -> bool:
+    """checksums.txt 是纯 SHA256 列表，直接 git diff 对比即可（无时间戳）"""
+    try:
+        subprocess.check_output(
+            ["git", "diff", "--quiet", "HEAD", "--", "data/checksums.txt"],
+            stderr=subprocess.DEVNULL,
+        )
+    except subprocess.CalledProcessError:
+        # 非 0：有差异，或者根本不是一个 git 仓库（报 CalledProcessError 并不合理，
+        # 但旧行为就是当成“有变化”，保守起见保持）
+        return True
+    return False
+
+
+def last_commit_age_days() -> float | None:
+    """距最后一次提交过去了多少天。拿不到（非 git 仓库/命令失败）→ None"""
+    try:
+        raw = subprocess.check_output(
+            ["git", "log", "-1", "--format=%ct"],
+            stderr=subprocess.DEVNULL,
+        )
+        return (time.time() - int(raw.decode("utf-8", errors="ignore").strip())) / 86400
+    except (subprocess.CalledProcessError, OSError, ValueError) as e:
+        log.warning("last_commit_age_days 失败: %s", e)
+        return None
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--heartbeat-days",
+        type=int,
+        default=int(os.environ.get("HEARTBEAT_DAYS", "0") or 0),
+        help="连续 N 天无提交时，仅时间戳变化也提交一次（0=关闭心跳）",
+    )
+    args = parser.parse_args(argv)
     changed = False
 
     if has_real_json_change("data/vmware_downloads.json"):
@@ -144,12 +188,7 @@ def main() -> int:
         changed = True
 
     # checksums.txt 是纯 SHA256 列表，直接 git diff 对比即可（无时间戳）
-    try:
-        subprocess.check_output(
-            ["git", "diff", "--quiet", "HEAD", "--", "data/checksums.txt"],
-            stderr=subprocess.DEVNULL,
-        )
-    except subprocess.CalledProcessError:
+    if has_checksums_change():
         print("🆕 data/checksums.txt: 有变化")
         changed = True
 
@@ -159,9 +198,18 @@ def main() -> int:
 
     if changed:
         return 0
-    else:
-        print("✅ 无真实数据变化，仅时间戳被刷新")
-        return 1
+
+    if args.heartbeat_days > 0:
+        age = last_commit_age_days()
+        if age is not None and age >= args.heartbeat_days:
+            print(
+                f"🫀 距上次提交 {age:.1f} 天（阈值 {args.heartbeat_days} 天）："
+                f"提交时间戳刷新，保持 README 诚实 & schedule 不被 GitHub 停用"
+            )
+            return 0
+
+    print("✅ 无真实数据变化，仅时间戳被刷新")
+    return 1
 
 
 if __name__ == "__main__":

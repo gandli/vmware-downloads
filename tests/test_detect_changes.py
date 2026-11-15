@@ -226,3 +226,52 @@ def test_has_readme_change_git_error_logs_warning(monkeypatch, caplog, tmp_path)
     with caplog.at_level(logging.WARNING, logger="vmware.detect_data_changes"):
         has_readme_change()  # 不应抛异常
     assert any("has_readme_change" in r.getMessage() for r in caplog.records)
+
+
+# ---------------------------------------------------------------- heartbeat
+# 无人值守细节：GitHub 在仓库连续 60 天无提交后会自动停用 schedule。
+# 心跳策略让周频流水线在“只有时间戳变化”时也能定期提交一次。
+
+import detect_data_changes as ddc  # noqa: E402
+import pytest  # noqa: E402
+
+
+@pytest.fixture()
+def no_changes(monkeypatch):
+    monkeypatch.setattr(ddc, "has_real_json_change", lambda path: False)
+    monkeypatch.setattr(ddc, "has_checksums_change", lambda: False)
+    monkeypatch.setattr(ddc, "has_readme_change", lambda: False)
+
+
+def test_heartbeat_triggers_when_stale(no_changes, monkeypatch, capsys):
+    monkeypatch.setattr(ddc, "last_commit_age_days", lambda: 99.0)
+    assert ddc.main(["--heartbeat-days", "21"]) == 0
+    assert "距上次提交" in capsys.readouterr().out
+
+
+def test_heartbeat_skipped_when_fresh(no_changes, monkeypatch):
+    monkeypatch.setattr(ddc, "last_commit_age_days", lambda: 3.0)
+    assert ddc.main(["--heartbeat-days", "21"]) == 1
+
+
+def test_heartbeat_disabled_by_default(no_changes, monkeypatch):
+    monkeypatch.setattr(ddc, "last_commit_age_days", lambda: 99.0)
+    assert ddc.main([]) == 1
+
+
+def test_heartbeat_skipped_without_git(no_changes, monkeypatch):
+    monkeypatch.setattr(ddc, "last_commit_age_days", lambda: None)
+    assert ddc.main(["--heartbeat-days", "21"]) == 1
+
+
+def test_real_change_wins_over_heartbeat(monkeypatch):
+    monkeypatch.setattr(ddc, "has_real_json_change", lambda path: True)
+    monkeypatch.setattr(ddc, "has_checksums_change", lambda: False)
+    monkeypatch.setattr(ddc, "has_readme_change", lambda: False)
+    monkeypatch.setattr(ddc, "last_commit_age_days", lambda: 0.0)
+    assert ddc.main(["--heartbeat-days", "21"]) == 0
+
+
+def test_last_commit_age_days_outside_repo(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    assert ddc.last_commit_age_days() is None

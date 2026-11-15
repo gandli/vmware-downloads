@@ -57,13 +57,17 @@ def _filename_link(info: dict) -> str:
     """快速下载区块的文件名渲染。
 
     有 archive.org URL → Markdown 链接
-    仅 Broadcom 有（url 为空）→ 纯 code 文件名 + 官方提示，避免生成 `[filename]()`
+    仅 Broadcom 有（url 为空）→ 纯 code 文件名 + 官方提示 + Portal 文件页链接，
+    避免生成 `[filename]()`；Portal 链接缺失时退化成纯文字提示
     """
     filename = info.get("filename", "")
     url = info.get("url", "").strip()
     if url:
         return f"[{filename}]({url})"
-    return f"`{filename}` · 需登录 Broadcom Support Portal 获取"
+    portal_url = info.get("broadcom_url", "").strip()
+    if portal_url:
+        return f"`{filename}` · 需登录 Broadcom 官网获取 · [官方下载页]({portal_url})"
+    return f"`{filename}` · 需登录 Broadcom 官网获取"
 
 
 def _download_cell(info: dict | None) -> str:
@@ -75,7 +79,9 @@ def _download_cell(info: dict | None) -> str:
     if url:
         return f"[下载]({url}) ({size})"
     # broadcom-only 情况：archive.org 未镜像，Broadcom 官方需要登录
-    return f"仅 Broadcom · {size}" if size else "仅 Broadcom"
+    portal_url = info.get("broadcom_url", "").strip()
+    source = f"[Broadcom]({portal_url})" if portal_url else "Broadcom"
+    return f"仅 {source} · {size}" if size else f"仅 {source}"
 
 
 def _now_utc_str() -> str:
@@ -282,6 +288,10 @@ def render_readme(data: dict) -> str:
         "",
         "> 直接点击文件名下载，无需登录。哈希在下方，下载后请务必[校验完整性](#-校验完整性)。",
         "",
+        "> 💡 **点不动就右键另存为**：点击后若浏览器只是打开预览/没有反应（下载器接管、代理拦截），"
+        "请**右键链接 → 另存为（Save Link As）**。标注「需登录 Broadcom 官网」的条目没有公开直链，"
+        "点「官方下载页」登录后即可下载。",
+        "",
     ]
     if ws_latest:
         lines += _render_latest_block("VMware Workstation Pro", ws_latest, "🪟")
@@ -347,7 +357,8 @@ def render_readme(data: dict) -> str:
     lines += [
         "## 📦 所有历史版本",
         "",
-        "> **图例**：✅ Broadcom 官方数据（SHA256 权威）· 📼 archive.org 历史存档（仅 MD5/SHA1）",
+        "> **图例**：✅ Broadcom 官方数据（SHA256 权威）· 📼 archive.org 历史存档（仅 MD5/SHA1）"
+        " · 点击「下载」无反应时**右键链接 → 另存为**",
         "",
     ]
 

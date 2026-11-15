@@ -375,3 +375,67 @@ def test_render_readme_still_uses_sha256_when_present() -> None:
     # sha1 假值不应出现（因为 sha256 优先）
     assert "abc123" not in md
     assert "def456" not in md
+
+
+BROADCOM_ONLY_WITH_PORTAL = {
+    "collected_at": "2026-07-06T00:00:00+00:00",
+    "workstation_pro": [
+        {
+            "version": "26H1u1",
+            "build": "25688693",
+            "date": "2026-09-03",
+            "downloads": {
+                "linux": {
+                    "url": "",
+                    "filename": "VMware-Workstation-Full-26H1u1-25688693.x86_64.bundle",
+                    "size": "349.83 MB",
+                    "sha256": "da823c853cc7e57be7b9b070c8aed20fe9d75fd519ae6f175ab1dafc7283002e",
+                    "source": "broadcom-only",
+                    "broadcom_url": (
+                        "https://support.broadcom.com/group/ecx/productfiles"
+                        "?subFamily=VMware+Workstation+Pro&release=26H1u1&servicePk=546859"
+                    ),
+                },
+            },
+        }
+    ],
+    "fusion_pro": [],
+}
+
+
+def test_readme_tells_user_to_right_click_save_as() -> None:
+    """回归：直链被下载器/代理拦截时，README 必须教用户右键另存为"""
+    md = render_readme(SAMPLE_DATA)
+    assert "右键" in md
+    assert "另存为" in md
+
+
+def test_broadcom_only_renders_portal_link_instead_of_dead_text() -> None:
+    """broadcom-only 条目：文件名保持纯文本，但必须给出可点的官方下载页"""
+    md = render_readme(BROADCOM_ONLY_WITH_PORTAL)
+    assert "VMware-Workstation-Full-26H1u1-25688693.x86_64.bundle" in md
+    assert "[官方下载页](https://support.broadcom.com/group/ecx/productfiles" in md
+    assert "]()" not in md
+
+
+def test_download_cell_broadcom_only_with_portal_url() -> None:
+    """表格单元格：有 Portal 链接时挂到 Broadcom 字样上"""
+    from vmware_lib.renderer import _download_cell
+
+    result = _download_cell(
+        {
+            "filename": "a.bundle",
+            "url": "",
+            "size": "349.83 MB",
+            "broadcom_url": "https://support.broadcom.com/x",
+        }
+    )
+    assert result == "仅 [Broadcom](https://support.broadcom.com/x) · 349.83 MB"
+
+
+def test_filename_link_without_portal_url_falls_back_to_plain_text() -> None:
+    """Portal 链接缺失（老数据）→ 纯 code 文件名 + 登录提示，不炸"""
+    from vmware_lib.renderer import _filename_link
+
+    result = _filename_link({"filename": "a.bundle", "url": ""})
+    assert result == "`a.bundle` · 需登录 Broadcom 官网获取"

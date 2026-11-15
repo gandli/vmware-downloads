@@ -28,3 +28,6 @@ probe_output/
 .idea/
 *.swp
 .DS_Store
+
+# 抓取抖动留档（由 fetch_broadcom.py 写出，不进仓库）
+data/broadcom_metadata.rejected.json

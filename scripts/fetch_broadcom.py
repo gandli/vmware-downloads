@@ -34,12 +34,14 @@ from playwright.async_api import TimeoutError as PWTimeout
 
 # audit v4 P1-A · 从自制 log() 迁到 stdlib logging，
 # 让 fetch_broadcom 与 detect_data_changes / summarize_changes 一致
+from vmware_lib.health import metadata_regressions
 from vmware_lib.logs import get_logger
 
 REPO_ROOT = Path(__file__).parent.parent
 DATA_DIR = REPO_ROOT / "data"
 DATA_DIR.mkdir(exist_ok=True)
 OUT_JSON = DATA_DIR / "broadcom_metadata.json"
+REJECTED_JSON = DATA_DIR / "broadcom_metadata.rejected.json"
 
 LOGIN_URL = "https://support.broadcom.com/c/portal/login"
 WORKSTATION_LIST = (
@@ -138,6 +140,26 @@ async def collect_detail_urls(
         })
     log(f"  发现 {len(entries)} 个版本")
     return entries
+
+
+def load_previous_metadata() -> dict:
+    """上一次落盘的元数据（判断本次抓取是否退化）。不存在 → {}"""
+    if not OUT_JSON.exists():
+        return {}
+    try:
+        return json.loads(OUT_JSON.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        log(f"读取上一版元数据失败，跳过快照保护: {type(e).__name__}: {e}", "warning")
+        return {}
+
+
+def shrink_allowed() -> bool:
+    """BROADCOM_ALLOW_SHRINK=1 时跳过收缩保护（上游确实下架时用）"""
+    return os.environ.get("BROADCOM_ALLOW_SHRINK", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
 
 
 def _human_size(n: int) -> str:
@@ -306,6 +328,23 @@ async def main() -> int:
         "total_files": sum(len(e.get("files", [])) for e in ordered),
         "entries": ordered,
     }
+
+    # 无人值守保护：本次掠取若比上一版少文件（detail 页抳空），拒绝覆盖。
+    # 保留上一版元数据，下游 collect 用旧数据继续渲染，不会把“少几条链接”
+    # 的退化发布出去；可疑结果留档供事后排查。退出码 3 = 软失败（不完整）。
+    previous = load_previous_metadata()
+    shrink_reasons = metadata_regressions(previous, result) if previous else []
+    if shrink_reasons and not shrink_allowed():
+        REJECTED_JSON.write_text(
+            json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        print("\n❌ 本次抓取不完整，已拒绝覆盖（保留上一版元数据）")
+        for reason in shrink_reasons:
+            print(f"   - {reason}")
+        print(f"   可疑结果留档：{REJECTED_JSON.relative_to(REPO_ROOT)}")
+        print("   若确认是上游真实下架，设 BROADCOM_ALLOW_SHRINK=1 重跑。")
+        return 3
+
     OUT_JSON.write_text(
         json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8"
     )

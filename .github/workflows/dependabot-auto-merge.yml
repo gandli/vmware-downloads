@@ -1,0 +1,29 @@
+﻿name: Dependabot Auto-merge
+
+# 依赖升级也不占人力：CI 绿了就 squash merge。
+# 依赖 Dependabot PR 会正常触发 CI（与 bot 自己开的数据 PR 不同）。
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dependabot-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: 批准并开启 auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr review "$PR" --approve --body "Dependabot 依赖升级，CI 通过后自动合并。" \
+            || echo "::warning::approve 被拒（GITHUB_TOKEN 限制），继续尝试开启 auto-merge"
+          gh pr merge "$PR" --squash --auto \
+            || echo "::warning::未能开启 auto-merge：仓库需允许 auto-merge（Settings → General → Allow auto-merge）"

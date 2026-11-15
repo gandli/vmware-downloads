@@ -1,0 +1,217 @@
+name: Data Update（无人值守）
+
+# 设计目标：跑起来就不需要人管。
+#   - 每周一跑一次（Broadcom 平均 91 天一发版，周频足够提前发现，且不会因为
+#     "连续两个月没提交" 触发 GitHub 60 天自动停用 schedule 的规则）
+#   - 抓取抖动（Portal 少返 detail 页 / archive.org metadata 不完整）不会污染线上数据：
+#     fetch 有收缩保护（退出码 3 = 软失败，保留旧元数据），
+#     collect 有重试 + 提交前回归防护（scripts/check_data_regression.py）
+#   - 真失败会自动开 issue；下次成功自动关闭。人只需要在 issue 出现时看
+#   - 长时间无变化也会按心跳策略提交 collected_at，保持 schedule 存活
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # 每周一 06:00 UTC（北京时间 14:00）
+  workflow_dispatch:
+    inputs:
+      force_metadata:
+        description: '忽略元数据收缩保护，强制采用本次抓取结果'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+  # audit v3 · P2-B · SLSA build provenance
+  id-token: write
+  attestations: write
+
+# 同一个数据分支不允许并发跑，避免 push 互相踩
+concurrency:
+  group: data-update
+  cancel-in-progress: false
+
+env:
+  FAILURE_ISSUE_TITLE: 数据更新流水线失败（自动创建，勿改标题）
+
+jobs:
+  fetch-and-render:
+    # 钉住 24.04：ubuntu-latest 于 2026-10-19 迁到 Ubuntu 26，
+    # Playwright/Chromium 兼容未知，且无人值守任务挂了没人盯着
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7
+        with:
+          persist-credentials: false
+
+      - name: 装 Python 3.11
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: requirements-dev.lock
+
+      - name: 安装依赖（锁版本，避免上游漂移把无人值守跑挂）
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.lock
+
+      - name: 缓存 Playwright 浏览器（省 15 秒）
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-v1
+
+      - name: 装 Playwright Chromium（未命中缓存时）
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: playwright install --with-deps chromium
+
+      - name: 装 Playwright 系统依赖（命中缓存时）
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: playwright install-deps chromium
+
+      - name: 单元测试（回归保底）
+        run: pytest -q
+
+      - name: 抓取 Broadcom 官方元数据
+        id: fetch
+        env:
+          BROADCOM_USERNAME: ${{ secrets.BROADCOM_USERNAME }}
+          BROADCOM_PASSWORD: ${{ secrets.BROADCOM_PASSWORD }}
+          # 人工确认上游真实下架时，手动触发并勾选 force_metadata
+          BROADCOM_ALLOW_SHRINK: ${{ inputs.force_metadata && '1' || '' }}
+        run: |
+          set +e
+          python scripts/fetch_broadcom.py
+          code=$?
+          set -e
+          case "$code" in
+            0)
+              echo "status=ok" >> "$GITHUB_OUTPUT"
+              ;;
+            3)
+              # 软失败：本次抓取不完整，fetch 已保留上一版元数据。
+              # 继续渲染（用旧元数据），数据不会退化。
+              echo "status=partial" >> "$GITHUB_OUTPUT"
+              echo "::warning title=元数据抓取不完整::Broadcom Portal 本次返回不完整，已保留上一版元数据继续渲染"
+              ;;
+            *)
+              exit "$code"
+              ;;
+          esac
+
+      # 抓取抖动时自动重试：每次重跑 collect（重新拉 archive.org metadata），
+      # 通过健康检查就收工；3 次都不过才判失败（此时宁可不开新数据）
+      - name: 融合 archive.org + 渲染（带健康检查重试）
+        run: |
+          for attempt in 1 2 3; do
+            echo "::group::第 ${attempt}/3 次采集"
+            if ! python scripts/collect_vmware_links.py; then
+              echo "::endgroup::"
+              echo "::warning::第 ${attempt} 次采集失败，20s 后重试"
+              git checkout HEAD -- data/ 2>/dev/null || true
+              sleep 20
+              continue
+            fi
+            if python scripts/check_data_regression.py --metadata; then
+              echo "::endgroup::"
+              echo "✅ 第 ${attempt} 次采集通过健康检查"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "::warning::第 ${attempt} 次采集未通过健康检查，回滚后重试"
+            git checkout HEAD -- data/ 2>/dev/null || true
+            sleep 20
+          done
+          echo "::error title=数据回归::3 次采集都未通过健康检查，本次不发布新数据（线上保持上一版）"
+          exit 1
+
+      - name: SLSA build provenance（供应链 chain-of-custody）
+        # 给 data/vmware_downloads.json / broadcom_metadata.json / checksums.txt
+        # 签发 SLSA level 3 attestation，用户可用 `gh attestation verify` 校验来源
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8  # v4.2.2
+        with:
+          subject-path: |
+            data/vmware_downloads.json
+            data/broadcom_metadata.json
+            data/checksums.txt
+
+      - name: 检查是否有真实数据变化（心跳兜底）
+        id: check_diff
+        run: |
+          # --heartbeat-days 21：连续 3 周只有时间戳变化时提交一次，
+          # 既让 README 的"数据抓取时间"保持诚实，也避免 GitHub 因
+          # 60 天无提交自动停用 schedule
+          if python scripts/detect_data_changes.py --heartbeat-days 21; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 摘要变化条目（commit message 用）
+        if: steps.check_diff.outputs.changed == 'true'
+        run: |
+          python scripts/summarize_changes.py > /tmp/summary.md
+          {
+            echo 'chore(data): 每周自动更新 Broadcom 元数据'
+            echo
+            echo '由 data-update.yml 触发，数据经健康检查后才提交。'
+            echo
+            cat /tmp/summary.md
+          } > /tmp/commit_msg.txt
+
+      # 直接推 main，不开 PR：bot 开的 PR 触发的 pull_request workflow 会被
+      # GitHub 挂在 action_required 等人工 approve（CI 根本不启动），与
+      # "无需人工介入" 冲突。CI 仍会在 push 上校验 README/数据同步。
+      - name: 提交到 main（若有变化）
+        if: steps.check_diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/vmware_downloads.json data/broadcom_metadata.json \
+                  data/checksums.txt data/checksums.sha1.txt README.md
+          git commit -F /tmp/commit_msg.txt
+          for i in 1 2 3; do
+            git fetch origin main --quiet
+            git rebase origin/main || { git rebase --abort || true; }
+            if git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main; then
+              echo "✅ 已推送（第 ${i} 次尝试）"
+              exit 0
+            fi
+            echo "::warning::push 失败（第 ${i} 次），10s 后重试"
+            sleep 10
+          done
+          exit 1
+
+      - name: 成功时自动关闭告警 issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          num=$(gh issue list --state open --limit 100 --json number,title \
+                  --jq ".[] | select(.title == \"$FAILURE_ISSUE_TITLE\") | .number" | head -n1)
+          if [ -n "$num" ]; then
+            gh issue close "$num" --comment "本次运行已恢复正常（$(date -u '+%Y-%m-%d %H:%M UTC')），自动关闭。"
+            echo "✅ 已关闭告警 issue #$num"
+          fi
+
+      - name: 失败时自动开 issue（无需人盯）
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body=$(printf '%s\n\n- 运行: %s/%s/actions/runs/%s\n- 触发: %s\n- 分支: %s\n\n线上数据保持在上一次通过健康检查的版本（未退化）。排查完可手关；下次成功运行会自动关闭。' \
+            '自动流水线执行失败。' \
+            "${{ github.server_url }}" "${{ github.repository }}" "${{ github.run_id }}" \
+            "${{ github.event_name }}" "${{ github.ref_name }}")
+          num=$(gh issue list --state open --limit 100 --json number,title \
+                  --jq ".[] | select(.title == \"$FAILURE_ISSUE_TITLE\") | .number" | head -n1)
+          if [ -n "$num" ]; then
+            gh issue comment "$num" --body "$body"
+          else
+            gh issue create --title "$FAILURE_ISSUE_TITLE" --body "$body"
+          fi
