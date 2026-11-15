@@ -11,8 +11,16 @@ import logging
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import urlencode
 
 logger = logging.getLogger(__name__)
+
+# Broadcom Support Portal 的 subFamily 取值（与列表页查询参数一致）
+SUB_FAMILY = {
+    "workstation": "VMware Workstation Pro",
+    "fusion": "VMware Fusion",
+}
+PORTAL_FILES_URL = "https://support.broadcom.com/group/ecx/productfiles"
 
 # 月份缩写 → 数字
 _MONTHS = {
@@ -60,6 +68,32 @@ def infer_platform(display_group: str, filename: str) -> str:
     if "fusion" in dg_lower or fn_lower.endswith(".dmg"):
         return "macos"
     return "unknown"
+
+
+def build_portal_url(
+    product: str, display_group: str, release: str, service_pk: str
+) -> str:
+    """拼出该版本在 Broadcom Support Portal 的文件页 URL。
+
+    archive.org 尚未镜像的条目（broadcom-only）没有公开直链，README 里只能给
+    文件名；附带这个官方页链接，用户登录后仍能拿到文件。任一关键参数缺失时
+    返回空串，由 renderer 退化成纯文本提示。
+    """
+    sub_family = SUB_FAMILY.get(product, "")
+    if not (sub_family and display_group and release and service_pk):
+        return ""
+    query = urlencode(
+        {
+            "subFamily": sub_family,
+            "displayGroup": display_group,
+            "release": release,
+            "os": "",
+            "servicePk": service_pk,
+            "language": "EN",
+            "freeDownloads": "true",
+        }
+    )
+    return f"{PORTAL_FILES_URL}?{query}"
 
 
 def parse_release_date(raw: str) -> str:
@@ -171,6 +205,9 @@ def build_download_entries(
                 "last_updated": parse_release_date(f.last_updated),
                 "display_group": v.display_group,
                 "service_pk": v.service_pk,
+                "broadcom_url": build_portal_url(
+                    v.product, v.display_group, v.version, v.service_pk
+                ),
             }
             result.setdefault(v.product, []).append(entry)
 

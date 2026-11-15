@@ -145,6 +145,8 @@ def merge_broadcom_with_archive(
                 "size": e.get("size", ""),
                 "sha256": e.get("sha256", ""),
                 "md5": e.get("md5", ""),
+                # Broadcom 官方文件页（需登录）· archive.org 未镜像时的兜底入口
+                "broadcom_url": e.get("broadcom_url", ""),
             }
             if arch:
                 dl["url"] = arch["url"]

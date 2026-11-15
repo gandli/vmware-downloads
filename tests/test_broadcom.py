@@ -13,6 +13,7 @@ from vmware_lib.broadcom import (
     BroadcomFile,
     BroadcomVersion,
     build_download_entries,
+    build_portal_url,
     load_broadcom_metadata,
     parse_release_date,
 )
@@ -348,3 +349,42 @@ def test_parse_release_date_non_numeric_triggers_valueerror() -> None:
     assert parse_release_date("Jul 15, abc") == ""
     # day 非数字 → int(day) 抛 ValueError
     assert parse_release_date("Jul xx, 2025") == ""
+
+def test_build_portal_url_points_at_broadcom_file_page() -> None:
+    """broadcom-only 条目要能给出官方文件页（需登录）而不是死文字"""
+    url = build_portal_url(
+        "workstation", "VMware Workstation Pro 26H1 for Linux", "26H1u1", "546859"
+    )
+    assert url.startswith("https://support.broadcom.com/group/ecx/productfiles?")
+    assert "subFamily=VMware+Workstation+Pro" in url
+    assert "displayGroup=VMware+Workstation+Pro+26H1+for+Linux" in url
+    assert "release=26H1u1" in url
+    assert "servicePk=546859" in url
+    assert "freeDownloads=true" in url
+
+
+@pytest.mark.parametrize(
+    "product,display_group,release,service_pk",
+    [
+        ("", "VMware Workstation Pro 26H1 for Linux", "26H1u1", "546859"),
+        ("workstation", "", "26H1u1", "546859"),
+        ("workstation", "VMware Workstation Pro 26H1 for Linux", "", "546859"),
+        ("workstation", "VMware Workstation Pro 26H1 for Linux", "26H1u1", ""),
+    ],
+)
+def test_build_portal_url_returns_empty_on_missing_input(
+    product: str, display_group: str, release: str, service_pk: str
+) -> None:
+    """参数不全时返回空串，renderer 退化成纯文本提示"""
+    assert build_portal_url(product, display_group, release, service_pk) == ""
+
+
+def test_build_download_entries_carries_broadcom_url(tmp_path: Path) -> None:
+    """build_download_entries 应把 Portal 链接带下去给 renderer"""
+    p = tmp_path / "meta.json"
+    p.write_text(json.dumps(FIXTURE), encoding="utf-8")
+    versions = load_broadcom_metadata(p)
+    entries = build_download_entries(versions)
+    url = entries["workstation"][0]["broadcom_url"]
+    assert url.startswith("https://support.broadcom.com/group/ecx/productfiles?")
+    assert "servicePk=533272" in url

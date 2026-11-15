@@ -260,3 +260,28 @@ def test_archive_hash_normalized_to_lowercase() -> None:
     entry = idx["vmware-workstation-full-17.6.4-24832109.exe"]
     assert entry["sha1"] == "aaaaaaaa1111111111111111111111111111aaaa"
     assert entry["md5_archive"] == "b387e0a655798ba356d9a7331d98851a"
+
+def test_merge_keeps_broadcom_portal_url() -> None:
+    """融合时不能丢掉 Broadcom Portal 链接（broadcom-only 条目的唯一可点入口）"""
+    entries = {
+        "workstation": [
+            {
+                "version": "26H1u1",
+                "platform": "linux",
+                "build": "25688693",
+                "filename": "VMware-Workstation-Full-26H1u1-25688693.x86_64.bundle",
+                "size": "349.83 MB",
+                "sha256": "e" * 64,
+                "md5": "e" * 32,
+                "release_date": "2026-09-03",
+                "last_updated": "2026-08-26",
+                "broadcom_url": "https://support.broadcom.com/group/ecx/productfiles?release=26H1u1",
+            }
+        ],
+        "fusion": [],
+    }
+    merged = merge_broadcom_with_archive(entries, {})
+    dl = merged["workstation"][0]["downloads"]["linux"]
+    assert dl["source"] == "broadcom-only"
+    assert dl["url"] == ""
+    assert dl["broadcom_url"].startswith("https://support.broadcom.com/")
